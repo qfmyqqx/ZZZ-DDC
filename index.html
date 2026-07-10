@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>绝区零驱动盘抽取强化提升概率计算器</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+body{background:#0a0a0a;color:#e0e0e0;padding:20px;line-height:1.6;}
+.container{max-width:800px;margin:0 auto;background:#141414;border:1px solid #2a2a2a;border-radius:12px;box-shadow:0 0 20px rgba(192,192,192,0.05);padding:30px;}
+h1{text-align:center;color:#f0f0f0;margin-bottom:10px;font-size:1.5rem;}
+.subtitle{text-align:center;color:#999;margin-bottom:25px;font-size:0.9rem;}
+.mode-tabs{display:flex;gap:10px;margin-bottom:25px;justify-content:center;flex-wrap:wrap;}
+.tab-btn{padding:10px 20px;border:1px solid #333;background:#1a1a1a;color:#ccc;border-radius:8px;cursor:pointer;transition:all 0.2s;}
+.tab-btn.active{background:#c0c0c0;color:#000;border-color:#c0c0c0;}
+.panel{display:none;}
+.panel.active{display:block;}
+.form-group{margin-bottom:18px;}
+label{display:block;margin-bottom:6px;font-weight:500;color:#dcdcdc;}
+input[type="text"],input[type="number"]{width:100%;padding:8px 12px;background:#1e1e1e;border:1px solid #333;color:#fff;border-radius:6px;font-size:1rem;}
+input[type="text"]:focus,input[type="number"]:focus{outline:none;border-color:#c0c0c0;}
+.entry-grid{display:grid;grid-template-columns:2fr 1fr 2fr;gap:10px;margin-bottom:10px;align-items:end;}
+.entry-item{display:flex;flex-direction:column;}
+.entries-list{margin-bottom:20px;padding:15px;background:#171717;border:1px solid #262626;border-radius:8px;max-height:400px;overflow-y:auto;}
+.btn{padding:10px 24px;background:#c0c0c0;color:#000;border:none;border-radius:8px;cursor:pointer;font-size:1rem;transition:background 0.2s;}
+.btn:hover{background:#d8d8d8;}
+.btn-secondary{background:#333;color:#ddd;border:1px solid #555;}
+.btn-secondary:hover{background:#444;}
+.result-area{margin-top:25px;padding:20px;background:#171717;border:1px solid #2a2a2a;border-radius:8px;display:none;}
+.result-area h3{margin-bottom:12px;color:#f0f0f0;}
+.result-item{margin-bottom:8px;font-family:"Consolas","Monaco",monospace;word-break:break-all;color:#e0e0e0;}
+.note{margin-top:20px;padding:15px;background:#171717;border:1px solid #333;border-radius:8px;font-size:0.9rem;color:#bbb;}
+.note p{margin-bottom:5px;}
+small{color:#888;display:block;margin-top:4px;}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-track{background:#141414;}
+::-webkit-scrollbar-thumb{background:#333;border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:#555;}
+@media(max-width:600px){.container{padding:20px;}.entry-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>绝区零驱动盘抽取强化后提升概率计算器</h1>
+<p class="subtitle">全网首发 | 支持简便版与综合版计算</p>
+
+<div class="mode-tabs">
+<button class="tab-btn active" data-mode="simple">简便版（1/2/3号盘）</button>
+<button class="tab-btn" data-mode="advanced">综合版（自定义场景）</button>
+</div>
+
+<div id="simple-panel" class="panel active">
+<div class="note">
+<p>注1：权重支持整数、小数(如0.5)、分数(如1/2)格式</p>
+<p>注2：权重相同的不同词条需分别输入，无效词条留空即可(默认权重0)</p>
+<p>注3：共10种词条，对应驱动盘10种副词条类型</p>
+</div>
+<div class="entries-list" id="simple-entries"></div>
+<div class="form-group">
+<label for="simple-goal">当前驱动盘分数（有效词条数量 × 对应权重之和）</label>
+<input type="text" id="simple-goal" placeholder="例如：12.5 或 25/2">
+</div>
+<button class="btn" onclick="calculateSimple ()">开始计算</button>
+</div>
+
+<div id="advanced-panel" class="panel">
+<div class="note">
+<p>注：可通过自定义词条、库存、权重、缩放系数，适配更多游戏或生活概率计算场景</p>
+</div>
+<div class="form-group">
+<label for="entry-count">词条总种类数量（包括有效与无效词条）</label>
+<div style="display:flex;gap:10px;flex-wrap:wrap;">
+<input type="number" id="entry-count" min="1" value="10" style="flex:1;min-width:150px;">
+<button class="btn btn-secondary" onclick="generateAdvancedEntries ()">生成词条输入</button>
+</div>
+</div>
+<div class="entries-list" id="advanced-entries"></div>
+<div class="form-group">
+<label for="advanced-goal">当前驱动盘分数（有效词条数量 × 对应权重之和）</label>
+<input type="text" id="advanced-goal" placeholder="例如：12.5 或 25/2">
+</div>
+<div class="form-group">
+<label for="advanced-scale">缩放系数</label>
+<input type="text" id="advanced-scale" placeholder="例：1号位随机抽取输入 1/6；5号位输入 1/60">
+<small>示例1：随机抽1次得目标位置驱动盘概率1/6，输入1/6<br>示例2：4/6号位主词条仅1种可用，输入1/36；5号位主词条仅1种可用，输入1/60</small>
+</div>
+<button class="btn" onclick="calculateAdvanced ()">开始计算</button>
+</div>
+
+<div class="result-area" id="result-area">
+<h3>计算结果（小数点后15位有效数字）</h3>
+<div class="result-item" id="res-a">A盘(5次强化)平均提升率：--</div>
+<div class="result-item" id="res-b">B盘(4次强化)平均提升率：--</div>
+<div class="result-item" id="res-directed">定向抽取综合提升率：--</div>
+<div class="result-item" id="res-random">随机抽取综合提升率：--</div>
+</div>
+</div>
+
+<script>
+const Achance=0.2011577424023155;
+const Bchance=0.798842257597684516;
+const Atimes=5;
+const Btimes=4;
+
+function parseNumber (str){
+    str=str.trim();
+    if (str==='') return 0;
+    if (str.includes('/')){
+        const parts=str.split('/');
+        if (parts.length!==2) return NaN;
+        const up=parseFloat(parts[0]);
+        const down=parseFloat(parts[1]);
+        if (isNaN(up) || isNaN(down) || down===0) return NaN;
+        return up/down;
+    }
+    const num=parseFloat(str);
+    return isNaN(num)?NaN:num;
+}
+
+function firstGroup (savePool,shortGroup,basicSc,presentWeight,allGroups){
+    if (shortGroup.length===4){
+        allGroups.push({
+            firstFour:[...shortGroup],
+            basicsc:basicSc,
+            weight:presentWeight
+        });
+        return;
+    }
+    for (let i=0;i<savePool.length;i++){
+        if (savePool[i].rest<=0) continue;
+        const newPool=savePool.map(item=>({...item}));
+        newPool[i].rest--;
+        shortGroup.push({...savePool[i]});
+        firstGroup(newPool,shortGroup,basicSc+savePool[i].score,presentWeight*savePool[i].rest,allGroups);
+        shortGroup.pop();
+    }
+}
+
+function dfsUp (leaveTimes,nowAdd,need,nowGroup,counter){
+    if (leaveTimes<=0){
+        counter.total++;
+        if (nowAdd>need) counter.pass++;
+        return;
+    }
+    for (let i=0;i<nowGroup.length;i++){
+        dfsUp(leaveTimes-1,nowAdd+nowGroup[i].score,need,nowGroup,counter);
+    }
+}
+
+function passChance (times,need,nowGroup){
+    const counter={total:0,pass:0};
+    dfsUp(times,0,need,nowGroup,counter);
+    return counter.total===0?0:counter.pass/counter.total;
+}
+
+function calculateCore (entryList,goal,scaleFactor){
+    const allGroups=[];
+    firstGroup(entryList,[],0,1,allGroups);
+    const groupTotal=allGroups.length;
+    let getA=0,getB=0,totalWeight=0;
+    for (let i=0;i<groupTotal;i++){
+        const gr=allGroups[i];
+        let schanceA,schanceB;
+        if (gr.basicsc>goal){
+            schanceA=1;
+            schanceB=1;
+        }
+        else {
+            const need=goal-gr.basicsc;
+            schanceA=passChance(Atimes,need,gr.firstFour);
+            schanceB=passChance(Btimes,need,gr.firstFour);
+        }
+        getA+=schanceA*gr.weight;
+        getB+=schanceB*gr.weight;
+        totalWeight+=gr.weight;
+    }
+    const mchanceA=getA/totalWeight;
+    const mchanceB=getB/totalWeight;
+    const chance=Achance*mchanceA+Bchance*mchanceB;
+    const scaledChance=chance*scaleFactor;
+    return {mchanceA,mchanceB,chance,scaledChance};
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(`${btn.dataset.mode}-panel`).classList.add('active');
+        document.getElementById('result-area').style.display='none';
+    });
+});
+
+function initSimpleEntries (){
+    const container=document.getElementById('simple-entries');
+    container.innerHTML='';
+    for (let i=0;i<10;i++){
+        const div=document.createElement('div');
+        div.className='form-group';
+        div.innerHTML=`
+            <label>词条${i+1}权重</label>
+            <input type="text" class="simple-weight" placeholder="留空则为无效词条（权重0）">
+        `;
+        container.appendChild(div);
+    }
+}
+
+function generateAdvancedEntries (){
+    const count=parseInt(document.getElementById('entry-count').value);
+    if (isNaN(count) || count<1){
+        alert('请输入有效的词条数量');
+        return;
+    }
+    const container=document.getElementById('advanced-entries');
+    container.innerHTML='';
+    for (let i=0;i<count;i++){
+        const div=document.createElement('div');
+        div.className='entry-grid';
+        div.innerHTML=`
+            <div class="entry-item">
+                <label>词条${i+1}名称</label>
+                <input type="text" class="adv-name" value="词条${i+1}">
+            </div>
+            <div class="entry-item">
+                <label>库存</label>
+                <input type="number" class="adv-rest" min="1" value="1">
+            </div>
+            <div class="entry-item">
+                <label>权重</label>
+                <input type="text" class="adv-score" placeholder="整数/小数/分数">
+            </div>
+        `;
+        container.appendChild(div);
+    }
+}
+
+function calculateSimple (){
+    const weights=document.querySelectorAll('.simple-weight');
+    const entryList=[];
+    for (let i=0;i<weights.length;i++){
+        const score=parseNumber(weights[i].value);
+        if (isNaN(score)){
+            alert(`词条${i+1}的权重格式不正确，请输入整数、小数或分数`);
+            return;
+        }
+        entryList.push({name:`${i+1}`,rest:1,score:score});
+    }
+    const goalVal=parseNumber(document.getElementById('simple-goal').value);
+    if (isNaN(goalVal)){
+        alert('当前驱动盘分数格式不正确');
+        return;
+    }
+    const result=calculateCore(entryList,goalVal,1/6);
+    showResult(result,'simple');
+}
+
+function calculateAdvanced (){
+    const names=document.querySelectorAll('.adv-name');
+    const rests=document.querySelectorAll('.adv-rest');
+    const scores=document.querySelectorAll('.adv-score');
+    if (names.length===0){
+        alert('请先生成词条输入');
+        return;
+    }
+    const entryList=[];
+    let totalRest=0;
+    for (let i=0;i<names.length;i++){
+        const name=names[i].value.trim()||`词条${i+1}`;
+        const rest=parseInt(rests[i].value);
+        const score=parseNumber(scores[i].value);
+        if (isNaN(rest) || rest<1){
+            alert(`词条${i+1}的库存必须是正整数`);
+            return;
+        }
+        if (isNaN(score)){
+            alert(`词条${i+1}的权重格式不正确`);
+            return;
+        }
+        entryList.push({name,rest,score});
+        totalRest+=rest;
+    }
+    if (totalRest<4){
+        alert('总词条库存不足4，无法抽取4词条，请修改库存');
+        return;
+    }
+    const goalVal=parseNumber(document.getElementById('advanced-goal').value);
+    if (isNaN(goalVal)){
+        alert('当前驱动盘分数格式不正确');
+        return;
+    }
+    const scaleVal=parseNumber(document.getElementById('advanced-scale').value);
+    if (isNaN(scaleVal)){
+        alert('缩放系数格式不正确');
+        return;
+    }
+    const result=calculateCore(entryList,goalVal,scaleVal);
+    showResult(result,'advanced');
+}
+
+function showResult (result,mode){
+    document.getElementById('res-a').textContent=`A盘(5次强化)平均提升率：${(result.mchanceA*100).toFixed(15)}%`;
+    document.getElementById('res-b').textContent=`B盘(4次强化)平均提升率：${(result.mchanceB*100).toFixed(15)}%`;
+    if (mode==='simple'){
+        document.getElementById('res-directed').textContent=`定向抽取综合提升率：${(result.chance*100).toFixed(15)}%`;
+        document.getElementById('res-random').textContent=`随机抽取综合提升率：${(result.scaledChance*100).toFixed(15)}%`;
+    }
+    else {
+        document.getElementById('res-directed').textContent=`综合提升率：${(result.chance*100).toFixed(15)}%`;
+        document.getElementById('res-random').textContent=`乘以缩放系数后提升率：${(result.scaledChance*100).toFixed(15)}%`;
+    }
+    document.getElementById('result-area').style.display='block';
+}
+
+window.onload=()=>{
+    initSimpleEntries ();
+    generateAdvancedEntries ();
+};
+</script>
+</body>
+</html>
