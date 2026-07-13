@@ -38,7 +38,7 @@ function renderCharacterGrid(t, fi = 0) {
     const g = document.getElementById(gId); g.innerHTML = '';
     CHARACTER_DATA[fi].roles.forEach(ch => {
         const cd = document.createElement('div'); cd.className = 'character-card';
-        cd.innerHTML = `<img src="${ch.image}" alt="${ch.name}" class="character-avatar" onerror="this.style.display='none'"><div class="character-name">${ch.name}</div>`;
+        cd.innerHTML = `<img src="./${ch.image}" alt="${ch.name}" class="character-avatar" onerror="this.style.display='none'"><div class="character-name">${ch.name}</div>`;
         cd.onclick = () => {
             g.querySelectorAll('.character-card').forEach(c => c.classList.remove('active')); cd.classList.add('active');
             if (t === 'simple') {
