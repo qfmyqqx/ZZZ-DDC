@@ -6,55 +6,57 @@
     <title>绝区零驱动盘练度提升概率计算器</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft YaHei", "PingFang SC", serif; }
-        body { background: #0a0a0a; color: #e0e0e0; padding: 20px; line-height: 1.6; }
-        .container { max-width: 1100px; margin: 0 auto; background: #121212; border: 1px solid #2a2a2a; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); padding: 36px; }
-        h1 { text-align: center; color: #e8e4dd; margin-bottom: 12px; font-size: 1.7rem; font-weight: 500; letter-spacing: 2px; }
-        .gold-title { background: linear-gradient(175deg, #F7F3EB 0%, #E8DCC8 12%, #CFBC9A 28%, #B8A07E 48%, #9E8462 65%, #8B7152 82%, #7D6448 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; font-size: 1.85rem; margin-left: 4px; letter-spacing: 4px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5)) drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
-        .subtitle { text-align: center; color: #888; margin-bottom: 28px; font-size: 0.9rem; }
+        body { background: #121212; color: #e0e0e0; padding: 20px; line-height: 1.6; }
+        .container { max-width: 1100px; margin: 0 auto; background: #121212; border: 1px solid #2a2a2a; border-radius: 16px; box-shadow: 0 8px 32px rgba(255, 69, 0, 0.05); padding: 36px; }
+        h1 { text-align: center; color: #FF4500; margin-bottom: 12px; font-size: 1.7rem; font-weight: 700; letter-spacing: 2px; }
+        .gold-title { background: #FF4500; color: #121212; padding: 0 8px; border-radius: 4px; background-clip: unset; -webkit-text-fill-color: #121212; font-weight: 700; font-size: 1.85rem; margin-left: 4px; letter-spacing: 4px; filter: none; }
+        .subtitle { text-align: center; color: #888; margin-bottom: 28px; font-size: 0.9rem; letter-spacing: 1px; }
         .mode-tabs { display: flex; gap: 12px; margin-bottom: 28px; justify-content: center; flex-wrap: wrap; }
-        .tab-btn { padding: 10px 24px; border: 1px solid #333; background: #1a1a1a; color: #ccc; border-radius: 8px; cursor: pointer; transition: all .25s; font-size: 1rem; }
-        .tab-btn.active { background: linear-gradient(180deg, #e6c870, #c9a43b); color: #1a1200; border-color: #d4af37; font-weight: 600; box-shadow: 0 0 18px rgba(212,175,55,0.35); }
-        .tab-btn:hover { border-color: #d4af37; box-shadow: 0 0 14px rgba(212,175,55,0.25); }
+        .tab-btn { padding: 10px 24px; border: 1px solid #FF4500; background: #121212; color: #FF4500; border-radius: 8px; cursor: pointer; transition: all .25s; font-size: 1rem; }
+        .tab-btn.active { background: #FF4500; color: #121212; border-color: #FF4500; font-weight: 700; box-shadow: 0 0 20px rgba(255, 69, 0, 0.3); }
+        .tab-btn:hover { border-color: #FF4500; box-shadow: 0 0 15px rgba(255, 69, 0, 0.2); }
         .panel { display: none; }
         .panel.active { display: block; }
         .form-group { margin-bottom: 18px; }
-        label { display: block; margin-bottom: 6px; font-weight: 500; color: #dcdcdc; }
-        input[type="text"], input[type="number"] { width: 100%; padding: 9px 12px; background: #1e1e1e; border: 1px solid #333; color: #fff; border-radius: 6px; font-size: 0.95rem; transition: border-color .2s; }
-        input:focus { outline: none; border-color: #d4af37; }
-        input:disabled { background: #181818; color: #666; cursor: not-allowed; }
-        input[type="checkbox"], input[type="radio"] { accent-color: #d4af37; }
+        label { display: block; margin-bottom: 6px; font-weight: 500; color: #eeeeee; }
+        input[type="text"], input[type="number"] { width: 100%; padding: 9px 12px; background: #0a0a0a; border: 1px solid #333333; color: #ffffff; border-radius: 6px; font-size: 0.95rem; transition: border-color .2s; }
+        input:focus { outline: none; border-color: #FF4500; }
+        input:disabled { background: #0a0a0a; color: #666; cursor: not-allowed; }
+        input[type="checkbox"], input[type="radio"] { accent-color: #FF4500; }
         .entry-grid { display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 10px; margin-bottom: 10px; align-items: end; }
         .entry-item { display: flex; flex-direction: column; }
-        .entries-list { margin-bottom: 20px; padding: 16px; background: #171717; border: 1px solid #262626; border-radius: 8px; max-height: 420px; overflow-y: auto; }
-        .btn { padding: 10px 28px; background: linear-gradient(180deg, #e6c870, #c9a43b); color: #1a1200; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: all .25s; letter-spacing: 0.5px; }
-        .btn:hover { filter: brightness(1.1); box-shadow: 0 4px 20px rgba(212,175,55,0.45); transform: translateY(-1px); }
-        .btn-secondary { background: #333; color: #ddd; border: 1px solid #555; font-weight: 400; }
-        .result-area { margin-top: 28px; padding: 22px; background: #171717; border: 1px solid #2a2a2a; border-radius: 10px; display: none; }
-        .result-area h3 { margin-bottom: 14px; color: #f0f0f0; font-size: 1.2rem; }
+        .entries-list { margin-bottom: 20px; padding: 16px; background: #0a0a0a; border: 1px solid #222222; border-radius: 8px; max-height: 420px; overflow-y: auto; }
+        .btn { padding: 10px 28px; background: #FF4500; color: #121212; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 700; transition: all .25s; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(255, 69, 0, 0.2); }
+        .btn:hover { filter: brightness(1.1); box-shadow: 0 6px 25px rgba(255, 69, 0, 0.4); transform: translateY(-1px); }
+        .btn-secondary { background: #121212; color: #FF4500; border: 1px solid #FF4500; font-weight: 600; }
+        .result-area { margin-top: 28px; padding: 22px; background: #0a0a0a; border: 1px solid #333333; border-radius: 10px; display: none; }
+        .result-area h3 { margin-bottom: 14px; color: #FF4500; font-size: 1.2rem; }
         .result-item { margin-bottom: 10px; font-family: "Consolas","Monaco",monospace; font-size: 0.95rem; word-break: break-all; color: #e0e0e0; }
-        .character-select { margin-bottom: 22px; padding: 18px; background: #171717; border: 1px solid #262626; border-radius: 10px; }
+        .character-select { margin-bottom: 22px; padding: 18px; background: #0a0a0a; border: 1px solid #222222; border-radius: 10px; }
         .faction-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-        .faction-tab { padding: 6px 14px; border: 1px solid #333; background: #1a1a1a; color: #bbb; border-radius: 6px; cursor: pointer; font-size: 0.88rem; white-space: nowrap; transition: all .2s; }
-        .faction-tab.active { background: #2a2a2a; color: #e6c870; border-color: #d4af37; }
+        .faction-tab { padding: 6px 14px; border: 1px solid #444444; background: #121212; color: #bbbbbb; border-radius: 6px; cursor: pointer; font-size: 0.88rem; white-space: nowrap; transition: all .2s; }
+        .faction-tab.active { background: #1a1a1a; color: #FF4500; border-color: #FF4500; }
         .character-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px,1fr)); gap: 12px; }
         .character-card { display: flex; flex-direction: column; align-items: center; cursor: pointer; border: 2px solid transparent; border-radius: 10px; padding: 8px 6px; transition: all .25s; }
-        .character-card.active { border-color: #c9a43b; background: rgba(180,150,100,0.06); box-shadow: 0 0 14px rgba(180,150,100,0.15); }
+        .character-card.active { border-color: #FF4500; background: rgba(255, 69, 0, 0.05); box-shadow: 0 0 14px rgba(255, 69, 0, 0.1); }
         .character-avatar { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; background: #222; border: 2px solid #2a2a2a; }
         .character-name { margin-top: 6px; font-size: 0.78rem; color: #ddd; text-align: center; }
-        .special-option { margin-top: 14px; display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(180,150,100,0.05); border: 1px solid rgba(180,150,100,0.2); border-radius: 8px; font-size: 0.9rem; color: #cfbc9a; }
+        .special-option { margin-top: 14px; display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(255, 69, 0, 0.05); border: 1px solid rgba(255, 69, 0, 0.25); border-radius: 8px; font-size: 0.9rem; color: #FF4500; }
         .position-select { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
-        .position-option { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.9rem; }
+        .position-option { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.9rem; color: #eee; }
         .main-entry-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap: 10px; margin-bottom: 15px; }
         .hidden { display: none !important; }
-        .pos-config { border: 1px solid #333; border-radius: 8px; padding: 15px; margin-bottom: 15px; background: #1a1a1a; }
-        .pos-config h4 { color: #cfbc9a; margin-bottom: 10px; }
+        .pos-config { border: 1px solid #333333; border-radius: 8px; padding: 15px; margin-bottom: 15px; background: #0a0a0a; }
+        .pos-config h4 { color: #FF4500; margin-bottom: 10px; }
         .enhance-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-        .section-label { display: block; margin-bottom: 6px; font-weight: 500; color: #dcdcdc; }
+        .section-label { display: block; margin-bottom: 6px; font-weight: 500; color: #eeeeee; }
+        .main-entry-item { display: flex; align-items: center; gap: 4px; cursor: pointer; color: #ddd; font-size: 0.85rem; }
+        .main-entry-item input { margin-right: 4px; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>绝区零驱动盘抽取练度概率计算器<span class="gold-title">V2.1</span></h1>
+    <h1>绝区零驱动盘练度提升概率计算器<span class="gold-title">V2.1</span></h1>
     <p class="subtitle">全网首发 | 全角色阵营分类 | 支持游戏版与自定义版双模式计算</p>
     <div class="mode-tabs">
         <button class="tab-btn active" data-mode="game">游戏版（1~6号盘）</button>
@@ -91,7 +93,7 @@
     </div>
     <!-- 自定义版面板 -->
     <div id="custom-panel" class="panel">
-        <div class="note"><p>注：可通过自定义词条、库存、权重、缩放系数，适配更多游戏或生活概率计算场景</p></div>
+        <div class="note"><p style="color:#aaa;">注：可通过自定义词条、库存、权重、缩放系数，适配更多游戏或生活概率计算场景</p></div>
         <div class="form-group">
             <label for="entry-count">词条总种类数量（包括有效与无效词条）</label>
             <div style="display:flex;gap:10px;flex-wrap:wrap;">
@@ -103,7 +105,7 @@
         <div class="special-option" style="margin-bottom:15px;">
             <input type="checkbox" id="custom-direct-toggle" onchange="toggleCustomDirect()"> <label for="custom-direct-toggle">定向副词条（可多选，无数量限制）</label>
         </div>
-        <div id="custom-direct-area" style="display:none; margin-bottom:15px; padding:10px; background:#1a1a1a; border:1px solid #333; border-radius:8px;">
+        <div id="custom-direct-area" style="display:none; margin-bottom:15px; padding:10px; background:#0a0a0a; border:1px solid #333; border-radius:8px;">
             <label>选择定向词条</label>
             <div id="custom-direct-options" class="main-entry-grid"></div>
         </div>
@@ -114,7 +116,7 @@
         <div class="form-group">
             <label for="advanced-scale">缩放系数</label>
             <input type="text" id="advanced-scale" placeholder="例：1号位随机抽取输入 1/6；5号位输入 1/60">
-            <small>示例1：随机抽1次得目标位置驱动盘概率1/6，输入1/6<br>示例2：4/6号位主词条仅1种可用，输入1/36；5号位主词条仅1种可用，输入1/60</small>
+            <small style="color:#999;">示例1：随机抽1次得目标位置驱动盘概率1/6，输入1/6<br>示例2：4/6号位主词条仅1种可用，输入1/36；5号位主词条仅1种可用，输入1/60</small>
         </div>
         <button class="btn" onclick="calculateAdvanced()">开始计算</button>
     </div>
@@ -354,7 +356,7 @@
             div.innerHTML = `<h4>${pos}号位配置</h4>`;
             if (pos >= 4) div.innerHTML += `<label>主词条选择：</label><div class="main-entry-grid" id="main-${pos}"></div>`;
             div.innerHTML += `<div class="special-option" style="margin:10px 0;"><input type="checkbox" id="game-direct-toggle-${pos}" onchange="toggleGameDirect(${pos})"> <label for="game-direct-toggle-${pos}">定向副词条</label></div>`;
-            div.innerHTML += `<div id="game-direct-area-${pos}" style="display:none; margin-bottom:10px; padding:10px; background:#1a1a1a; border:1px solid #333; border-radius:8px;"><label>选择定向副词条（最多2个）</label><div id="game-direct-options-${pos}" class="main-entry-grid"></div></div>`;
+            div.innerHTML += `<div id="game-direct-area-${pos}" style="display:none; margin-bottom:10px; padding:10px; background:#0a0a0a; border:1px solid #333; border-radius:8px;"><label>选择定向副词条（最多2个）</label><div id="game-direct-options-${pos}" class="main-entry-grid"></div></div>`;
             div.innerHTML += `<label>当前驱动盘强化次数：</label><div id="enhance-${pos}"></div>`;
             div.innerHTML += `<div>当前驱动盘分数：<span id="score-percent-${pos}">0分</span></div>`;
             div.innerHTML += `<small style="color:#888;">满分100分，为100倍当前驱动盘权重分数与驱动盘最大权重分数之比</small>`;
