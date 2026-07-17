@@ -4,913 +4,120 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>绝区零驱动盘抽取强化提升概率计算器</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft YaHei", "PingFang SC", serif;
-        }
-        body {
-            background: #0a0a0a;
-            color: #e0e0e0;
-            padding: 20px;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            background: #121212;
-            border: 1px solid #2a2a2a;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            padding: 36px;
-        }
-        h1 {
-            text-align: center;
-            color: #e8e4dd;
-            margin-bottom: 12px;
-            font-size: 1.7rem;
-            font-weight: 500;
-            letter-spacing: 2px;
-        }
-        .gold-title {
-            background: linear-gradient(175deg, #F7F3EB 0%, #E8DCC8 12%, #CFBC9A 28%, #B8A07E 48%, #9E8462 65%, #8B7152 82%, #7D6448 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 600;
-            font-size: 1.85rem;
-            margin-left: 4px;
-            letter-spacing: 4px;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-        }
-        .subtitle {
-            text-align: center;
-            color: #888;
-            margin-bottom: 28px;
-            font-size: 0.9rem;
-        }
-        .mode-tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 28px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .tab-btn {
-            padding: 10px 24px;
-            border: 1px solid #333;
-            background: #1a1a1a;
-            color: #ccc;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all .25s;
-            font-size: 1rem;
-        }
-        .tab-btn.active {
-            background: linear-gradient(180deg, #e6c870, #c9a43b);
-            color: #1a1200;
-            border-color: #d4af37;
-            font-weight: 600;
-            box-shadow: 0 0 18px rgba(212, 175, 55, 0.35);
-        }
-        .tab-btn:hover {
-            border-color: #d4af37;
-            box-shadow: 0 0 14px rgba(212, 175, 55, 0.25);
-        }
-        .panel {
-            display: none;
-        }
-        .panel.active {
-            display: block;
-        }
-        .form-group {
-            margin-bottom: 18px;
-        }
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            color: #dcdcdc;
-        }
-        input[type="text"],
-        input[type="number"] {
-            width: 100%;
-            padding: 9px 12px;
-            background: #1e1e1e;
-            border: 1px solid #333;
-            color: #fff;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            transition: border-color .2s;
-        }
-        input:focus {
-            outline: none;
-            border-color: #d4af37;
-        }
-        input:disabled {
-            background: #181818;
-            color: #666;
-            cursor: not-allowed;
-        }
-        input[type="checkbox"],
-        input[type="radio"] {
-            accent-color: #d4af37;
-        }
-        .entry-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 2fr;
-            gap: 10px;
-            margin-bottom: 10px;
-            align-items: end;
-        }
-        .entry-item {
-            display: flex;
-            flex-direction: column;
-        }
-        .entries-list {
-            margin-bottom: 20px;
-            padding: 16px;
-            background: #171717;
-            border: 1px solid #262626;
-            border-radius: 8px;
-            max-height: 420px;
-            overflow-y: auto;
-        }
-        .btn {
-            padding: 10px 28px;
-            background: linear-gradient(180deg, #e6c870, #c9a43b);
-            color: #1a1200;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all .25s;
-            letter-spacing: 0.5px;
-        }
-        .btn:hover {
-            filter: brightness(1.1);
-            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.45);
-            transform: translateY(-1px);
-        }
-        .btn-secondary {
-            background: #333;
-            color: #ddd;
-            border: 1px solid #555;
-            font-weight: 400;
-        }
-        .result-area {
-            margin-top: 28px;
-            padding: 22px;
-            background: #171717;
-            border: 1px solid #2a2a2a;
-            border-radius: 10px;
-            display: none;
-        }
-        .result-area h3 {
-            margin-bottom: 14px;
-            color: #f0f0f0;
-            font-size: 1.2rem;
-        }
-        .result-item {
-            margin-bottom: 10px;
-            font-family: "Consolas", "Monaco", monospace;
-            font-size: 0.95rem;
-            word-break: break-all;
-            color: #e0e0e0;
-        }
-        .character-select {
-            margin-bottom: 22px;
-            padding: 18px;
-            background: #171717;
-            border: 1px solid #262626;
-            border-radius: 10px;
-        }
-        .faction-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-        .faction-tab {
-            padding: 6px 14px;
-            border: 1px solid #333;
-            background: #1a1a1a;
-            color: #bbb;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.88rem;
-            white-space: nowrap;
-            transition: all .2s;
-        }
-        .faction-tab.active {
-            background: #2a2a2a;
-            color: #e6c870;
-            border-color: #d4af37;
-        }
-        .character-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
-            gap: 12px;
-        }
-        .character-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            border: 2px solid transparent;
-            border-radius: 10px;
-            padding: 8px 6px;
-            transition: all .25s;
-        }
-        .character-card.active {
-            border-color: #c9a43b;
-            background: rgba(180, 150, 100, 0.06);
-            box-shadow: 0 0 14px rgba(180, 150, 100, 0.15);
-        }
-        .character-avatar {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            object-fit: cover;
-            background: #222;
-            border: 2px solid #2a2a2a;
-        }
-        .character-name {
-            margin-top: 6px;
-            font-size: 0.78rem;
-            color: #ddd;
-            text-align: center;
-        }
-        .special-option {
-            margin-top: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 14px;
-            background: rgba(180, 150, 100, 0.05);
-            border: 1px solid rgba(180, 150, 100, 0.2);
-            border-radius: 8px;
-            font-size: 0.9rem;
-            color: #cfbc9a;
-        }
-        .position-select {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-        .position-option {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .main-entry-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .hidden {
-            display: none !important;
-        }
-        .pos-config {
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background: #1a1a1a;
-        }
-        .pos-config h4 {
-            color: #cfbc9a;
-            margin-bottom: 10px;
-        }
-        .enhance-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 6px;
-        }
-        .sub-mode-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            justify-content: flex-start;
-        }
-        .sub-mode-btn {
-            padding: 8px 18px;
-            border: 1px solid #333;
-            background: #1a1a1a;
-            color: #ccc;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all .2s;
-        }
-        .sub-mode-btn.active {
-            background: #2a2a2a;
-            color: #cfbc9a;
-            border-color: #b8a07e;
-        }
-    </style>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 </head>
 <body>
-    <div class="container">
-        <h1>绝区零驱动盘抽取强化提升概率计算器<span class="gold-title">升级版</span></h1>
-        <p class="subtitle">全网首发 | 全角色阵营分类 | 支持简便版与综合版双模式计算</p>
-        <div class="mode-tabs">
+    <div class="container px-4 py-4 sm:px-6 sm:py-6 md:px-9 md:py-9">
+        <h1 class="text-center text-2xl sm:text-3xl md:text-4xl mb-2">绝区零驱动盘抽取强化提升概率计算器<span class="gold-title">升级版</span></h1>
+        <p class="subtitle text-center text-gray-400 mb-4">全网首发 | 全角色阵营分类 | 支持简便版与综合版双模式计算</p>
+        <div class="mode-tabs flex gap-3 mb-4 justify-center flex-wrap">
             <button class="tab-btn active" data-mode="simple">简便版（1/2/3号盘）</button>
             <button class="tab-btn" data-mode="advanced">综合版（1~6号盘，支持自定义场景）</button>
         </div>
         <div id="simple-panel" class="panel active">
-            <div class="note">
-                <p>注1：权重支持整数、小数(如0.5)、分数(如1/2)格式</p>
-                <p>注2：权重相同的不同词条需分别输入，无效词条留空即可(默认权重0)</p>
-                <p>注3：共10种词条，对应驱动盘10种副词条类型</p>
+            <div class="note bg-[#171717] border border-[#333] rounded-lg p-3 mb-4">
+                <p class="mb-0">注1：权重支持整数、小数(如0.5)、分数(如1/2)格式</p>
+                <p class="mb-0">注2：权重相同的不同词条需分别输入，无效词条留空即可(默认权重0)</p>
+                <p class="mb-0">注3：共10种词条，对应驱动盘10种副词条类型</p>
             </div>
-            <div class="character-select">
-                <label>选择角色自动填充权重（可手动修改下方数值）</label>
-                <div class="faction-tabs" id="simple-faction-tabs"></div>
+            <div class="character-select bg-[#171717] border border-[#262626] rounded-xl p-4 mb-4">
+                <label class="block text-sm font-medium text-gray-300 mb-2">选择角色自动填充权重（可手动修改下方数值）</label>
+                <div class="faction-tabs flex gap-2 mb-3 flex-wrap" id="simple-faction-tabs"></div>
                 <div class="character-grid" id="simple-character-grid"></div>
-                <div class="special-option" id="simple-alice-c6-option" style="display:none;">
+                <div class="special-option flex items-center gap-2 mt-3 p-2 rounded" id="simple-alice-c6-option" style="display:none;">
                     <input type="checkbox" id="simple-alice-c6" onchange="updateSimpleWeights()"> <label for="simple-alice-c6">爱丽丝6命（额外增加爆伤权重0.3）</label>
                 </div>
-                <div class="special-option" id="simple-vivian-c4-option" style="display:none;">
+                <div class="special-option flex items-center gap-2 mt-3 p-2 rounded" id="simple-vivian-c4-option" style="display:none;">
                     <input type="checkbox" id="simple-vivian-c4" onchange="updateSimpleWeights()"> <label for="simple-vivian-c4">薇薇安4命（暴击伤害权重改为0.6）</label>
                 </div>
             </div>
-            <div class="entries-list" id="simple-entries"></div>
-            <div class="form-group">
-                <label>📌 当前驱动盘已有词条强化次数（勾选4个词条并填写强化次数，自动计算分数）</label>
+            <div class="entries-list bg-[#171717] border border-[#262626] rounded-lg p-3 mb-4">
+                <div id="simple-entries"></div>
+            </div>
+            <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-300 mb-1">当前驱动盘已有词条强化次数（勾选4个词条并填写强化次数，自动计算分数）</label>
                 <div id="simple-enhance-area"></div>
-                <div style="margin-top:8px;"><strong>自动计算当前驱动盘分数：</strong><span id="simple-auto-score">0</span></div>
+                <div class="mt-2"><strong>自动计算当前驱动盘分数：</strong><span id="simple-auto-score">0</span></div>
             </div>
-            <div class="form-group">
-                <label for="simple-goal">当前驱动盘分数（有效词条数量 × 对应权重之和）</label>
-                <input type="text" id="simple-goal" placeholder="例如：12.5 或 25/2">
+            <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-300 mb-1" for="simple-goal">当前驱动盘分数（有效词条数量 × 对应权重之和）</label>
+                <input type="text" class="custom-input" id="simple-goal" placeholder="例如：12.5 或 25/2">
             </div>
-            <button class="btn" onclick="calculateSimple()">开始计算</button>
+            <button class="btn-gold" onclick="calculateSimple()">开始计算</button>
         </div>
         <div id="advanced-panel" class="panel">
-            <div class="note">
-                <p>注：可通过自定义词条、库存、权重、缩放系数，适配更多游戏或生活概率计算场景</p>
+            <div class="note bg-[#171717] border border-[#333] rounded-lg p-3 mb-4">
+                <p class="mb-0">注：可通过自定义词条、库存、权重、缩放系数，适配更多游戏或生活概率计算场景</p>
             </div>
-            <div class="sub-mode-tabs">
+            <div class="sub-mode-tabs flex gap-2 mb-4">
                 <button class="sub-mode-btn active" data-submode="game">游戏版（1~6号盘）</button>
                 <button class="sub-mode-btn" data-submode="custom">自定义版</button>
             </div>
             <div id="adv-custom-panel" style="display:none;">
-                <div class="form-group">
-                    <label for="entry-count">词条总种类数量（包括有效与无效词条）</label>
-                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                        <input type="number" id="entry-count" min="1" value="10" style="flex:1;min-width:150px;">
-                        <button class="btn btn-secondary" onclick="generateAdvancedEntries()">生成词条输入</button>
+                <div class="mb-3">
+                    <label class="block text-sm font-medium text-gray-300 mb-1">词条总种类数量（包括有效与无效词条）</label>
+                    <div class="flex items-start entry-count-row">
+                            <div class="stepper" id="entry-count-stepper">
+                            <input type="number" class="stepper-input" id="entry-count" min="1" value="10" onchange="generateAdvancedEntries()" style="height:42px;">
+                            <button type="button" class="stepper-btn" onclick="stepperChange(this,-1)">-</button>
+                            <button type="button" class="stepper-btn" onclick="stepperChange(this,1)">+</button>
+                        </div>
+                        <button class="px-26 py-2 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 cursor-pointer" onclick="generateAdvancedEntries()">生成词条输入</button>
                     </div>
                 </div>
-                <div class="entries-list" id="advanced-entries"></div>
-                <div class="form-group">
-                    <label for="advanced-goal">当前驱动盘分数（有效词条数量 × 对应权重之和）</label>
-                    <input type="text" id="advanced-goal" placeholder="例如：12.5 或 25/2">
+                <div class="entries-list bg-[#171717] border border-[#262626] rounded-lg p-3 mb-4">
+                    <div id="advanced-entries"></div>
                 </div>
-                <div class="form-group">
-                    <label for="advanced-scale">缩放系数</label>
-                    <input type="text" id="advanced-scale" placeholder="例：1号位随机抽取输入 1/6；5号位输入 1/60">
-                    <small>示例1：随机抽1次得目标位置驱动盘概率1/6，输入1/6<br>示例2：4/6号位主词条仅1种可用，输入1/36；5号位主词条仅1种可用，输入1/60</small>
+                <div class="mb-3">
+                    <label class="block text-sm font-medium text-gray-300 mb-1" for="advanced-goal">当前驱动盘分数（有效词条数量 × 对应权重之和）</label>
+                    <input type="text" class="custom-input" id="advanced-goal" placeholder="例如：12.5 或 25/2">
                 </div>
-                <button class="btn" onclick="calculateAdvanced()">开始计算</button>
+                <div class="mb-3">
+                    <label class="block text-sm font-medium text-gray-300 mb-1" for="advanced-scale">缩放系数</label>
+                    <input type="text" class="custom-input" id="advanced-scale" placeholder="例：1号位随机抽取输入 1/6；5号位输入 1/60">
+                    <small class="text-gray-400">示例1：随机抽1次得目标位置驱动盘概率1/6，输入1/6<br>示例2：4/6号位主词条仅1种可用，输入1/36；5号位主词条仅1种可用，输入1/60</small>
+                </div>
+                <button class="btn-gold" onclick="calculateAdvanced()">开始计算</button>
             </div>
             <div id="adv-game-panel">
-                <div class="character-select">
-                    <label>选择角色自动填充权重（可手动修改下方数值）</label>
-                    <div class="faction-tabs" id="game-faction-tabs"></div>
+                <div class="character-select bg-[#171717] border border-[#262626] rounded-xl p-4 mb-4">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">选择角色自动填充权重（可手动修改下方数值）</label>
+                    <div class="faction-tabs flex gap-2 mb-3 flex-wrap" id="game-faction-tabs"></div>
                     <div class="character-grid" id="game-character-grid"></div>
-                    <div class="special-option" id="game-alice-c6-option" style="display:none;">
+                    <div class="special-option flex items-center gap-2 mt-3 p-2 rounded" id="game-alice-c6-option" style="display:none;">
                         <input type="checkbox" id="game-alice-c6" onchange="updateGameWeights()"> <label for="game-alice-c6">爱丽丝6命（额外增加爆伤权重0.3）</label>
                     </div>
-                    <div class="special-option" id="game-vivian-c4-option" style="display:none;">
+                    <div class="special-option flex items-center gap-2 mt-3 p-2 rounded" id="game-vivian-c4-option" style="display:none;">
                         <input type="checkbox" id="game-vivian-c4" onchange="updateGameWeights()"> <label for="game-vivian-c4">薇薇安4命（暴击伤害权重改为0.6）</label>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>驱动盘号位（可多选）</label>
-                    <div class="position-select" id="game-position-checkboxes">
-                        <label class="position-option"><input type="checkbox" value="1" onchange="onPositionChange()"> 1号位</label>
-                        <label class="position-option"><input type="checkbox" value="2" onchange="onPositionChange()"> 2号位</label>
-                        <label class="position-option"><input type="checkbox" value="3" onchange="onPositionChange()"> 3号位</label>
-                        <label class="position-option"><input type="checkbox" value="4" onchange="onPositionChange()"> 4号位</label>
-                        <label class="position-option"><input type="checkbox" value="5" onchange="onPositionChange()"> 5号位</label>
-                        <label class="position-option"><input type="checkbox" value="6" onchange="onPositionChange()"> 6号位</label>
+                <div class="mb-3">
+                    <label class="block text-sm font-medium text-gray-300 mb-1">驱动盘号位（可多选）</label>
+                    <div class="position-select flex gap-3 mb-3 flex-wrap" id="game-position-checkboxes">
+                        <label class="position-option flex items-center"><input type="checkbox" value="1" onchange="onPositionChange()"> 1号位</label>
+                        <label class="position-option flex items-center"><input type="checkbox" value="2" onchange="onPositionChange()"> 2号位</label>
+                        <label class="position-option flex items-center"><input type="checkbox" value="3" onchange="onPositionChange()"> 3号位</label>
+                        <label class="position-option flex items-center"><input type="checkbox" value="4" onchange="onPositionChange()"> 4号位</label>
+                        <label class="position-option flex items-center"><input type="checkbox" value="5" onchange="onPositionChange()"> 5号位</label>
+                        <label class="position-option flex items-center"><input type="checkbox" value="6" onchange="onPositionChange()"> 6号位</label>
                     </div>
                 </div>
                 <div id="position-configs"></div>
-                <div class="entries-list" id="game-entries"></div>
-                <button class="btn" onclick="calculateGame()">开始计算</button>
+                <div class="entries-list bg-[#171717] border border-[#262626] rounded-lg p-3 mb-4">
+                    <div id="game-entries"></div>
+                </div>
+                <button class="btn-gold" onclick="calculateGame()">开始计算</button>
             </div>
         </div>
-        <div class="result-area" id="result-area">
-            <h3>计算结果（小数点后15位有效数字）</h3>
+        <div class="result-area bg-[#171717] border border-[#2a2a2a] rounded-xl p-5 mt-4" id="result-area">
+            <h3 class="text-lg font-medium text-gray-100 mb-3">计算结果（小数点后15位有效数字）</h3>
             <div id="per-position-results"></div>
-            <div class="result-item" id="res-a">A盘(5次强化)平均提升率：--</div>
-            <div class="result-item" id="res-b">B盘(4次强化)平均提升率：--</div>
-            <div class="result-item" id="res-directed">定向抽取综合提升率：--</div>
-            <div class="result-item" id="res-random">随机抽取综合提升率：--</div>
+            <div class="result-item mb-2" id="res-a">A盘(5次强化)平均提升率：--</div>
+            <div class="result-item mb-2" id="res-b">B盘(4次强化)平均提升率：--</div>
+            <div class="result-item mb-2" id="res-directed">定向抽取综合提升率：--</div>
+            <div class="result-item mb-2" id="res-random">随机抽取综合提升率：--</div>
         </div>
     </div>
-    <script>
-        const Achance = 0.2011577424023155;
-        const Bchance = 0.798842257597684516;
-        const Atimes = 5;
-        const Btimes = 4;
-        const ENTRY_NAMES = ["大生命", "小生命", "大攻击", "小攻击", "穿透值", "大防御", "小防御", "暴击伤害", "暴击率", "异常精通"];
-        const MAIN_ENTRY_CONFIG = {
-            4: ["攻击力百分比", "生命值百分比", "防御力百分比", "暴击率", "暴击伤害", "异常精通"],
-            5: ["攻击力百分比", "生命值百分比", "防御力百分比", "穿透率", "物理伤害加成", "火属性伤害加成", "冰属性伤害加成", "电属性伤害加成", "以太伤害加成", "风属性伤害加成"],
-            6: ["攻击力百分比", "生命值百分比", "防御力百分比", "异常掌控", "冲击力", "能量自动回复"]
-        };
-        const MAIN_ATTR_TO_SUB = {
-            "攻击力百分比": 2,
-            "生命值百分比": 0,
-            "防御力百分比": 5,
-            "暴击率": 8,
-            "暴击伤害": 7,
-            "异常精通": 9
-        };
-
-        const CHARACTER_DATA = [
-            { faction: "狡兔屋", roles: [
-                { name: "猫宫又奈", image: "屏幕截图 2026-07-10 194828.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0] },
-                { name: "安比·德玛拉", image: "屏幕截图 2026-07-10 194848.png", weights: [0,0,0.75,0.225,0.25,0,0,1,1,0] },
-                { name: "妮可·德玛拉", image: "屏幕截图 2026-07-10 194842.png", weights: [0,0,1,0.3,0.2,0,0,0,0,1] },
-                { name: "比利·奇德", image: "屏幕截图 2026-07-10 194834.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0] },
-                { name: "星徽·比利", image: "屏幕截图 2026-07-10 194819.png", weights: [0.75,0.225,0.45,0.135,0,0,0,1,1,0] }
-            ]},
-            { faction: "白祇重工", roles: [
-                { name: "珂蕾妲·贝洛伯格", image: "屏幕截图 2026-07-10 194754.png", weights: [0,0,0.75,0.225,0.25,0,0,1,1,0] },
-                { name: "格莉丝·霍华德", image: "屏幕截图 2026-07-10 194737.png", weights: [0,0,0.75,0.225,0.3,0,0,0,0,1] },
-                { name: "安东·伊万诺夫", image: "屏幕截图 2026-07-10 194746.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0] },
-                { name: "本·比格", image: "屏幕截图 2026-07-10 194742.png", weights: [0,0,0.75,0.225,0.3,0.75,0.225,1,1,0] }
-            ]},
-            { faction: "维多利亚家政", roles: [
-                { name: "艾莲·乔", image: "屏幕截图 2026-07-10 194711.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0] },
-                { name: "丽娜", image: "屏幕截图 2026-07-10 194715.png", weights: [0,0,0.75,0.225,0.25,0,0,0,0,1] },
-                { name: "冯·莱卡恩", image: "屏幕截图 2026-07-10 194724.png", weights: [0,0,0.75,0.225,0.25,0,0,1,1,0] },
-                { name: "可琳·威克斯", image: "屏幕截图 2026-07-10 194731.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0] }
-            ]},
-            { faction: "对空六课", roles: [
-                { name: "星见雅", image: "屏幕截图 2026-07-10 194323.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0.3] },
-                { name: "浅羽悠真", image: "屏幕截图 2026-07-10 194311.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0] },
-                { name: "苍角", image: "屏幕截图 2026-07-10 194334.png", weights: [0,0,1,0.3,0.25,0,0,0.75,0.75,1] },
-                { name: "月城柳", image: "屏幕截图 2026-07-10 194315.png", weights: [0,0,0.75,0.225,0.3,0,0,0,0,1] }
-            ]},
-            { faction: "治安局", roles: [
-                { name: "简·杜", image: "屏幕截图 2026-07-10 194526.png", weights: [0,0,0.75,0.225,0.3,0,0,0,0,1] },
-                { name: "青衣", image: "屏幕截图 2026-07-10 194549.png", weights: [0,0,0.75,0.225,0.25,0,0,1,1,0] },
-                { name: "朱鸢", image: "屏幕截图 2026-07-10 194558.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0] },
-                { name: "赛斯·洛威尔", image: "屏幕截图 2026-07-10 194543.png", weights: [0,0,1,0.3,0.25,0,0,0,0,0.75] },
-                { name: "希希芙", image: "屏幕截图 2026-07-10 195047.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0] }
-            ]},
-            { faction: "卡吕冬之子", roles: [
-                { name: "柏妮思·怀特", image: "屏幕截图 2026-07-10 194454.png", weights: [0,0,0.75,0.225,0.3,0,0,0,0,1] },
-                { name: "凯撒·金", image: "屏幕截图 2026-07-10 194507.png", weights: [0,0,0.75,0.225,0.25,0,0,1,1,0] },
-                { name: "露西", image: "屏幕截图 2026-07-10 194517.png", weights: [0,0,1,0.3,0.25,0,0,0.75,0.75,0] },
-                { name: "派派·韦尔", image: "屏幕截图 2026-07-10 194512.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0] },
-                { name: "波可娜", image: "屏幕截图 2026-07-10 194340.png", weights: [0,0,0.75,0.225,0.25,0,0,1,1,0] },
-                { name: "莱特", image: "屏幕截图 2026-07-10 194346.png", weights: [0,0,0.75,0.225,0.25,0,0,1,1,0] }
-            ]},
-            { faction: "天琴座", roles: [
-                { name: "伊芙琳·舒瓦利耶", image: "屏幕截图 2026-07-10 194300.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0] },
-                { name: "耀嘉音", image: "屏幕截图 2026-07-10 194305.png", weights: [0,0,1,0.3,0.25,0,0,0.75,0.75,0] }
-            ]},
-            { faction: "防卫军奥波勒斯小队", roles: [
-                { name: "11号", image: "屏幕截图 2026-07-10 194703.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0] },
-                { name: "扳机", image: "屏幕截图 2026-07-10 194617.png", weights: [0,0,0.75,0.225,0.25,0,0,0.75,1,0] },
-                { name: "席德", image: "屏幕截图 2026-07-10 194613.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0] },
-                { name: "奥菲丝&鬼火", image: "屏幕截图 2026-07-10 194608.png", weights: [0,0,1,0.3,0.6,0,0,1,1,0] }
-            ]},
-            { faction: "防卫军白银小队", roles: [
-                { name: "零号·安比", image: "屏幕截图 2026-07-10 194251.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0] }
-            ]},
-            { faction: "反舌鸟", roles: [
-                { name: "雨果·维拉德", image: "屏幕截图 2026-07-10 194227.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0] },
-                { name: "薇薇安·班希", image: "屏幕截图 2026-07-10 194244.png", weights: [0,0,0.75,0.225,0.3,0,0,0,0,1], special: "vivian" }
-            ]},
-            { faction: "坎卜斯黑枝", roles: [
-                { name: "照", image: "屏幕截图 2026-07-10 195122.png", weights: [1,0.3,0,0,0,0,0,0.5,0.5,0] },
-                { name: "普罗米娅", image: "屏幕截图 2026-07-10 195115.png", weights: [0,0,0.75,0.225,0.3,0,0,0,0,1] },
-                { name: "琉音", image: "屏幕截图 2026-07-10 195139.png", weights: [0,0,0.75,0.225,0.25,0,0,0.75,1,0] },
-                { name: "般岳", image: "屏幕截图 2026-07-10 195130.png", weights: [0.75,0.225,0.45,0.135,0,0,0,1,1,0] }
-            ]},
-            { faction: "妄想天使", roles: [
-                { name: "南宫羽", image: "屏幕截图 2026-07-10 195055.png", weights: [0,0,0.75,0.225,0.3,0,0,0,0,1] },
-                { name: "千夏", image: "屏幕截图 2026-07-10 195107.png", weights: [0,0,1,0.3,0,0,0,0.5,0.5,0] },
-                { name: "爱芮", image: "屏幕截图 2026-07-10 195101.png", weights: [0,0,0.75,0.225,0.3,0,0,0,0,1] }
-            ]},
-            { faction: "云岿山", roles: [
-                { name: "叶瞬光", image: "屏幕截图 2026-07-10 193955.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0] },
-                { name: "橘福福", image: "屏幕截图 2026-07-10 194214.png", weights: [0,0,1,0.3,0.25,0,0,0.75,1,0] },
-                { name: "仪玄", image: "屏幕截图 2026-07-10 194237.png", weights: [0.75,0.225,0.45,0.135,0,0,0,1,1,0] },
-                { name: "潘引壶", image: "屏幕截图 2026-07-10 194219.png", weights: [0,0,1,0.3,0.25,0,0,0.75,0.75,0] }
-            ]},
-            { faction: "怪啖屋", roles: [
-                { name: "爱丽丝·泰姆菲尔德", image: "屏幕截图 2026-07-10 193916.png", weights: [0,0,1,0.3,0.3,0,0,0,0,1], special: "alice" },
-                { name: "伊德海莉·墨菲", image: "屏幕截图 2026-07-10 193846.png", weights: [0.75,0.225,0.45,0.135,0,0,0,1,1,0] },
-                { name: "卢西娅", image: "屏幕截图 2026-07-10 193903.png", weights: [1,0.3,0,0,0,0,0,0.5,0.5,0] },
-                { name: "浮波柚叶", image: "屏幕截图 2026-07-10 193927.png", weights: [0,0,1,0.225,0.25,0,0,0,0,1] },
-                { name: "狛野真斗", image: "屏幕截图 2026-07-10 193857.png", weights: [0.75,0.225,0.45,0.135,0,0,0,1,1,0] }
-            ]},
-            { faction: "罗斯凯利法外务筹策局", roles: [
-                { name: "维琳娜·艾嘉德", image: "屏幕截图 2026-07-10 194910.png", weights: [0,0,0.75,0.225,0.3,0,0,0,0,1] },
-                { name: "诺姆·霍洛维尔", image: "屏幕截图 2026-07-10 194905.png", weights: [0,0,0.75,0.225,0.25,0,0,0.75,1,0] }
-            ]},
-            { faction: "法厄同", roles: [
-                { name: "佩洛伊斯", image: "屏幕截图 2026-07-10 194933.png", weights: [0,0,1,0.3,0.3,0,0,1,1,0] }
-            ]}
-        ];
-
-        let simpleSelectedChar = null;
-        let gameSelectedChar = null;
-
-        function parseNumber(str) {
-            str = str.trim();
-            if (str === '') return 0;
-            if (str.includes('/')) { const p = str.split('/'); if (p.length !== 2) return NaN; return parseFloat(p[0]) / parseFloat(p[1]); }
-            return parseFloat(str);
-        }
-
-        function firstGroup(savePool, shortGroup, basicSc, presentWeight, allGroups) {
-            if (shortGroup.length === 4) { allGroups.push({ firstFour: [...shortGroup], basicsc: basicSc, weight: presentWeight }); return; }
-            for (let i = 0; i < savePool.length; i++) {
-                if (savePool[i].rest <= 0) continue;
-                const nP = savePool.map(item => ({ ...item }));
-                nP[i].rest--;
-                shortGroup.push({ ...savePool[i] });
-                firstGroup(nP, shortGroup, basicSc + savePool[i].score, presentWeight * savePool[i].rest, allGroups);
-                shortGroup.pop();
-            }
-        }
-
-        function dfsUp(leaveTimes, nowAdd, need, nowGroup, counter) {
-            if (leaveTimes <= 0) { counter.total++; if (nowAdd > need) counter.pass++; return; }
-            for (let i = 0; i < nowGroup.length; i++) dfsUp(leaveTimes - 1, nowAdd + nowGroup[i].score, need, nowGroup, counter);
-        }
-
-        function passChance(times, need, nowGroup) { const c = { total: 0, pass: 0 }; dfsUp(times, 0, need, nowGroup, c); return c.total === 0 ? 0 : c.pass / c.total; }
-
-        function calculateCore(entryList, goal, scaleFactor) {
-            const allGroups = [];
-            firstGroup(entryList, [], 0, 1, allGroups);
-            let gA = 0, gB = 0, tW = 0;
-            for (const gr of allGroups) {
-                let sA, sB;
-                if (gr.basicsc > goal) { sA = 1; sB = 1; }
-                else { const nd = goal - gr.basicsc; sA = passChance(Atimes, nd, gr.firstFour); sB = passChance(Btimes, nd, gr.firstFour); }
-                gA += sA * gr.weight; gB += sB * gr.weight; tW += gr.weight;
-            }
-            const mA = gA / tW, mB = gB / tW, ch = Achance * mA + Bchance * mB;
-            return { mchanceA: mA, mchanceB: mB, chance: ch, scaledChance: ch * scaleFactor };
-        }
-
-        document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => {
-            document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            b.classList.add('active');
-            document.getElementById(`${b.dataset.mode}-panel`).classList.add('active');
-            document.getElementById('result-area').style.display = 'none';
-        }));
-        document.querySelectorAll('.sub-mode-btn').forEach(b => b.addEventListener('click', () => {
-            document.querySelectorAll('.sub-mode-btn').forEach(x => x.classList.remove('active'));
-            b.classList.add('active');
-            document.getElementById('adv-game-panel').style.display = b.dataset.submode === 'game' ? 'block' : 'none';
-            document.getElementById('adv-custom-panel').style.display = b.dataset.submode === 'custom' ? 'block' : 'none';
-            document.getElementById('result-area').style.display = 'none';
-        }));
-
-        function renderFactionTabs(cId, t) {
-            const ct = document.getElementById(cId); ct.innerHTML = '';
-            CHARACTER_DATA.forEach((f, i) => {
-                const tb = document.createElement('div'); tb.className = `faction-tab ${i===0?'active':''}`; tb.textContent = f.faction;
-                tb.onclick = () => { ct.querySelectorAll('.faction-tab').forEach(x => x.classList.remove('active')); tb.classList.add('active'); renderCharacterGrid(t, i); };
-                ct.appendChild(tb);
-            });
-        }
-
-        function renderCharacterGrid(t, fi = 0) {
-            const gId = t === 'simple' ? 'simple-character-grid' : 'game-character-grid';
-            const g = document.getElementById(gId); g.innerHTML = '';
-            CHARACTER_DATA[fi].roles.forEach(ch => {
-                const cd = document.createElement('div'); cd.className = 'character-card';
-                cd.innerHTML = `<img src="./${ch.image}" alt="${ch.name}" class="character-avatar" onerror="this.style.display='none'"><div class="character-name">${ch.name}</div>`;
-                cd.onclick = () => {
-                    g.querySelectorAll('.character-card').forEach(c => c.classList.remove('active')); cd.classList.add('active');
-                    if (t === 'simple') {
-                        simpleSelectedChar = ch;
-                        document.getElementById('simple-alice-c6-option').style.display = ch.special === 'alice' ? 'flex' : 'none';
-                        document.getElementById('simple-vivian-c4-option').style.display = ch.special === 'vivian' ? 'flex' : 'none';
-                        updateSimpleWeights(); buildSimpleEnhance();
-                    } else {
-                        gameSelectedChar = ch;
-                        document.getElementById('game-alice-c6-option').style.display = ch.special === 'alice' ? 'flex' : 'none';
-                        document.getElementById('game-vivian-c4-option').style.display = ch.special === 'vivian' ? 'flex' : 'none';
-                        updateGameWeights(); onPositionChange();
-                    }
-                };
-                g.appendChild(cd);
-            });
-        }
-
-        function getSimpleWeights() {
-            const w = simpleSelectedChar ? [...simpleSelectedChar.weights] : new Array(10).fill(0);
-            if (simpleSelectedChar?.special === 'alice' && document.getElementById('simple-alice-c6').checked) w[7] += 0.3;
-            if (simpleSelectedChar?.special === 'vivian' && document.getElementById('simple-vivian-c4').checked) w[7] = 0.6;
-            return w;
-        }
-
-        function updateSimpleWeights() {
-            if (!simpleSelectedChar) return;
-            const w = getSimpleWeights();
-            document.querySelectorAll('.simple-weight').forEach((inp, i) => {
-                if (inp) { inp.value = w[i] === 0 ? '' : w[i]; }
-            });
-            buildSimpleEnhance();
-        }
-
-        function buildSimpleEnhance() {
-            const area = document.getElementById('simple-enhance-area');
-            const weightInputs = document.querySelectorAll('.simple-weight');
-            area.innerHTML = '';
-            for (let i = 0; i < weightInputs.length; i++) {
-                const w = parseNumber(weightInputs[i].value);
-                if (isNaN(w) || w <= 0) continue;
-                const div = document.createElement('div'); div.className = 'enhance-row';
-                div.innerHTML = `<label><input type="checkbox" class="simple-enhance-check" data-idx="${i}" onchange="calcSimpleAutoScore()"> ${ENTRY_NAMES[i]}</label> 权重:<span>${w}</span> 强化次数:<input type="number" class="simple-enhance-times" data-idx="${i}" min="0" max="5" value="0" style="width:60px;" onchange="calcSimpleAutoScore()">`;
-                area.appendChild(div);
-            }
-            calcSimpleAutoScore();
-        }
-
-        function calcSimpleAutoScore() {
-            const checks = document.querySelectorAll('.simple-enhance-check:checked');
-            const weightInputs = document.querySelectorAll('.simple-weight');
-            let score = 0;
-            checks.forEach(cb => {
-                const idx = parseInt(cb.dataset.idx);
-                const w = parseNumber(weightInputs[idx]?.value);
-                if (isNaN(w)) return;
-                const times = parseInt(document.querySelector(`.simple-enhance-times[data-idx="${idx}"]`)?.value || 0);
-                score += (times + 1) * w;
-            });
-            document.getElementById('simple-auto-score').textContent = score.toFixed(4);
-            document.getElementById('simple-goal').value = score.toFixed(4);
-        }
-
-        function getCurrentPositions() {
-            return Array.from(document.querySelectorAll('#game-position-checkboxes input:checked')).map(cb => parseInt(cb.value));
-        }
-
-        function getSelectedMainForPos(pos) {
-            const container = document.getElementById(`main-${pos}`);
-            if (!container) return [];
-            return Array.from(container.querySelectorAll('input:checked')).map(c => c.value);
-        }
-
-        function getBlockedSubIdxForPos(pos) {
-            if (pos <= 3) return -1;
-            const selected = getSelectedMainForPos(pos);
-            if (selected.length === 1 && MAIN_ATTR_TO_SUB[selected[0]] !== undefined) return MAIN_ATTR_TO_SUB[selected[0]];
-            return -1;
-        }
-
-        function onPositionChange() {
-            const positions = getCurrentPositions();
-            const configsDiv = document.getElementById('position-configs'); configsDiv.innerHTML = '';
-            positions.forEach(pos => {
-                const div = document.createElement('div'); div.className = 'pos-config';
-                div.innerHTML = `<h4>${pos}号位配置</h4>`;
-                if (pos >= 4) div.innerHTML += `<label>主词条选择：</label><div class="main-entry-grid" id="main-${pos}"></div>`;
-                div.innerHTML += `<label>当前驱动盘强化次数：</label><div id="enhance-${pos}"></div>`;
-                div.innerHTML += `<div>当前驱动盘分数：<span id="score-${pos}">0</span></div>`;
-                div.innerHTML += `<label>缩放系数：<input type="text" id="scale-${pos}" readonly></label><small style="color:#888;">示例：随机抽得该位置概率1/6；4/6号位主词条仅1种可用输入1/36</small>`;
-                configsDiv.appendChild(div);
-            });
-            positions.forEach(pos => { if (pos >= 4) renderMainEntriesForPos(pos); updatePosScale(pos); });
-            updateGameWeights();
-            positions.forEach(pos => buildPosEnhance(pos));
-        }
-
-        function renderMainEntriesForPos(pos) {
-            const ct = document.getElementById(`main-${pos}`); if (!ct) return;
-            ct.innerHTML = '';
-            (MAIN_ENTRY_CONFIG[pos] || []).forEach(n => {
-                const it = document.createElement('label'); it.className = 'main-entry-item';
-                it.innerHTML = `<input type="checkbox" value="${n}" onchange="onMainEntryChange(${pos})"> ${n}`;
-                ct.appendChild(it);
-            });
-        }
-
-        function onMainEntryChange(pos) { updatePosScale(pos); buildPosEnhance(pos); }
-
-        function buildPosEnhance(pos) {
-            const area = document.getElementById(`enhance-${pos}`); if (!area) return;
-            const weightInputs = document.querySelectorAll('.game-weight');
-            const blockedIdx = getBlockedSubIdxForPos(pos);
-            area.innerHTML = '';
-            for (let i = 0; i < weightInputs.length; i++) {
-                if (i === blockedIdx) continue;
-                const w = parseNumber(weightInputs[i].value);
-                if (isNaN(w) || w <= 0) continue;
-                const div = document.createElement('div'); div.className = 'enhance-row';
-                div.innerHTML = `<label><input type="checkbox" class="enhance-check-${pos}" data-idx="${i}" onchange="calcPosScore(${pos})"> ${ENTRY_NAMES[i]}</label> 权重:<span>${w}</span> 强化次数:<input type="number" class="enhance-times-${pos}" data-idx="${i}" min="0" max="5" value="0" style="width:60px;" onchange="calcPosScore(${pos})">`;
-                area.appendChild(div);
-            }
-            calcPosScore(pos);
-        }
-
-        function calcPosScore(pos) {
-            const checks = document.querySelectorAll(`.enhance-check-${pos}:checked`);
-            const weightInputs = document.querySelectorAll('.game-weight');
-            let score = 0;
-            checks.forEach(cb => {
-                const idx = parseInt(cb.dataset.idx);
-                const w = parseNumber(weightInputs[idx]?.value);
-                if (isNaN(w)) return;
-                const times = parseInt(document.querySelector(`.enhance-times-${pos}[data-idx="${idx}"]`)?.value || 0);
-                score += (times + 1) * w;
-            });
-            const span = document.getElementById(`score-${pos}`); if (span) span.textContent = score.toFixed(4);
-        }
-
-        function getPosGoal(pos) { const span = document.getElementById(`score-${pos}`); return span ? parseFloat(span.textContent) : 0; }
-
-        function updatePosScale(pos) {
-            const input = document.getElementById(`scale-${pos}`); if (!input) return;
-            let sc;
-            if (pos <= 3) sc = 1/6;
-            else {
-                const selectedCount = getSelectedMainForPos(pos).length;
-                const cnt = selectedCount > 0 ? selectedCount : MAIN_ENTRY_CONFIG[pos].length;
-                const tot = MAIN_ENTRY_CONFIG[pos].length;
-                sc = cnt / (6 * tot);
-            }
-            input.value = sc.toFixed(15);
-        }
-
-        function updateGameWeights() {
-            const wi = document.querySelectorAll('.game-weight');
-            const ri = document.querySelectorAll('.game-rest');
-            let baseWeights = gameSelectedChar ? [...gameSelectedChar.weights] : new Array(10).fill(0);
-            if (gameSelectedChar?.special === 'alice' && document.getElementById('game-alice-c6').checked) baseWeights[7] += 0.3;
-            if (gameSelectedChar?.special === 'vivian' && document.getElementById('game-vivian-c4').checked) baseWeights[7] = 0.6;
-            for (let i = 0; i < 10; i++) {
-                if (wi[i]) { wi[i].value = baseWeights[i] === 0 ? '' : baseWeights[i]; wi[i].disabled = false; }
-                if (ri[i]) { if (ri[i].disabled) { ri[i].disabled = false; ri[i].value = 1; } }
-            }
-            getCurrentPositions().forEach(pos => updatePosScale(pos));
-        }
-
-        function collectEntryListForSingleMain(pos, mainName) {
-            const rests = document.querySelectorAll('.game-rest');
-            const weights = document.querySelectorAll('.game-weight');
-            const list = [];
-            const blockedIdx = (pos >= 4 && mainName && MAIN_ATTR_TO_SUB[mainName] !== undefined) ? MAIN_ATTR_TO_SUB[mainName] : -1;
-            for (let i = 0; i < 10; i++) {
-                let r = parseInt(rests[i].value) || 0;
-                const w = parseNumber(weights[i].value) || 0;
-                if (i === blockedIdx) r = 0;
-                for (let j = 0; j < r; j++) list.push({ rest: 1, score: w });
-            }
-            return list;
-        }
-
-        function calculateGame() {
-            const positions = getCurrentPositions();
-            if (positions.length === 0) { alert('请至少选择一个号位'); return; }
-            let totalRandom = 0, totalDirected = 0;
-            const perPosResults = [];
-            let sumA = 0, sumB = 0, countResults = 0;
-
-            positions.forEach(pos => {
-                const goal = getPosGoal(pos);
-                let mainList = [];
-                if (pos <= 3) mainList = [null];
-                else {
-                    const selected = getSelectedMainForPos(pos);
-                    mainList = selected.length > 0 ? selected : [...MAIN_ENTRY_CONFIG[pos]];
-                }
-                const tot = pos >= 4 ? MAIN_ENTRY_CONFIG[pos].length : 1;
-                let posRandom = 0, posDirected = 0;
-                mainList.forEach(main => {
-                    const entryList = collectEntryListForSingleMain(pos, main);
-                    if (entryList.length < 4) {
-                        alert(`${pos}号位（主词条：${main || '无'}）词条库存不足4`);
-                        return;
-                    }
-                    const scaleFactor = pos <= 3 ? (1/6) : (1 / (6 * tot));
-                    const result = calculateCore(entryList, goal, scaleFactor);
-                    const directedContrib = pos >= 4 ? result.chance / 6 : result.chance;
-                    posRandom += result.scaledChance;
-                    posDirected += directedContrib;
-                    sumA += result.mchanceA;
-                    sumB += result.mchanceB;
-                    countResults++;
-                });
-                perPosResults.push({ pos, random: posRandom, directed: posDirected });
-                totalRandom += posRandom;
-                totalDirected += posDirected;
-            });
-
-            const avgA = countResults > 0 ? sumA / countResults : null;
-            const avgB = countResults > 0 ? sumB / countResults : null;
-
-            document.getElementById('per-position-results').innerHTML = perPosResults.map(r =>
-                `<div>${r.pos}号位：随机 ${(r.random*100).toFixed(4)}% 定向 ${(r.directed*100).toFixed(4)}%</div>`
-            ).join('');
-            document.getElementById('res-a').textContent = `A盘(5次强化)平均提升率：${avgA !== null ? (avgA*100).toFixed(15) : '--'}%`;
-            document.getElementById('res-b').textContent = `B盘(4次强化)平均提升率：${avgB !== null ? (avgB*100).toFixed(15) : '--'}%`;
-            document.getElementById('res-directed').textContent = positions.length > 1 ? '定向抽取综合提升率：--' : `定向抽取综合提升率：${(totalDirected*100).toFixed(15)}%`;
-            document.getElementById('res-random').textContent = `随机抽取综合提升率：${(totalRandom*100).toFixed(15)}%`;
-            document.getElementById('result-area').style.display = 'block';
-        }
-
-        function calculateSimple() {
-            const wg = document.querySelectorAll('.simple-weight'); const el = [];
-            for (let i = 0; i < wg.length; i++) {
-                const sc = parseNumber(wg[i].value); if (isNaN(sc)) { alert(`词条${i+1}的权重格式不正确`); return; }
-                el.push({ rest: 1, score: sc });
-            }
-            const g = parseNumber(document.getElementById('simple-goal').value);
-            if (isNaN(g)) { alert('当前驱动盘分数格式不正确'); return; }
-            showResult(calculateCore(el, g, 1/6), 'simple');
-        }
-
-        function calculateAdvanced() {
-            const ns = document.querySelectorAll('.adv-name'), rs = document.querySelectorAll('.adv-rest'), ss = document.querySelectorAll('.adv-score');
-            if (ns.length === 0) { alert('请先生成词条输入'); return; }
-            const el = []; let tr = 0;
-            for (let i = 0; i < ns.length; i++) {
-                const r = parseInt(rs[i].value), s = parseNumber(ss[i].value);
-                if (isNaN(r) || r < 1) { alert(`词条${i+1}库存必须是正整数`); return; }
-                if (isNaN(s)) { alert(`词条${i+1}权重格式不正确`); return; }
-                el.push({ rest: r, score: s }); tr += r;
-            }
-            if (tr < 4) { alert('总词条库存不足4'); return; }
-            const g = parseNumber(document.getElementById('advanced-goal').value);
-            const sc = parseNumber(document.getElementById('advanced-scale').value);
-            if (isNaN(g)) { alert('目标分数格式不正确'); return; }
-            if (isNaN(sc)) { alert('缩放系数格式不正确'); return; }
-            showResult(calculateCore(el, g, sc), 'advanced');
-        }
-
-        function showResult(r, mode) {
-            document.getElementById('res-a').textContent = `A盘(5次强化)平均提升率：${(r.mchanceA*100).toFixed(15)}%`;
-            document.getElementById('res-b').textContent = `B盘(4次强化)平均提升率：${(r.mchanceB*100).toFixed(15)}%`;
-            document.getElementById('res-directed').textContent = mode === 'simple' ? `定向抽取综合提升率：${(r.chance*100).toFixed(15)}%` : `综合提升率：${(r.chance*100).toFixed(15)}%`;
-            document.getElementById('res-random').textContent = mode === 'simple' ? `随机抽取综合提升率：${(r.scaledChance*100).toFixed(15)}%` : `乘以缩放系数后提升率：${(r.scaledChance*100).toFixed(15)}%`;
-            document.getElementById('result-area').style.display = 'block';
-        }
-
-        function initSimpleEntries() {
-            const ct = document.getElementById('simple-entries'); ct.innerHTML = '';
-            for (let i = 0; i < 10; i++) {
-                const d = document.createElement('div'); d.className = 'form-group';
-                d.innerHTML = `<label>${ENTRY_NAMES[i]}权重</label><input type="text" class="simple-weight" placeholder="留空则为无效词条（权重0）">`;
-                ct.appendChild(d);
-            }
-            document.querySelectorAll('.simple-weight').forEach(inp => inp.addEventListener('input', () => buildSimpleEnhance()));
-            renderFactionTabs('simple-faction-tabs', 'simple'); renderCharacterGrid('simple', 0); buildSimpleEnhance();
-        }
-
-        function initGameEntries() {
-            const ct = document.getElementById('game-entries'); ct.innerHTML = '';
-            ENTRY_NAMES.forEach(n => {
-                const d = document.createElement('div'); d.className = 'entry-grid';
-                d.innerHTML = `<div class="entry-item"><label>词条名称</label><input type="text" value="${n}" disabled></div><div class="entry-item"><label>库存</label><input type="number" class="game-rest" min="0" value="1"></div><div class="entry-item"><label>权重</label><input type="text" class="game-weight" placeholder="整数/小数/分数"></div>`;
-                ct.appendChild(d);
-            });
-            document.querySelectorAll('.game-weight').forEach(inp => inp.addEventListener('input', () => { getCurrentPositions().forEach(pos => buildPosEnhance(pos)); }));
-        }
-
-        function generateAdvancedEntries() {
-            const cnt = parseInt(document.getElementById('entry-count').value) || 10;
-            const ct = document.getElementById('advanced-entries'); ct.innerHTML = '';
-            for (let i = 0; i < cnt; i++) {
-                const d = document.createElement('div'); d.className = 'entry-grid';
-                d.innerHTML = `<div class="entry-item"><label>词条${i+1}名称</label><input type="text" class="adv-name" value="词条${i+1}"></div><div class="entry-item"><label>库存</label><input type="number" class="adv-rest" min="1" value="1"></div><div class="entry-item"><label>权重</label><input type="text" class="adv-score" placeholder="整数/小数/分数"></div>`;
-                ct.appendChild(d);
-            }
-        }
-
-        window.onload = () => {
-            initSimpleEntries();
-            generateAdvancedEntries();
-            renderFactionTabs('game-faction-tabs', 'game');
-            renderCharacterGrid('game', 0);
-            initGameEntries();
-            onPositionChange();
-        };
-    </script>
+    <script type="module" src="/src/main.js"></script>
 </body>
 </html>

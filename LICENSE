@@ -1,0 +1,16 @@
+Creative Commons Attribution-NonCommercial 4.0 International Public License
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial 4.0 International Public License ("Public License"). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions
+Section 1 – Definitions
+- Licensed Material: The artistic or literary work, database, or other material to which the Licensor applied this Public License
+- Licensed Rights: Rights granted to You subject to the terms and conditions of this Public License, limited to all copyright and similar rights that apply to Your use of the Licensed Material
+Section 2 – Scope
+- You may share and adapt the Licensed Material for non-commercial purposes only
+- Attribution is required: You must give appropriate credit, provide a link to the license, and indicate if changes were made
+Section 3 – License Conditions
+- NonCommercial: You may not use the Licensed Material for commercial purposes
+- Attribution: You must retain the following:
+ - Identification of the creator(s) and any others designated to receive attribution
+ - A copyright notice and a link to this license
+Section 4 – Disclaimer of Warranties and Limitation of Liability
+- The Licensed Material is provided "as-is" without warranties of any kind
+For the full license text, visit: https://creativecommons.org/licenses/by-nc/4.0/legalcode

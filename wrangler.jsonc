@@ -1,0 +1,16 @@
+{
+  "name": "zzz-ddc",
+  "compatibility_date": "2026-07-12",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "dist"
+  },
+  "build": {
+    "command": "pnpm run build"
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}

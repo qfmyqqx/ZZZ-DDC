@@ -1,0 +1,14 @@
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
+
+# dependencies
+node_modules
+
+# build output
+dist
+
+pnpm-workspace.yaml
