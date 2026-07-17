@@ -54,7 +54,7 @@
                 <label class="block text-sm font-medium text-gray-300 mb-1">词条总种类数量（包括有效与无效词条）</label>
                 <div class="flex items-start entry-count-row">
                     <div class="stepper" id="entry-count-stepper">
-                        <input type="number" class="stepper-input" id="entry-count" min="1" value="10" onchange="generateAdvancedEntries()">
+                        <input type="number" class="stepper-input" id="entry-count" min="1" value="10" onchange="generateAdvancedEntries()" style="height:42px;">
                         <button type="button" class="stepper-btn" onclick="stepperChange(this,-1)">-</button>
                         <button type="button" class="stepper-btn" onclick="stepperChange(this,1)">+</button>
                     </div>
@@ -89,7 +89,7 @@
             <div class="result-item mb-2" id="res-b">初始三词条驱动盘强化后练度提升概率：--</div>
             <div class="result-item mb-2" id="res-random">随机抽取综合练度提升概率：--</div>
         </div>
-        <footer class="mt-8 sm:mt-10 border-t border-[#2a2a2a] py-4 sm:py-6 px-3 sm:px-4 text-center text-gray-400 text-sm">
+        <footer class="mt-8 sm:mt-10 border-t border-[#2a2a2a] pt-3 sm:pt-4 pb-0.5 sm:pb-1 px-3 sm:px-4 text-center text-gray-400 text-sm">
             <p class="mb-3 flex items-center justify-center gap-1.5 sm:gap-2">
                 <span class="inline-block w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#FF4500]/70"></span>
                 &copy; 2026 qfmyqqx
