@@ -617,6 +617,14 @@ input[type="radio"] {
     }
 }
 
+/* Medium-Small: 640px ~ 849px — gold-title 提前换行保持完整性 */
+@media (max-width: 849px) {
+    .gold-title {
+        display: block;
+        margin-left: 0;
+    }
+}
+
 /* Small: 640px ~ 768px */
 @media (max-width: 640px) {
     body {
@@ -626,9 +634,6 @@ input[type="radio"] {
         border-radius: 10px;
         border-left: none;
         border-right: none;
-    }
-    h1 {
-        font-size: 1.25rem;
     }
     .gold-title {
         font-size: 1.6rem;
@@ -642,10 +647,12 @@ input[type="radio"] {
     .tab-btn {
         font-size: 0.8rem;
         padding: 8px 12px;
-        flex: 1;
         text-align: center;
+        white-space: nowrap;
     }
     .mode-tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 6px;
     }
     .sub-mode-btn {
@@ -653,6 +660,7 @@ input[type="radio"] {
         padding: 7px 12px;
         flex: 1;
         text-align: center;
+        white-space: nowrap;
     }
     .sub-mode-tabs {
         gap: 6px;
@@ -707,6 +715,7 @@ input[type="radio"] {
     .btn-gold {
         width: 100%;
         text-align: center;
+        padding: 10px 26px;
     }
     .entry-count-row {
         flex-wrap: wrap;
@@ -726,6 +735,14 @@ input[type="radio"] {
     }
 }
 
+/* Medium: 480px ~ 540px — 按钮紧凑适配 */
+@media (max-width: 540px) {
+    .btn-gold {
+        font-size: 0.95rem;
+        padding: 9px 22px;
+    }
+}
+
 /* Extra Small: < 480px */
 @media (max-width: 480px) {
     body {
@@ -735,11 +752,8 @@ input[type="radio"] {
         padding: 12px 10px !important;
         border-radius: 8px;
     }
-    h1 {
-        font-size: 1.1rem;
-    }
     .gold-title {
-        font-size: 1.35rem;
+        font-size: 1.5rem;
         letter-spacing: 2px;
     }
     .subtitle {
@@ -750,10 +764,14 @@ input[type="radio"] {
         font-size: 0.75rem;
         padding: 6px 8px;
         border-radius: 6px;
+        white-space: nowrap;
     }
     .sub-mode-btn {
         font-size: 0.78rem;
         padding: 6px 10px;
+        flex: 1;
+        text-align: center;
+        white-space: nowrap;
     }
     .faction-tab {
         font-size: 0.75rem;
@@ -873,5 +891,37 @@ input[type="radio"] {
     }
     .note p {
         margin-bottom: 2px;
+    }
+}
+
+/* Tiny: < 404px — 极小屏页脚紧凑适配 */
+@media (max-width: 404px) {
+    footer {
+        padding: 10px 6px !important;
+    }
+    footer p:first-child {
+        font-size: 0.72rem;
+        flex-wrap: wrap;
+        gap: 1px !important;
+    }
+    footer p:first-child span:not([class*="bg-"]),
+    footer p:first-child a {
+        font-size: inherit;
+    }
+    /* 隐藏版权行的装饰性金色圆点 */
+    footer p:first-child .rounded-full {
+        display: none !important;
+    }
+    footer > div {
+        gap: 6px !important;
+    }
+    footer [class*="rounded-full"] {
+        padding: 5px 10px !important;
+    }
+    footer .text-xs {
+        font-size: 0.68rem !important;
+    }
+    footer .text-base {
+        font-size: 0.8rem !important;
     }
 }
