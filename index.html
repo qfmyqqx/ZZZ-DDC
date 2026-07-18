@@ -247,7 +247,6 @@
 
     function passChance(times, need, nowGroup) { const c = { total: 0, pass: 0 }; dfsUp(times, 0, need, nowGroup, c); return c.total === 0 ? 0 : c.pass / c.total; }
 
-    // 自定义版组合枚举（等概率）
     function firstGroup(savePool, shortGroup, basicSc, presentWeight, allGroups, requiredTypes = []) {
         if (shortGroup.length === 4) {
             if (requiredTypes.length > 0) {
@@ -283,28 +282,21 @@
         return { mchanceA: mA, mchanceB: mB, chance: ch, scaledChance: ch * scaleFactor };
     }
 
-    // 游戏版加权组合枚举（基于特殊权重）
     function calculateCoreGame(types, goal, scaleFactor, directedTypes = []) {
         const k = 4;
         const n = types.length;
         let totalW = 0, totalA = 0, totalB = 0;
         const factorial = [1,1,2,6,24];
         const currentCounts = new Array(n).fill(0);
-
         function dfs(idx, remaining, currentSc, currentWeight) {
             if (idx === n) {
                 if (remaining === 0) {
                     const includedTypes = new Set();
-                    for (let i = 0; i < n; i++) {
-                        if (currentCounts[i] > 0) includedTypes.add(types[i].typeIndex);
-                    }
+                    for (let i = 0; i < n; i++) { if (currentCounts[i] > 0) includedTypes.add(types[i].typeIndex); }
                     if (!directedTypes.every(t => includedTypes.has(t))) return;
-
                     const firstFour = [];
                     for (let i = 0; i < n; i++) {
-                        for (let j = 0; j < currentCounts[i]; j++) {
-                            firstFour.push({ score: types[i].score });
-                        }
+                        for (let j = 0; j < currentCounts[i]; j++) firstFour.push({ score: types[i].score });
                     }
                     const base = currentSc;
                     const pA = base > goal ? 1 : passChance(Atimes, goal - base, firstFour);
@@ -533,12 +525,7 @@
             let r = parseInt(rests[i].value) || 0;
             const w = parseNumber(weights[i].value) || 0;
             if (i === blockedIdx) r = 0;
-            types.push({
-                typeIndex: i,
-                score: w,
-                rest: r,
-                specialWeight: SUBSTAT_SPECIAL_WEIGHTS[i]
-            });
+            types.push({ typeIndex: i, score: w, rest: r, specialWeight: SUBSTAT_SPECIAL_WEIGHTS[i] });
         }
         return types;
     }
@@ -693,3 +680,14 @@
         });
         document.querySelectorAll('.game-weight').forEach(inp => inp.addEventListener('input', () => { getCurrentPositions().forEach(pos => { buildPosEnhance(pos); buildGameDirectOptions(pos); }); }));
     }
+
+    window.onload = () => {
+        generateAdvancedEntries();
+        renderFactionTabs('game-faction-tabs');
+        renderCharacterGrid(0);
+        initGameEntries();
+        onPositionChange();
+    };
+</script>
+</body>
+</html>
