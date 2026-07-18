@@ -62,7 +62,6 @@
         <button class="tab-btn active" data-mode="game">游戏版（1~6号盘）</button>
         <button class="tab-btn" data-mode="custom">自定义版</button>
     </div>
-    <!-- 游戏版面板 -->
     <div id="game-panel" class="panel active">
         <div class="character-select">
             <label>选择角色自动填充权重（可手动修改下方数值）</label>
@@ -91,7 +90,6 @@
         <div class="entries-list" id="game-entries"></div>
         <button class="btn" onclick="calculateGame()">开始计算</button>
     </div>
-    <!-- 自定义版面板 -->
     <div id="custom-panel" class="panel">
         <div class="note"><p style="color:#aaa;">注：可通过自定义词条、库存、权重、缩放系数，适配更多游戏或生活概率计算场景</p></div>
         <div class="form-group">
@@ -134,6 +132,7 @@
     const Atimes = 5;
     const Btimes = 4;
     const ENTRY_NAMES = ["大生命", "小生命", "大攻击", "小攻击", "穿透值", "大防御", "小防御", "暴击伤害", "暴击率", "异常精通"];
+    const SUBSTAT_SPECIAL_WEIGHTS = [10, 10, 9, 9, 8, 10, 10, 8, 8, 8];
     const MAIN_ENTRY_CONFIG = {
         4: ["攻击力百分比", "生命值百分比", "防御力百分比", "暴击率", "暴击伤害", "异常精通"],
         5: ["攻击力百分比", "生命值百分比", "防御力百分比", "穿透率", "物理伤害加成", "火属性伤害加成", "冰属性伤害加成", "电属性伤害加成", "以太伤害加成", "风属性伤害加成"],
@@ -241,6 +240,14 @@
         return parseFloat(str);
     }
 
+    function dfsUp(leaveTimes, nowAdd, need, nowGroup, counter) {
+        if (leaveTimes <= 0) { counter.total++; if (nowAdd > need) counter.pass++; return; }
+        for (let i = 0; i < nowGroup.length; i++) dfsUp(leaveTimes - 1, nowAdd + nowGroup[i].score, need, nowGroup, counter);
+    }
+
+    function passChance(times, need, nowGroup) { const c = { total: 0, pass: 0 }; dfsUp(times, 0, need, nowGroup, c); return c.total === 0 ? 0 : c.pass / c.total; }
+
+    // 自定义版组合枚举（等概率）
     function firstGroup(savePool, shortGroup, basicSc, presentWeight, allGroups, requiredTypes = []) {
         if (shortGroup.length === 4) {
             if (requiredTypes.length > 0) {
@@ -260,13 +267,6 @@
         }
     }
 
-    function dfsUp(leaveTimes, nowAdd, need, nowGroup, counter) {
-        if (leaveTimes <= 0) { counter.total++; if (nowAdd > need) counter.pass++; return; }
-        for (let i = 0; i < nowGroup.length; i++) dfsUp(leaveTimes - 1, nowAdd + nowGroup[i].score, need, nowGroup, counter);
-    }
-
-    function passChance(times, need, nowGroup) { const c = { total: 0, pass: 0 }; dfsUp(times, 0, need, nowGroup, c); return c.total === 0 ? 0 : c.pass / c.total; }
-
     function calculateCore(entryList, goal, scaleFactor, directedTypes = []) {
         const allGroups = [];
         firstGroup(entryList, [], 0, 1, allGroups, directedTypes);
@@ -279,6 +279,54 @@
         }
         const mA = tW === 0 ? 0 : gA / tW;
         const mB = tW === 0 ? 0 : gB / tW;
+        const ch = Achance * mA + Bchance * mB;
+        return { mchanceA: mA, mchanceB: mB, chance: ch, scaledChance: ch * scaleFactor };
+    }
+
+    // 游戏版加权组合枚举（基于特殊权重）
+    function calculateCoreGame(types, goal, scaleFactor, directedTypes = []) {
+        const k = 4;
+        const n = types.length;
+        let totalW = 0, totalA = 0, totalB = 0;
+        const factorial = [1,1,2,6,24];
+        const currentCounts = new Array(n).fill(0);
+
+        function dfs(idx, remaining, currentSc, currentWeight) {
+            if (idx === n) {
+                if (remaining === 0) {
+                    const includedTypes = new Set();
+                    for (let i = 0; i < n; i++) {
+                        if (currentCounts[i] > 0) includedTypes.add(types[i].typeIndex);
+                    }
+                    if (!directedTypes.every(t => includedTypes.has(t))) return;
+
+                    const firstFour = [];
+                    for (let i = 0; i < n; i++) {
+                        for (let j = 0; j < currentCounts[i]; j++) {
+                            firstFour.push({ score: types[i].score });
+                        }
+                    }
+                    const base = currentSc;
+                    const pA = base > goal ? 1 : passChance(Atimes, goal - base, firstFour);
+                    const pB = base > goal ? 1 : passChance(Btimes, goal - base, firstFour);
+                    totalW += currentWeight;
+                    totalA += pA * currentWeight;
+                    totalB += pB * currentWeight;
+                }
+                return;
+            }
+            const max = Math.min(types[idx].rest, remaining);
+            for (let c = 0; c <= max; c++) {
+                const w = types[idx].specialWeight;
+                const contrib = Math.pow(w, c) / factorial[c];
+                currentCounts[idx] = c;
+                dfs(idx+1, remaining - c, currentSc + c * types[idx].score, currentWeight * contrib);
+            }
+        }
+        dfs(0, k, 0, 1);
+        if (totalW === 0) return { mchanceA:0, mchanceB:0, chance:0, scaledChance:0 };
+        const mA = totalA / totalW;
+        const mB = totalB / totalW;
         const ch = Achance * mA + Bchance * mB;
         return { mchanceA: mA, mchanceB: mB, chance: ch, scaledChance: ch * scaleFactor };
     }
@@ -479,15 +527,20 @@
     function collectEntryListForSingleMain(pos, mainName) {
         const rests = document.querySelectorAll('.game-rest');
         const weights = document.querySelectorAll('.game-weight');
-        const list = [];
+        const types = [];
         const blockedIdx = (pos >= 4 && mainName && MAIN_ATTR_TO_SUB[mainName] !== undefined) ? MAIN_ATTR_TO_SUB[mainName] : -1;
         for (let i = 0; i < 10; i++) {
             let r = parseInt(rests[i].value) || 0;
             const w = parseNumber(weights[i].value) || 0;
             if (i === blockedIdx) r = 0;
-            for (let j = 0; j < r; j++) list.push({ rest: 1, score: w, typeIndex: i });
+            types.push({
+                typeIndex: i,
+                score: w,
+                rest: r,
+                specialWeight: SUBSTAT_SPECIAL_WEIGHTS[i]
+            });
         }
-        return list;
+        return types;
     }
 
     function calculateGame() {
@@ -509,15 +562,15 @@
             let posRandom = 0, posDirected = 0;
             const directedTypes = getGameDirectTypes(pos);
             mainList.forEach(main => {
-                const entryList = collectEntryListForSingleMain(pos, main);
-                if (entryList.length < 4) { alert(`${pos}号位（主词条：${main||'无'}）词条库存不足4`); return; }
+                const types = collectEntryListForSingleMain(pos, main);
+                if (types.reduce((sum,t)=>sum+t.rest,0) < 4) { alert(`${pos}号位（主词条：${main||'无'}）词条库存不足4`); return; }
                 let scaleFactor;
                 if (pos <= 3) scaleFactor = 1/6;
                 else {
                     const weight = probWeights[main] || 0;
                     scaleFactor = (1/6) * (weight / totalWeight);
                 }
-                const result = calculateCore(entryList, goal, scaleFactor, directedTypes);
+                const result = calculateCoreGame(types, goal, scaleFactor, directedTypes);
                 const directedContrib = pos >= 4 ? result.chance / 6 : result.chance;
                 posRandom += result.scaledChance;
                 posDirected += directedContrib;
@@ -640,14 +693,3 @@
         });
         document.querySelectorAll('.game-weight').forEach(inp => inp.addEventListener('input', () => { getCurrentPositions().forEach(pos => { buildPosEnhance(pos); buildGameDirectOptions(pos); }); }));
     }
-
-    window.onload = () => {
-        generateAdvancedEntries();
-        renderFactionTabs('game-faction-tabs');
-        renderCharacterGrid(0);
-        initGameEntries();
-        onPositionChange();
-    };
-</script>
-</body>
-</html>
