@@ -283,42 +283,50 @@
     }
 
     function calculateCoreGame(types, goal, scaleFactor, directedTypes = []) {
-        const k = 4;
-        const n = types.length;
-        let totalW = 0, totalA = 0, totalB = 0;
-        const factorial = [1,1,2,6,24];
-        const currentCounts = new Array(n).fill(0);
-        function dfs(idx, remaining, currentSc, currentWeight) {
-            if (idx === n) {
-                if (remaining === 0) {
-                    const includedTypes = new Set();
-                    for (let i = 0; i < n; i++) { if (currentCounts[i] > 0) includedTypes.add(types[i].typeIndex); }
-                    if (!directedTypes.every(t => includedTypes.has(t))) return;
-                    const firstFour = [];
-                    for (let i = 0; i < n; i++) {
-                        for (let j = 0; j < currentCounts[i]; j++) firstFour.push({ score: types[i].score });
-                    }
-                    const base = currentSc;
-                    const pA = base > goal ? 1 : passChance(Atimes, goal - base, firstFour);
-                    const pB = base > goal ? 1 : passChance(Btimes, goal - base, firstFour);
-                    totalW += currentWeight;
-                    totalA += pA * currentWeight;
-                    totalB += pB * currentWeight;
+        // 基于不放回权重抽取的精确组合概率
+        const combinationMap = new Map(); // key: sorted typeIndices -> { weight, scores }
+
+        function enumerate(seqIndices, seqScores, currentWeight, remaining) {
+            if (seqIndices.length === 4) {
+                const key = [...seqIndices].sort((a,b)=>a-b).join(',');
+                if (combinationMap.has(key)) {
+                    combinationMap.get(key).weight += currentWeight;
+                } else {
+                    combinationMap.set(key, {
+                        weight: currentWeight,
+                        scores: seqScores.map(s => ({score: s}))
+                    });
                 }
                 return;
             }
-            const max = Math.min(types[idx].rest, remaining);
-            for (let c = 0; c <= max; c++) {
-                const w = types[idx].specialWeight;
-                const contrib = Math.pow(w, c) / factorial[c];
-                currentCounts[idx] = c;
-                dfs(idx+1, remaining - c, currentSc + c * types[idx].score, currentWeight * contrib);
+            const totalW = remaining.reduce((sum, t) => sum + (t.rest > 0 ? t.specialWeight : 0), 0);
+            for (let i = 0; i < remaining.length; i++) {
+                const t = remaining[i];
+                if (t.rest <= 0) continue;
+                const prob = t.specialWeight / totalW;
+                const nextRemaining = remaining.map(item => ({...item}));
+                nextRemaining[i].rest--;
+                enumerate([...seqIndices, t.typeIndex], [...seqScores, t.score], currentWeight * prob, nextRemaining);
             }
         }
-        dfs(0, k, 0, 1);
-        if (totalW === 0) return { mchanceA:0, mchanceB:0, chance:0, scaledChance:0 };
-        const mA = totalA / totalW;
-        const mB = totalB / totalW;
+
+        const initialRemaining = types.map(t => ({...t}));
+        enumerate([], [], 1, initialRemaining);
+
+        let totalWeight = 0, totalA = 0, totalB = 0;
+        for (const [key, entry] of combinationMap.entries()) {
+            const typeIndices = key.split(',').map(Number);
+            if (directedTypes.length > 0 && !directedTypes.every(dt => typeIndices.includes(dt))) continue;
+            const baseScore = entry.scores.reduce((sum, s) => sum + s.score, 0);
+            const pA = baseScore > goal ? 1 : passChance(Atimes, goal - baseScore, entry.scores);
+            const pB = baseScore > goal ? 1 : passChance(Btimes, goal - baseScore, entry.scores);
+            totalWeight += entry.weight;
+            totalA += pA * entry.weight;
+            totalB += pB * entry.weight;
+        }
+        if (totalWeight === 0) return { mchanceA:0, mchanceB:0, chance:0, scaledChance:0 };
+        const mA = totalA / totalWeight;
+        const mB = totalB / totalWeight;
         const ch = Achance * mA + Bchance * mB;
         return { mchanceA: mA, mchanceB: mB, chance: ch, scaledChance: ch * scaleFactor };
     }
