@@ -1,9 +1,11 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>绝区零驱动盘练度提升概率计算器</title>
+    <script src="https://paddlejs.bj.bcebos.com/models/ocr/1.0.0/paddleocr.min.js">
+    </script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft YaHei", "PingFang SC", serif; }
 
@@ -54,6 +56,8 @@
         .btn { padding: 10px 28px; background: var(--primary-color); color: var(--text-on-primary); border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 700; transition: all .25s; letter-spacing: 0.5px; box-shadow: 0 4px 15px var(--primary-color-alpha); }
         .btn:hover { filter: brightness(1.1); box-shadow: 0 6px 25px var(--primary-color-alpha); transform: translateY(-1px); }
         .btn-secondary { background: var(--bg-color); color: var(--primary-color); border: 1px solid var(--primary-color); font-weight: 600; }
+        .btn-ocr { background: #00B4D8; color: #fff; border: none; font-weight: 700; }
+        .btn-ocr:hover { background: #0096c7; }
         .result-area { margin-top: 28px; padding: 22px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; display: none; }
         .result-area h3 { margin-bottom: 14px; color: var(--primary-color); font-size: 1.2rem; }
         .result-item { margin-bottom: 10px; font-family: "Consolas","Monaco",monospace; font-size: 0.95rem; word-break: break-all; color: var(--text-color); }
@@ -93,6 +97,16 @@
         #update-log-modal .version-block li { margin-bottom: 4px; }
         #update-log-modal .version-block a { color: var(--primary-color); text-decoration: underline; }
 
+        .ocr-area { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; padding: 12px 16px; background: var(--bg-secondary); border: 1px dashed var(--primary-color); border-radius: 10px; }
+        .ocr-area .ocr-status { color: var(--text-muted); font-size: 0.85rem; }
+        .ocr-preview { max-width: 200px; max-height: 150px; border-radius: 8px; border: 1px solid var(--border-color); display: none; object-fit: contain; }
+
+        #ocr-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
+        #ocr-modal .ocr-modal-content { background: var(--bg-secondary); border: 2px solid var(--primary-color); border-radius: 16px; padding: 30px; max-width: 500px; width: 90%; text-align: center; }
+        #ocr-modal .progress-bar { width: 100%; height: 10px; background: var(--border-color); border-radius: 5px; margin: 20px 0; overflow: hidden; }
+        #ocr-modal .progress-fill { height: 100%; background: var(--primary-color); border-radius: 5px; width: 0%; transition: width 0.3s; }
+        #ocr-modal h3 { color: var(--primary-color); margin-bottom: 10px; }
+
         input[type="number"]::-webkit-inner-spin-button,
         input[type="number"]::-webkit-outer-spin-button {
             -webkit-appearance: inner-spin-button !important;
@@ -102,12 +116,13 @@
         .char-panel { border: 2px solid var(--primary-color); border-radius: 12px; padding: 20px; margin-bottom: 25px; background: var(--bg-secondary); }
         .char-panel h3 { color: var(--primary-color); margin-bottom: 15px; }
         .recommend-box { margin-top: 20px; padding: 15px; background: var(--primary-color-alpha-light); border: 1px solid var(--primary-color); border-radius: 10px; font-weight: bold; }
+        .category-result { margin-left: 20px; padding: 8px 12px; border-left: 2px solid var(--primary-color); margin-bottom: 8px; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>绝区零驱动盘练度提升概率计算器<span class="gold-title">V2.2</span></h1>
-    <p class="subtitle">全网首发 | 全角色阵营分类 | 支持游戏版与自定义版双模式计算</p>
+    <h1>绝区零驱动盘练度提升概率计算器<span class="gold-title">V2.3</span></h1>
+    <p class="subtitle">全网首发 | 全角色阵营分类 | 支持游戏版与自定义版双模式计算 | 支持图像识别</p>
 
     <div class="mode-tabs-container">
         <div class="mode-tabs">
@@ -122,6 +137,12 @@
     </div>
 
     <div id="game-panel" class="panel active">
+        <div class="ocr-area">
+            <button class="btn btn-ocr" id="ocr-btn" onclick="document.getElementById('ocr-file-input').click()">📷 图像识别</button>
+            <input type="file" id="ocr-file-input" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
+            <span id="ocr-status" class="ocr-status">支持电脑与手机端上传截图，自动识别角色、号位、词条与强化情况</span>
+            <img id="ocr-preview" class="ocr-preview" alt="预览">
+        </div>
         <div class="character-select">
             <label>选择角色（可多选，再次点击取消选择）</label>
             <div class="faction-tabs" id="game-faction-tabs"></div>
@@ -222,14 +243,29 @@
         <div class="version-block">
             <h3>V2.2</h3>
             <ul>
-		<li>修正副词条强化概率</li>
                 <li>可选择多个角色</li>
                 <li>增加推荐培养角色功能</li>
                 <li>增加配色与更新日志板块</li>
                 <li>在界面下方新增了我的B站号和打赏渠道</li>
-		<li>增加角色蕾米埃尔</li>
             </ul>
         </div>
+        <div class="version-block">
+            <h3>V2.3</h3>
+            <ul>
+                <li>新增图像识别功能：上传截图自动识别角色、号位、词条强化情况</li>
+                <li>支持分类输出不同驱动盘类别的练度提升概率</li>
+                <li>推荐培养角色改为比较各类别中最高提升概率</li>
+                <li>OCR引擎升级为PaddleOCR，准确率大幅提升，离线可用</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="ocr-modal">
+    <div class="ocr-modal-content">
+        <h3>正在识别图片文字...</h3>
+        <div class="progress-bar"><div class="progress-fill" id="ocr-progress-fill"></div></div>
+        <p id="ocr-progress-text" style="color:var(--text-muted);">加载OCR引擎中...</p>
     </div>
 </div>
 
@@ -239,6 +275,19 @@
     const Atimes = 5;
     const Btimes = 4;
     const ENTRY_NAMES = ["大生命", "小生命", "大攻击", "小攻击", "穿透值", "大防御", "小防御", "暴击伤害", "暴击率", "异常精通"];
+    const ENTRY_IDX_MAP = { "大生命":0, "小生命":1, "大攻击":2, "小攻击":3, "穿透值":4, "大防御":5, "小防御":6, "暴击伤害":7, "暴击率":8, "异常精通":9 };
+    const MAIN_ENTRY_KEYWORDS = {
+        "生命值":"生命值百分比","攻击力":"攻击力百分比","防御力":"防御力百分比",
+        "能量回复":"能量自动回复","能量自动回复":"能量自动回复",
+        "物伤加成":"物理伤害加成","物理伤害加成":"物理伤害加成",
+        "火伤加成":"火属性伤害加成","火属性伤害加成":"火属性伤害加成",
+        "以太加伤":"以太伤害加成","以太伤害加成":"以太伤害加成",
+        "冰伤加成":"冰属性伤害加成","冰属性伤害加成":"冰属性伤害加成",
+        "电伤加成":"电属性伤害加成","电属性伤害加成":"电属性伤害加成",
+        "风伤加成":"风属性伤害加成","风属性伤害加成":"风属性伤害加成",
+        "暴击率":"暴击率","暴击伤害":"暴击伤害","异常精通":"异常精通",
+        "穿透率":"穿透率","异常掌控":"异常掌控","冲击力":"冲击力"
+    };
     const SUBSTAT_SPECIAL_WEIGHTS = [10, 10, 9, 9, 8, 10, 10, 8, 8, 8];
     const MAIN_ENTRY_CONFIG = {
         4: ["攻击力百分比", "生命值百分比", "防御力百分比", "暴击率", "暴击伤害", "异常精通"],
@@ -342,6 +391,7 @@
     ];
 
     let gameSelectedChars = [];
+    let ocrParsedData = null;
 
     const themes = [
         { left: '#FF4500', right: '#121212', primary: '#FF4500', bg: '#121212', bg2: '#0a0a0a', text: '#e0e0e0', muted: '#888', border: '#333', textOnPrimary: '#121212' },
@@ -516,6 +566,380 @@
         return { mchanceA: mA, mchanceB: mB, chance: ch, scaledChance: ch * scaleFactor };
     }
 
+    function getAllCharacterNames() {
+        const names = [];
+        CHARACTER_DATA.forEach(f => f.roles.forEach(r => names.push(r.name)));
+        return names;
+    }
+
+    function matchCharacterFromText(text) {
+        if (!text) return null;
+        const cleaned = text.replace(/\s/g, '').replace(/[•·⋅]/g, '·');
+        const allChars = getAllCharacterNames();
+        let bestMatch = null;
+        for (const fullName of allChars) {
+            const cleanName = fullName.replace(/\s/g, '');
+            if (cleaned.includes(cleanName)) return fullName;
+        }
+        for (const fullName of allChars) {
+            const dotIdx = fullName.indexOf('·');
+            if (dotIdx > 0) {
+                const prefix = fullName.substring(0, dotIdx);
+                if (prefix.length >= 2 && cleaned.includes(prefix)) {
+                    if (!bestMatch || prefix.length > bestMatch.prefixLen) {
+                        bestMatch = { name: fullName, prefixLen: prefix.length };
+                    }
+                }
+            }
+        }
+        if (bestMatch) return bestMatch.name;
+        for (const fullName of allChars) {
+            const parts = fullName.split(/[·&\s]+/);
+            for (const part of parts) {
+                if (part.length >= 2 && cleaned.includes(part)) {
+                    return fullName;
+                }
+            }
+        }
+        return null;
+    }
+
+    function findCharacterInData(name) {
+        for (const f of CHARACTER_DATA) {
+            for (const r of f.roles) {
+                if (r.name === name) return r;
+            }
+        }
+        return null;
+    }
+
+    function parseOcrSubstat(entryName, valueText) {
+        let valueNum = parseFloat(valueText.replace(/[+＋十％%]/g, '').trim());
+        if (isNaN(valueNum)) return null;
+        let times = 0;
+        switch(entryName) {
+            case '小攻击': times = Math.round(valueNum / 19 - 1); break;
+            case '大攻击': case '大生命': times = Math.round(valueNum / 3 - 1); break;
+            case '大防御': case '暴击伤害': times = Math.round(valueNum / 4.8 - 1); break;
+            case '暴击率': times = Math.round(valueNum / 2.4 - 1); break;
+            case '异常精通': case '穿透值': times = Math.round(valueNum / 9 - 1); break;
+            case '小生命': times = Math.round(valueNum / 112 - 1); break;
+            case '小防御': times = Math.round(valueNum / 15 - 1); break;
+            default: return null;
+        }
+        times = Math.max(0, Math.min(5, times));
+        return { entryName, times };
+    }
+
+    function detectSubstatEntry(line) {
+        if (!line || line.trim() === '') return null;
+        const cleaned = line.replace(/\s/g, '');
+        if (cleaned.includes('暴击伤害') || cleaned.includes('暴伤')) return '暴击伤害';
+        if (cleaned.includes('暴击率') || cleaned.includes('暴率')) return '暴击率';
+        if (cleaned.includes('异常精通')) return '异常精通';
+        if (cleaned.includes('精通') && !cleaned.includes('异常')) return '异常精通';
+        if (cleaned.includes('穿透值')) return '穿透值';
+        if (cleaned.includes('穿透') && !cleaned.includes('率')) return '穿透值';
+        if (cleaned.includes('攻击力') || cleaned.includes('攻击')) {
+            const atkIdx = Math.max(cleaned.indexOf('攻击力'), cleaned.indexOf('攻击'));
+            const after = cleaned.substring(atkIdx + 3, atkIdx + 8).replace(/\s/g, '');
+            if (after.includes('%') || after.includes('％')) return '大攻击';
+            return '小攻击';
+        }
+        if (cleaned.includes('防御力') || cleaned.includes('防御')) {
+            const defIdx = Math.max(cleaned.indexOf('防御力'), cleaned.indexOf('防御'));
+            const after = cleaned.substring(defIdx + 3, defIdx + 8).replace(/\s/g, '');
+            if (after.includes('%') || after.includes('％')) return '大防御';
+            return '小防御';
+        }
+        if (cleaned.includes('生命值') || cleaned.includes('生命')) {
+            const hpIdx = Math.max(cleaned.indexOf('生命值'), cleaned.indexOf('生命'));
+            const after = cleaned.substring(hpIdx + 3, hpIdx + 8).replace(/\s/g, '');
+            if (after.includes('%') || after.includes('％')) return '大生命';
+            return '小生命';
+        }
+        return null;
+    }
+
+    function extractPlusValue(line) {
+        const cleaned = line.replace(/\s/g, '').replace(/十/g, '+').replace(/＋/g, '+');
+        const match = cleaned.match(/[+]?(\d+\.?\d*)\s*[%％]?/);
+        if (match) {
+            const num = parseFloat(match[1]);
+            if (!isNaN(num)) return '+' + num + (cleaned.includes('%') || cleaned.includes('％') ? '%' : '');
+        }
+        return null;
+    }
+
+    function parsePositionData(text, posNum, lines, lineIndex) {
+        const catEndMarkers = ['?', '？', '%', '％'];
+        let catName = '';
+        let catSearchIdx = lineIndex;
+        while (catSearchIdx >= 0) {
+            if (catSearchIdx >= lines.length) {
+                catSearchIdx--;
+                continue;
+            }
+            const prevLine = lines[catSearchIdx].trim();
+            const bracketPos = prevLine.indexOf('[' + posNum + ']');
+            let searchText;
+            if (bracketPos >= 0) {
+                searchText = prevLine.substring(0, bracketPos);
+            } else {
+                searchText = prevLine;
+            }
+            let foundMarker = -1;
+            for (const m of catEndMarkers) {
+                const mi = searchText.lastIndexOf(m);
+                if (mi > foundMarker) foundMarker = mi;
+            }
+            if (foundMarker >= 0) {
+                catName = searchText.substring(foundMarker + 1).trim();
+                if (!catName) catName = searchText.substring(0, foundMarker).trim() + searchText.charAt(foundMarker);
+                break;
+            }
+            catSearchIdx--;
+            if (catSearchIdx < 0) {
+                catName = searchText.trim();
+                if (!catName) catName = '类别' + posNum;
+                break;
+            }
+        }
+        if (!catName || catName.length === 0) catName = '驱动盘' + posNum;
+        catName = catName.replace(/[\[\]\(\)（）]/g, '').trim();
+        if (catName.length > 30) catName = catName.substring(catName.length - 30);
+
+        const result = { pos: posNum, categoryName: catName, mainStat: null, substats: [] };
+        let readIdx = lineIndex + 1;
+
+        if (posNum >= 4) {
+            let mainLine = '';
+            let mainLinesChecked = 0;
+            while (readIdx < lines.length && mainLinesChecked < 10) {
+                const l = lines[readIdx].trim();
+                if (l && !l.includes('[') && !l.includes(']')) {
+                    mainLine = l;
+                    readIdx++;
+                    break;
+                }
+                readIdx++;
+                mainLinesChecked++;
+            }
+            if (mainLine) {
+                const matchedMain = matchMainStat(mainLine, posNum);
+                if (matchedMain) result.mainStat = matchedMain;
+            }
+            let skipCount = 0;
+            while (readIdx < lines.length && skipCount < 6) {
+                const l = lines[readIdx].trim();
+                if (l && !l.includes('[') && !l.includes(']')) break;
+                readIdx++;
+                skipCount++;
+            }
+        }
+
+        let substatLinesRead = 0;
+        let attempts = 0;
+        while (readIdx < lines.length && substatLinesRead < 6 && attempts < 20) {
+            const l = lines[readIdx].trim();
+            attempts++;
+            readIdx++;
+            if (!l || l.includes('[') || l.includes(']')) continue;
+            const entryName = detectSubstatEntry(l);
+            if (entryName) {
+                const plusVal = extractPlusValue(l);
+                if (plusVal) {
+                    const parsed = parseOcrSubstat(entryName, plusVal);
+                    if (parsed !== null) {
+                        result.substats.push(parsed);
+                        substatLinesRead++;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    function matchMainStat(line, pos) {
+        const configs = MAIN_ENTRY_CONFIG[pos];
+        if (!configs) return null;
+        const cleaned = line.replace(/\s/g, '');
+        for (const config of configs) {
+            if (cleaned.includes(config)) return config;
+        }
+        for (const [keyword, mainName] of Object.entries(MAIN_ENTRY_KEYWORDS)) {
+            if (cleaned.includes(keyword) && configs.includes(mainName)) return mainName;
+        }
+        const shortMatchMap = {
+            '生命值':'生命值百分比','生命':'生命值百分比',
+            '攻击力':'攻击力百分比','攻击':'攻击力百分比',
+            '防御力':'防御力百分比','防御':'防御力百分比',
+            '能量回复':'能量自动回复','能量自动回复':'能量自动回复',
+            '物伤加成':'物理伤害加成','物理伤害加成':'物理伤害加成',
+            '火伤加成':'火属性伤害加成','火属性伤害加成':'火属性伤害加成',
+            '以太加伤':'以太伤害加成','以太伤害加成':'以太伤害加成',
+            '冰伤加成':'冰属性伤害加成','冰属性伤害加成':'冰属性伤害加成',
+            '电伤加成':'电属性伤害加成','电属性伤害加成':'电属性伤害加成',
+            '风伤加成':'风属性伤害加成','风属性伤害加成':'风属性伤害加成',
+            '暴击率':'暴击率','暴击伤害':'暴击伤害','异常精通':'异常精通',
+            '穿透率':'穿透率','异常掌控':'异常掌控','冲击力':'冲击力'
+        };
+        for (const [short, main] of Object.entries(shortMatchMap)) {
+            if (cleaned.includes(short) && configs.includes(main)) {
+                if (short.length <= 5 && cleaned.indexOf(short) <= 5) return main;
+            }
+        }
+        return null;
+    }
+
+    function parseOcrText(fullText) {
+        const lines = fullText.split(/\r?\n/);
+        const positions = [];
+        const matchedChar = matchCharacterFromText(fullText);
+        console.log('识别到的角色:', matchedChar);
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const bracketMatch = line.match(/\[(\d)\]/g);
+            if (!bracketMatch) continue;
+            for (const bm of bracketMatch) {
+                const num = parseInt(bm.charAt(1));
+                if (num >= 1 && num <= 6 && !positions.some(p => p.pos === num)) {
+                    const posData = parsePositionData(fullText, num, lines, i);
+                    positions.push(posData);
+                }
+            }
+        }
+        positions.sort((a, b) => a.pos - b.pos);
+        console.log('解析到的位置:', positions);
+        return { characterName: matchedChar, positions };
+    }
+
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('ocr-preview');
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+            document.getElementById('ocr-status').textContent = '图片已加载，开始OCR识别...';
+            runOCR(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function showOCRModal() {
+        document.getElementById('ocr-modal').style.display = 'flex';
+        document.getElementById('ocr-progress-fill').style.width = '0%';
+        document.getElementById('ocr-progress-text').textContent = '加载OCR引擎中...';
+    }
+
+    function updateOCRProgress(percent, text) {
+        document.getElementById('ocr-progress-fill').style.width = percent + '%';
+        document.getElementById('ocr-progress-text').textContent = text;
+    }
+
+    function hideOCRModal() {
+        document.getElementById('ocr-modal').style.display = 'none';
+    }
+
+  async function runOCR(imageData) {
+    showOCRModal();
+    updateOCRProgress(5, '正在加载PaddleOCR引擎...');
+
+    // 检查 PaddleOCR 是否已加载
+    if (typeof window.PaddleOCR === 'undefined') {
+        hideOCRModal();
+        document.getElementById('ocr-status').textContent = 'PaddleOCR库加载失败，请检查网络或更换CDN';
+        return;
+    }
+
+    try {
+        const ocr = new window.PaddleOCR({
+            modelPath: 'https://paddleocr.bj.bcebos.com/static/PP-OCRv3/ch_PP-OCRv3_det_infer/',
+            lang: 'ch',
+            useWebgl: true
+        });
+
+        await ocr.init();
+        updateOCRProgress(40, 'OCR引擎就绪，正在识别...');
+
+        const result = await ocr.recognize(imageData);
+        const text = result.text || '';
+        console.log('PaddleOCR 识别结果:', text);
+
+        updateOCRProgress(100, '识别完成！');
+        processOCRResult(text);
+
+        setTimeout(() => {
+            hideOCRModal();
+            document.getElementById('ocr-status').textContent = '识别完成！已自动填充数据';
+        }, 500);
+    } catch (err) {
+        hideOCRModal();
+        document.getElementById('ocr-status').textContent = 'OCR识别失败：' + err.message;
+        console.error(err);
+    }
+}
+    function processOCRResult(text) {
+        console.log('OCR原始识别文字:', text);
+        const parsed = parseOcrText(text);
+        ocrParsedData = parsed;
+        if (parsed.characterName) {
+            selectCharacterByOCR(parsed.characterName);
+        } else {
+            document.getElementById('ocr-status').textContent = '未能识别到角色名，请手动选择角色。';
+        }
+    }
+
+    function selectCharacterByOCR(charName) {
+        const ch = findCharacterInData(charName);
+        if (!ch) return;
+        const alreadySelected = gameSelectedChars.find(c => c.name === charName);
+        if (!alreadySelected) {
+            ch.ocrPositions = ocrParsedData ? JSON.parse(JSON.stringify(ocrParsedData.positions)) : null;
+            gameSelectedChars.push(ch);
+        } else {
+            alreadySelected.ocrPositions = ocrParsedData ? JSON.parse(JSON.stringify(ocrParsedData.positions)) : null;
+        }
+        for (let fi = 0; fi < CHARACTER_DATA.length; fi++) {
+            if (CHARACTER_DATA[fi].roles.some(r => r.name === charName)) {
+                const ct = document.getElementById('game-faction-tabs');
+                if (ct) {
+                    const tabs = ct.querySelectorAll('.faction-tab');
+                    tabs.forEach(t => t.classList.remove('active'));
+                    if (tabs[fi]) tabs[fi].classList.add('active');
+                }
+                renderCharacterGrid(fi);
+                break;
+            }
+        }
+        renderAllCharacterConfigs();
+    }
+
+    function applyPosOcrData(charIdx, posData) {
+        if (posData.pos >= 4 && posData.mainStat) {
+            const mainCheckboxes = document.querySelectorAll(`#main-${charIdx}-${posData.pos} input[type="checkbox"]`);
+            mainCheckboxes.forEach(cb => {
+                cb.checked = (cb.value === posData.mainStat);
+            });
+        }
+        posData.substats.forEach(sub => {
+            const entryIdx = ENTRY_IDX_MAP[sub.entryName];
+            if (entryIdx === undefined) return;
+            const enhanceCheck = document.querySelector(`#pos-config-${charIdx}-${posData.pos} .enhance-check-${charIdx}-${posData.pos}[data-idx="${entryIdx}"]`);
+            if (enhanceCheck) {
+                enhanceCheck.checked = true;
+            }
+            const timesInput = document.querySelector(`#pos-config-${charIdx}-${posData.pos} .enhance-times-${charIdx}-${posData.pos}[data-idx="${entryIdx}"]`);
+            if (timesInput) {
+                timesInput.value = sub.times;
+            }
+        });
+        calcPosScore(charIdx, posData.pos);
+        updatePosScale(charIdx, posData.pos);
+    }
+
     document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => {
         document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -579,7 +1003,22 @@
             container.appendChild(panel);
             initCharEntries(idx, ch);
             updateCharWeights(idx);
-            onPositionChange(idx);
+            if (ch.ocrPositions && ch.ocrPositions.length > 0) {
+                const ocrPos = JSON.parse(JSON.stringify(ch.ocrPositions));
+                delete ch.ocrPositions;
+                ocrPos.forEach(posData => {
+                    const posCheckbox = document.querySelector(`#char-positions-${idx} input[value="${posData.pos}"]`);
+                    if (posCheckbox) posCheckbox.checked = true;
+                });
+                onPositionChange(idx);
+                setTimeout(() => {
+                    ocrPos.forEach(posData => {
+                        applyPosOcrData(idx, posData);
+                    });
+                }, 500);
+            } else {
+                onPositionChange(idx);
+            }
         });
     }
 
@@ -811,15 +1250,72 @@
         return types;
     }
 
+    function getOcrCategoriesForChar(charName) {
+        if (!ocrParsedData || ocrParsedData.characterName !== charName) return null;
+        const categories = [];
+        ocrParsedData.positions.forEach(pd => {
+            const existing = categories.find(c => c.name === pd.categoryName);
+            if (existing) {
+                existing.positions.push(pd.pos);
+            } else {
+                categories.push({ name: pd.categoryName, positions: [pd.pos] });
+            }
+        });
+        return categories;
+    }
+
+    function calculateSinglePosForMain(idx, pos, main, goal, probWeights, totalWeight, directedTypes) {
+        const types = collectEntryListForSingleMain(idx, pos, main);
+        if (types.reduce((sum,t)=>sum+t.rest,0) < 4) return { error: true };
+        let scaleFactor;
+        if (pos <= 3) scaleFactor = 1/6;
+        else {
+            const weight = probWeights[main] || 0;
+            scaleFactor = (1/6) * (weight / totalWeight);
+        }
+        return calculateCoreGame(types, goal, scaleFactor, directedTypes);
+    }
+
     function calculateGame() {
         if (gameSelectedChars.length === 0) { alert('请至少选择一个角色'); return; }
         const allCharResults = [];
         gameSelectedChars.forEach((ch, idx) => {
             const positions = getCurrentPositions(idx);
             if (positions.length === 0) return;
-            let totalRandom = 0;
+            const categories = getOcrCategoriesForChar(ch.name);
             const perPosResults = [];
             let sumA = 0, sumB = 0, countResults = 0;
+            let categoryResults = null;
+            if (categories && categories.length > 0) {
+                categoryResults = [];
+                categories.forEach(cat => {
+                    let catTotalRandom = 0;
+                    cat.positions.forEach(pos => {
+                        const goal = getPosGoal(idx, pos);
+                        let mainList = [];
+                        if (pos <= 3) mainList = [null];
+                        else {
+                            const selected = getSelectedMainForPos(idx, pos);
+                            mainList = selected.length > 0 ? selected : [...MAIN_ENTRY_CONFIG[pos]];
+                        }
+                        const probWeights = pos >= 4 ? MAIN_PROB_WEIGHTS[pos] : null;
+                        const totalWeight = probWeights ? Object.values(probWeights).reduce((a,b)=>a+b,0) : 1;
+                        const directedTypes = getGameDirectTypes(idx, pos);
+                        let posRandom = 0;
+                        mainList.forEach(main => {
+                            const result = calculateSinglePosForMain(idx, pos, main, goal, probWeights, totalWeight, directedTypes);
+                            if (!result.error) {
+                                posRandom += result.scaledChance;
+                                sumA += result.mchanceA;
+                                sumB += result.mchanceB;
+                                countResults++;
+                            }
+                        });
+                        catTotalRandom += posRandom;
+                    });
+                    categoryResults.push({ name: cat.name, totalRandom: catTotalRandom });
+                });
+            }
             positions.forEach(pos => {
                 const goal = getPosGoal(idx, pos);
                 let mainList = [];
@@ -833,21 +1329,11 @@
                 let posRandom = 0, posDirected = 0;
                 const directedTypes = getGameDirectTypes(idx, pos);
                 mainList.forEach(main => {
-                    const types = collectEntryListForSingleMain(idx, pos, main);
-                    if (types.reduce((sum,t)=>sum+t.rest,0) < 4) { alert(`${ch.name} ${pos}号位（主词条：${main||'无'}）词条库存不足4`); return; }
-                    let scaleFactor;
-                    if (pos <= 3) scaleFactor = 1/6;
-                    else {
-                        const weight = probWeights[main] || 0;
-                        scaleFactor = (1/6) * (weight / totalWeight);
-                    }
-                    const result = calculateCoreGame(types, goal, scaleFactor, directedTypes);
+                    const result = calculateSinglePosForMain(idx, pos, main, goal, probWeights, totalWeight, directedTypes);
+                    if (result.error) { alert(`${ch.name} ${pos}号位（主词条：${main||'无'}）词条库存不足4`); return; }
                     const directedContrib = pos >= 4 ? result.chance / 6 : result.chance;
                     posRandom += result.scaledChance;
                     posDirected += directedContrib;
-                    sumA += result.mchanceA;
-                    sumB += result.mchanceB;
-                    countResults++;
                 });
                 if (pos === 5) posDirected *= 0.6;
                 let directedMain = null;
@@ -880,16 +1366,23 @@
                     else { gradeText = '可提升空间极大'; gradeColor = 'white'; }
                 }
                 perPosResults.push({ pos, random: posRandom, directed: posDirected, directedMain, gradeText, gradeColor });
-                totalRandom += posRandom;
             });
             const avgA = countResults > 0 ? sumA / countResults : null;
             const avgB = countResults > 0 ? sumB / countResults : null;
-            allCharResults.push({ name: ch.name, perPosResults, totalRandom, avgA, avgB });
+            let totalRandom = 0;
+            perPosResults.forEach(r => { totalRandom += r.random; });
+            allCharResults.push({ name: ch.name, perPosResults, totalRandom, avgA, avgB, categoryResults });
         });
 
         let resultHtml = '';
         allCharResults.forEach(cr => {
             resultHtml += `<div style="margin-bottom:25px; border-bottom:1px solid var(--border-color); padding-bottom:10px;"><h3 style="color:var(--primary-color);">${cr.name}：</h3>`;
+            if (cr.categoryResults && cr.categoryResults.length > 0) {
+                resultHtml += `<div style="margin:10px 0;"><strong>类别分析：</strong></div>`;
+                cr.categoryResults.forEach(cat => {
+                    resultHtml += `<div class="category-result">${cat.name}：随机抽取综合练度提升概率 <strong>${(cat.totalRandom*100).toFixed(4)}%</strong></div>`;
+                });
+            }
             resultHtml += cr.perPosResults.map(r => {
                 let line = `${r.pos}号位：随机 ${(r.random*100).toFixed(4)}% 定向位置 ${(r.directed*100).toFixed(4)}%`;
                 if (r.directedMain !== null) line += ` 定向主词条 ${(r.directedMain*100).toFixed(4)}%`;
@@ -898,7 +1391,13 @@
             }).join('');
             resultHtml += `<div class="result-item">初始四词条驱动盘强化后练度提升概率：${cr.avgA !== null ? (cr.avgA*100).toFixed(15) : '--'}%</div>`;
             resultHtml += `<div class="result-item">初始三词条驱动盘强化后练度提升概率：${cr.avgB !== null ? (cr.avgB*100).toFixed(15) : '--'}%</div>`;
-            resultHtml += `<div class="result-item">随机抽取综合练度提升概率：${(cr.totalRandom*100).toFixed(15)}%</div></div>`;
+            if (cr.categoryResults && cr.categoryResults.length > 0) {
+                const maxCat = cr.categoryResults.reduce((a,b) => a.totalRandom > b.totalRandom ? a : b);
+                resultHtml += `<div class="result-item">最高类别（${maxCat.name}）综合练度提升概率：${(maxCat.totalRandom*100).toFixed(15)}%</div>`;
+            } else {
+                resultHtml += `<div class="result-item">随机抽取综合练度提升概率：${(cr.totalRandom*100).toFixed(15)}%</div>`;
+            }
+            resultHtml += `</div>`;
         });
 
         document.getElementById('per-position-results').innerHTML = resultHtml;
@@ -907,11 +1406,18 @@
         document.getElementById('res-random').style.display = 'none';
 
         if (allCharResults.length > 1) {
-            const sorted = [...allCharResults].sort((a,b) => b.totalRandom - a.totalRandom);
-            const best = sorted[0];
+            const scored = allCharResults.map(cr => {
+                let maxProb = cr.totalRandom;
+                if (cr.categoryResults && cr.categoryResults.length > 0) {
+                    maxProb = cr.categoryResults.reduce((max, cat) => Math.max(max, cat.totalRandom), 0);
+                }
+                return { name: cr.name, maxProb };
+            });
+            scored.sort((a, b) => b.maxProb - a.maxProb);
+            const best = scored[0];
             const recommendArea = document.getElementById('recommend-area');
             recommendArea.style.display = 'block';
-            recommendArea.innerHTML = `推荐优先提升的角色：<strong>${best.name}</strong>（综合练度提升概率 ${(best.totalRandom*100).toFixed(4)}%，提升空间最大）`;
+            recommendArea.innerHTML = `推荐优先提升的角色：<strong>${best.name}</strong>（各类别中最高综合练度提升概率 ${(best.maxProb*100).toFixed(4)}%，提升空间最大）`;
         } else {
             document.getElementById('recommend-area').style.display = 'none';
         }
