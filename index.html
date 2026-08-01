@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -99,6 +99,12 @@
             opacity: 1 !important;
         }
 
+        input[type="number"] {
+            -webkit-appearance: auto !important;
+            -moz-appearance: number-input !important;
+            appearance: auto !important;
+        }
+
         .char-panel { border: 2px solid var(--primary-color); border-radius: 12px; padding: 20px; margin-bottom: 25px; background: var(--bg-secondary); }
         .char-panel h3 { color: var(--primary-color); margin-bottom: 15px; }
         .recommend-box { margin-top: 20px; padding: 15px; background: var(--primary-color-alpha-light); border: 1px solid var(--primary-color); border-radius: 10px; font-weight: bold; }
@@ -177,6 +183,18 @@
             <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 8px;">微信赞赏</p>
         </div>
     </div>
+
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.9rem; color: var(--text-muted);">
+        <p>鸣谢（排名不分先后，均为b站昵称，不喜可删）：</p>
+        <p>
+            <a href="https://space.bilibili.com/38597682" target="_blank" style="color: var(--primary-color);">qwerty1454</a>、
+            <a href="https://space.bilibili.com/497509737" target="_blank" style="color: var(--primary-color);">bili_61161198286</a>、
+            <a href="https://space.bilibili.com/16070999" target="_blank" style="color: var(--primary-color);">不知道是什么控</a>、
+            <a href="https://space.bilibili.com/157237724" target="_blank" style="color: var(--primary-color);">芥各就是爱情</a>、
+            <a href="https://space.bilibili.com/267411577" target="_blank" style="color: var(--primary-color);">孤胆飞客</a>、
+            <a href="https://space.bilibili.com/16070999" target="_blank" style="color: var(--primary-color);">不知道是什么控关</a>
+        </p>
+    </div>
 </div>
 
 <div id="qr-modal" onclick="this.style.display='none'">
@@ -189,14 +207,14 @@
         <button class="close-btn" onclick="document.getElementById('update-log-modal').style.display='none'">&times;</button>
         <h2>更新日志</h2>
         <div class="version-block">
-            <h3>V1.0</h3>
+            <h3>V1.0（2026.7.9）</h3>
             <ul>
                 <li>功能非常少且操作繁琐。</li>
             </ul>
             <p>B站讲解视频：<a href="https://www.bilibili.com/video/BV1ucMH6hEJ1/?spm_id_from=333.1387.homepage.video_card.click&vd_source=c5e79e86ae5117cf072f818557230b42" target="_blank">点击观看</a></p>
         </div>
         <div class="version-block">
-            <h3>V2.0</h3>
+            <h3>V2.0（2026.7.11）</h3>
             <ul>
                 <li>可选择单个角色，自动生成对应角色词条库</li>
                 <li>用户填完对应驱动盘强化次数后可自动计算驱动盘缩放系数并生成对应驱动盘权重分数</li>
@@ -207,7 +225,7 @@
             <p>B站讲解视频：<a href="https://www.bilibili.com/video/BV1KSNA6NEP2/?spm_id_from=333.1387.homepage.video_card.click&vd_source=c5e79e86ae5117cf072f818557230b42" target="_blank">点击观看</a></p>
         </div>
         <div class="version-block">
-            <h3>V2.1</h3>
+            <h3>V2.1（2026.7.11）</h3>
             <ul>
                 <li>驱动盘可定向副词条</li>
                 <li>驱动盘分数计算方式优化</li>
@@ -220,12 +238,13 @@
             <p>B站讲解视频：<a href="https://www.bilibili.com/video/BV1mJNR61EEg?spm_id_from=333.788.videopod.sections&vd_source=c5e79e86ae5117cf072f818557230b42" target="_blank">点击观看</a></p>
         </div>
         <div class="version-block">
-            <h3>V2.2</h3>
+            <h3>V2.2（2026.7.31）</h3>
             <ul>
 		<li>修正副词条强化概率</li>
                 <li>可选择多个角色</li>
                 <li>增加推荐培养角色功能</li>
                 <li>增加配色与更新日志板块</li>
+		<li>使得取消勾选驱动盘号位后只有对应驱动盘号位会删除对应数据，其他号位驱动盘输入数据保留</li>
                 <li>在界面下方新增了我的B站号和打赏渠道</li>
 		<li>增加角色蕾米埃尔</li>
             </ul>
@@ -570,7 +589,7 @@
             }
             html += `<div class="form-group"><label>驱动盘号位（可多选）</label><div class="position-select" id="char-positions-${idx}">`;
             for (let p = 1; p <= 6; p++) {
-                html += `<label class="position-option"><input type="checkbox" value="${p}" onchange="onPositionChange(${idx})"> ${p}号位</label>`;
+                html += `<label class="position-option"><input type="checkbox" value="${p}" onchange="togglePosition(${idx}, this.value, this.checked)"> ${p}号位</label>`;
             }
             html += `</div></div>`;
             html += `<div id="position-configs-${idx}"></div>`;
@@ -645,30 +664,49 @@
         return top4[0]*6 + (top4[1]||0) + (top4[2]||0) + (top4[3]||0);
     }
 
+    function createPositionConfig(idx, pos) {
+        const configsDiv = document.getElementById(`position-configs-${idx}`);
+        if (!configsDiv || document.getElementById(`pos-config-${idx}-${pos}`)) return;
+        const div = document.createElement('div');
+        div.className = 'pos-config';
+        div.id = `pos-config-${idx}-${pos}`;
+        let inner = `<h4>${pos}号位配置</h4>`;
+        if (pos >= 4) inner += `<label>主词条选择：</label><div class="main-entry-grid" id="main-${idx}-${pos}"></div>`;
+        inner += `<div class="special-option" style="margin:10px 0;"><input type="checkbox" id="game-direct-toggle-${idx}-${pos}" onchange="toggleGameDirect(${idx},${pos})"> <label for="game-direct-toggle-${idx}-${pos}">定向副词条</label></div>`;
+        inner += `<div id="game-direct-area-${idx}-${pos}" style="display:none; margin-bottom:10px; padding:10px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:8px;"><label>选择定向副词条（最多2个）</label><div id="game-direct-options-${idx}-${pos}" class="main-entry-grid"></div></div>`;
+        inner += `<label>当前驱动盘强化次数：</label><div id="enhance-${idx}-${pos}"></div>`;
+        inner += `<div>当前驱动盘分数：<span id="score-percent-${idx}-${pos}">0分</span></div>`;
+        inner += `<small style="color:var(--text-muted);">满分100分，为100倍当前驱动盘权重分数与驱动盘最大权重分数之比</small>`;
+        inner += `<label>抽中对应号位主词条概率：<input type="text" id="scale-${idx}-${pos}" readonly></label><small style="color:var(--text-muted);">示例：随机抽得该位置概率1/6；4/6号位主词条仅1种可用输入1/36</small>`;
+        div.innerHTML = inner;
+        configsDiv.appendChild(div);
+        if (pos >= 4) renderMainEntriesForPos(idx, pos);
+        updatePosScale(idx, pos);
+        buildGameDirectOptions(idx, pos);
+        buildPosEnhance(idx, pos);
+    }
+
+    function removePositionConfig(idx, pos) {
+        const el = document.getElementById(`pos-config-${idx}-${pos}`);
+        if (el) el.remove();
+    }
+
+    function togglePosition(idx, pos, checked) {
+        if (checked) {
+            createPositionConfig(idx, parseInt(pos));
+        } else {
+            removePositionConfig(idx, parseInt(pos));
+        }
+    }
+
     function onPositionChange(idx) {
         const positions = getCurrentPositions(idx);
         const configsDiv = document.getElementById(`position-configs-${idx}`);
         if (!configsDiv) return;
         configsDiv.innerHTML = '';
         positions.forEach(pos => {
-            const div = document.createElement('div'); div.className = 'pos-config'; div.id = `pos-config-${idx}-${pos}`;
-            let inner = `<h4>${pos}号位配置</h4>`;
-            if (pos >= 4) inner += `<label>主词条选择：</label><div class="main-entry-grid" id="main-${idx}-${pos}"></div>`;
-            inner += `<div class="special-option" style="margin:10px 0;"><input type="checkbox" id="game-direct-toggle-${idx}-${pos}" onchange="toggleGameDirect(${idx},${pos})"> <label for="game-direct-toggle-${idx}-${pos}">定向副词条</label></div>`;
-            inner += `<div id="game-direct-area-${idx}-${pos}" style="display:none; margin-bottom:10px; padding:10px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:8px;"><label>选择定向副词条（最多2个）</label><div id="game-direct-options-${idx}-${pos}" class="main-entry-grid"></div></div>`;
-            inner += `<label>当前驱动盘强化次数：</label><div id="enhance-${idx}-${pos}"></div>`;
-            inner += `<div>当前驱动盘分数：<span id="score-percent-${idx}-${pos}">0分</span></div>`;
-            inner += `<small style="color:var(--text-muted);">满分100分，为100倍当前驱动盘权重分数与驱动盘最大权重分数之比</small>`;
-            inner += `<label>抽中对应号位主词条概率：<input type="text" id="scale-${idx}-${pos}" readonly></label><small style="color:var(--text-muted);">示例：随机抽得该位置概率1/6；4/6号位主词条仅1种可用输入1/36</small>`;
-            div.innerHTML = inner;
-            configsDiv.appendChild(div);
+            createPositionConfig(idx, pos);
         });
-        positions.forEach(pos => {
-            if (pos >= 4) renderMainEntriesForPos(idx, pos);
-            updatePosScale(idx, pos);
-            buildGameDirectOptions(idx, pos);
-        });
-        positions.forEach(pos => buildPosEnhance(idx, pos));
     }
 
     function toggleGameDirect(idx, pos) {
