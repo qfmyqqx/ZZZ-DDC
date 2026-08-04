@@ -183,21 +183,27 @@
             <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 8px;">微信赞赏</p>
         </div>
     </div>
-
-    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.9rem; color: var(--text-muted);">
-        <p>鸣谢（排名不分先后，均为b站昵称，不喜可删）：</p>
+<div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.9rem; color: var(--text-muted);">
+        <p>鸣谢（排名不分先后，均为b站昵称，感谢提供数据、建议及打赏的朋友们，不喜可删）：</p>
         <p>
-            <a href="https://space.bilibili.com/38597682" target="_blank" style="color: var(--primary-color);">qwerty1454</a>、
+            <p style="color: var(--primary-color);">衷心感谢所有提供帮助的朋友们！是你们的支持，让计算器有了今天！</p>
+	    <p style="color: var(--primary-color);">无论在眼前在天边</p>
+	    <p style="color: var(--primary-color);">真心的为你祝愿</p>
+            <p style="color: var(--primary-color);">&nbsp;&nbsp;&nbsp;祝愿你幸福平安！</p>
+	    <p style="color: var(--primary-color);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;——《让世界充满爱》</p>
+	    <a href="https://space.bilibili.com/38597682" target="_blank" style="color: var(--primary-color);">qwerty1454</a>、
             <a href="https://space.bilibili.com/497509737" target="_blank" style="color: var(--primary-color);">bili_61161198286</a>、
             <a href="https://space.bilibili.com/16070999" target="_blank" style="color: var(--primary-color);">不知道是什么控</a>、
             <a href="https://space.bilibili.com/157237724" target="_blank" style="color: var(--primary-color);">芥各就是爱情</a>、
             <a href="https://space.bilibili.com/267411577" target="_blank" style="color: var(--primary-color);">孤胆飞客</a>、
-            <a href="https://space.bilibili.com/16070999" target="_blank" style="color: var(--primary-color);">不知道是什么控关</a>
-        </p>
+            <a href="https://space.bilibili.com/16070999" target="_blank" style="color: var(--primary-color);">不知道是什么控关</a>、
+            <a href="https://space.bilibili.com/2542448" target="_blank" style="color: var(--primary-color);">星灯铃兰</a>、
+            <a href="https://space.bilibili.com/24383668" target="_blank" style="color: var(--primary-color);">南秋cC丶</a>
+        </p>        
     </div>
 </div>
 
-<div id="qr-modal" onclick="this.style.display='none'">
+  <div id="qr-modal" onclick="this.style.display='none'">
     <span onclick="document.getElementById('qr-modal').style.display='none'">&times;</span>
     <img id="qr-modal-img" src="" alt="放大赞赏码">
 </div>
@@ -574,85 +580,99 @@
         });
     }
 
+    function getCid(ch) {
+        if (!ch.cid) ch.cid = ch.name.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_');
+        return ch.cid;
+    }
+
     function renderAllCharacterConfigs() {
         const container = document.getElementById('char-configs-container');
-        container.innerHTML = '';
-        gameSelectedChars.forEach((ch, idx) => {
-            const panel = document.createElement('div');
-            panel.className = 'char-panel';
-            panel.id = `char-panel-${idx}`;
-            let html = `<h3>${ch.name}</h3>`;
-            if (ch.special === 'alice') {
-                html += `<div class="special-option"><input type="checkbox" id="char-alice-c6-${idx}" onchange="updateCharWeights(${idx})"> <label for="char-alice-c6-${idx}">爱丽丝6命（额外增加爆伤权重0.3）</label></div>`;
+        const existingPanels = container.querySelectorAll('.char-panel');
+        const existingCids = new Set();
+        existingPanels.forEach(panel => existingCids.add(panel.dataset.cid));
+        const currentCids = new Set(gameSelectedChars.map(ch => getCid(ch)));
+        existingPanels.forEach(panel => {
+            if (!currentCids.has(panel.dataset.cid)) panel.remove();
+        });
+        gameSelectedChars.forEach(ch => {
+            const cid = getCid(ch);
+            if (!existingCids.has(cid)) {
+                const panel = document.createElement('div');
+                panel.className = 'char-panel';
+                panel.id = `char-panel-${cid}`;
+                panel.dataset.cid = cid;
+                let html = `<h3>${ch.name}</h3>`;
+                if (ch.special === 'alice') {
+                    html += `<div class="special-option"><input type="checkbox" id="char-alice-c6-${cid}" onchange="updateCharWeights('${cid}')"> <label for="char-alice-c6-${cid}">爱丽丝6命（额外增加爆伤权重0.3）</label></div>`;
+                }
+                if (ch.special === 'vivian') {
+                    html += `<div class="special-option"><input type="checkbox" id="char-vivian-c4-${cid}" onchange="updateCharWeights('${cid}')"> <label for="char-vivian-c4-${cid}">薇薇安4命（暴击伤害权重改为0.6）</label></div>`;
+                }
+                html += `<div class="form-group"><label>驱动盘号位（可多选）</label><div class="position-select" id="char-positions-${cid}">`;
+                for (let p = 1; p <= 6; p++) {
+                    html += `<label class="position-option"><input type="checkbox" value="${p}" onchange="togglePosition('${cid}', this.value, this.checked)"> ${p}号位</label>`;
+                }
+                html += `</div></div>`;
+                html += `<div id="position-configs-${cid}"></div>`;
+                html += `<label class="section-label">角色基础词条库</label><div class="entries-list" id="char-entries-${cid}"></div>`;
+                panel.innerHTML = html;
+                container.appendChild(panel);
+                initCharEntries(cid, ch);
+                updateCharWeights(cid);
             }
-            if (ch.special === 'vivian') {
-                html += `<div class="special-option"><input type="checkbox" id="char-vivian-c4-${idx}" onchange="updateCharWeights(${idx})"> <label for="char-vivian-c4-${idx}">薇薇安4命（暴击伤害权重改为0.6）</label></div>`;
-            }
-            html += `<div class="form-group"><label>驱动盘号位（可多选）</label><div class="position-select" id="char-positions-${idx}">`;
-            for (let p = 1; p <= 6; p++) {
-                html += `<label class="position-option"><input type="checkbox" value="${p}" onchange="togglePosition(${idx}, this.value, this.checked)"> ${p}号位</label>`;
-            }
-            html += `</div></div>`;
-            html += `<div id="position-configs-${idx}"></div>`;
-            html += `<label class="section-label">角色基础词条库</label><div class="entries-list" id="char-entries-${idx}"></div>`;
-            panel.innerHTML = html;
-            container.appendChild(panel);
-            initCharEntries(idx, ch);
-            updateCharWeights(idx);
-            onPositionChange(idx);
         });
     }
 
-    function initCharEntries(idx, ch) {
-        const ct = document.getElementById(`char-entries-${idx}`);
+    function initCharEntries(cid, ch) {
+        const ct = document.getElementById(`char-entries-${cid}`);
         ct.innerHTML = '';
         ENTRY_NAMES.forEach((n, i) => {
             const d = document.createElement('div'); d.className = 'entry-grid';
-            d.innerHTML = `<div class="entry-item"><label>词条名称</label><input type="text" value="${n}" disabled></div><div class="entry-item"><label>库存</label><input type="number" class="game-rest-${idx}" data-idx="${i}" min="0" value="1"></div><div class="entry-item"><label>权重</label><input type="text" class="game-weight-${idx}" data-idx="${i}" placeholder="整数/小数/分数"></div>`;
+            d.innerHTML = `<div class="entry-item"><label>词条名称</label><input type="text" value="${n}" disabled></div><div class="entry-item"><label>库存</label><input type="number" class="game-rest-${cid}" data-idx="${i}" min="0" value="1"></div><div class="entry-item"><label>权重</label><input type="text" class="game-weight-${cid}" data-idx="${i}" placeholder="整数/小数/分数"></div>`;
             ct.appendChild(d);
         });
-        document.querySelectorAll(`.game-weight-${idx}`).forEach(inp => inp.addEventListener('input', () => {
-            onPositionChange(idx);
+        document.querySelectorAll(`.game-weight-${cid}`).forEach(inp => inp.addEventListener('input', () => {
+            onPositionChange(cid);
         }));
     }
 
-    function updateCharWeights(idx) {
-        const ch = gameSelectedChars[idx];
+    function updateCharWeights(cid) {
+        const ch = gameSelectedChars.find(c => getCid(c) === cid);
         if (!ch) return;
         const weights = [...ch.weights];
-        const aliceCb = document.getElementById(`char-alice-c6-${idx}`);
-        const vivianCb = document.getElementById(`char-vivian-c4-${idx}`);
+        const aliceCb = document.getElementById(`char-alice-c6-${cid}`);
+        const vivianCb = document.getElementById(`char-vivian-c4-${cid}`);
         if (aliceCb && aliceCb.checked) weights[7] += 0.3;
         if (vivianCb && vivianCb.checked) weights[7] = 0.6;
-        const wi = document.querySelectorAll(`.game-weight-${idx}`);
-        const ri = document.querySelectorAll(`.game-rest-${idx}`);
+        const wi = document.querySelectorAll(`.game-weight-${cid}`);
+        const ri = document.querySelectorAll(`.game-rest-${cid}`);
         for (let i = 0; i < 10; i++) {
             if (wi[i]) { wi[i].value = weights[i] === 0 ? '' : weights[i]; wi[i].disabled = false; }
             if (ri[i]) { ri[i].disabled = false; ri[i].value = 1; }
         }
-        onPositionChange(idx);
+        onPositionChange(cid);
     }
 
-    function getCurrentPositions(idx) {
-        return Array.from(document.querySelectorAll(`#char-positions-${idx} input:checked`)).map(cb => parseInt(cb.value));
+    function getCurrentPositions(cid) {
+        return Array.from(document.querySelectorAll(`#char-positions-${cid} input:checked`)).map(cb => parseInt(cb.value));
     }
 
-    function getSelectedMainForPos(idx, pos) {
-        const container = document.getElementById(`main-${idx}-${pos}`);
+    function getSelectedMainForPos(cid, pos) {
+        const container = document.getElementById(`main-${cid}-${pos}`);
         if (!container) return [];
         return Array.from(container.querySelectorAll('input:checked')).map(c => c.value);
     }
 
-    function getBlockedSubIdxForPos(idx, pos) {
+    function getBlockedSubIdxForPos(cid, pos) {
         if (pos <= 3) return -1;
-        const selected = getSelectedMainForPos(idx, pos);
+        const selected = getSelectedMainForPos(cid, pos);
         if (selected.length === 1 && MAIN_ATTR_TO_SUB[selected[0]] !== undefined) return MAIN_ATTR_TO_SUB[selected[0]];
         return -1;
     }
 
-    function getMaxScoreForPos(idx, pos) {
-        const weightInputs = document.querySelectorAll(`.game-weight-${idx}`);
-        const blockedIdx = getBlockedSubIdxForPos(idx, pos);
+    function getMaxScoreForPos(cid, pos) {
+        const weightInputs = document.querySelectorAll(`.game-weight-${cid}`);
+        const blockedIdx = getBlockedSubIdxForPos(cid, pos);
         const weights = [];
         for (let i = 0; i < 10; i++) {
             if (i === blockedIdx) continue;
@@ -665,62 +685,62 @@
         return top4[0]*6 + (top4[1]||0) + (top4[2]||0) + (top4[3]||0);
     }
 
-    function createPositionConfig(idx, pos) {
-        const configsDiv = document.getElementById(`position-configs-${idx}`);
-        if (!configsDiv || document.getElementById(`pos-config-${idx}-${pos}`)) return;
+    function createPositionConfig(cid, pos) {
+        const configsDiv = document.getElementById(`position-configs-${cid}`);
+        if (!configsDiv || document.getElementById(`pos-config-${cid}-${pos}`)) return;
         const div = document.createElement('div');
         div.className = 'pos-config';
-        div.id = `pos-config-${idx}-${pos}`;
+        div.id = `pos-config-${cid}-${pos}`;
         let inner = `<h4>${pos}号位配置</h4>`;
-        if (pos >= 4) inner += `<label>主词条选择：</label><div class="main-entry-grid" id="main-${idx}-${pos}"></div>`;
-        inner += `<div class="special-option" style="margin:10px 0;"><input type="checkbox" id="game-direct-toggle-${idx}-${pos}" onchange="toggleGameDirect(${idx},${pos})"> <label for="game-direct-toggle-${idx}-${pos}">定向副词条</label></div>`;
-        inner += `<div id="game-direct-area-${idx}-${pos}" style="display:none; margin-bottom:10px; padding:10px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:8px;"><label>选择定向副词条（最多2个）</label><div id="game-direct-options-${idx}-${pos}" class="main-entry-grid"></div></div>`;
-        inner += `<label>当前驱动盘强化次数：</label><div id="enhance-${idx}-${pos}"></div>`;
-        inner += `<div>当前驱动盘分数：<span id="score-percent-${idx}-${pos}">0分</span></div>`;
+        if (pos >= 4) inner += `<label>主词条选择：</label><div class="main-entry-grid" id="main-${cid}-${pos}"></div>`;
+        inner += `<div class="special-option" style="margin:10px 0;"><input type="checkbox" id="game-direct-toggle-${cid}-${pos}" onchange="toggleGameDirect('${cid}',${pos})"> <label for="game-direct-toggle-${cid}-${pos}">定向副词条</label></div>`;
+        inner += `<div id="game-direct-area-${cid}-${pos}" style="display:none; margin-bottom:10px; padding:10px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:8px;"><label>选择定向副词条（最多2个）</label><div id="game-direct-options-${cid}-${pos}" class="main-entry-grid"></div></div>`;
+        inner += `<label>当前驱动盘强化次数：</label><div id="enhance-${cid}-${pos}"></div>`;
+        inner += `<div>当前驱动盘分数：<span id="score-percent-${cid}-${pos}">0分</span></div>`;
         inner += `<small style="color:var(--text-muted);">满分100分，为100倍当前驱动盘权重分数与驱动盘最大权重分数之比</small>`;
-        inner += `<label>抽中对应号位主词条概率：<input type="text" id="scale-${idx}-${pos}" readonly></label><small style="color:var(--text-muted);">示例：随机抽得该位置概率1/6；4/6号位主词条仅1种可用输入1/36</small>`;
+        inner += `<label>抽中对应号位主词条概率：<input type="text" id="scale-${cid}-${pos}" readonly></label><small style="color:var(--text-muted);">示例：随机抽得该位置概率1/6；4/6号位主词条仅1种可用输入1/36</small>`;
         div.innerHTML = inner;
         configsDiv.appendChild(div);
-        if (pos >= 4) renderMainEntriesForPos(idx, pos);
-        updatePosScale(idx, pos);
-        buildGameDirectOptions(idx, pos);
-        buildPosEnhance(idx, pos);
+        if (pos >= 4) renderMainEntriesForPos(cid, pos);
+        updatePosScale(cid, pos);
+        buildGameDirectOptions(cid, pos);
+        buildPosEnhance(cid, pos);
     }
 
-    function removePositionConfig(idx, pos) {
-        const el = document.getElementById(`pos-config-${idx}-${pos}`);
+    function removePositionConfig(cid, pos) {
+        const el = document.getElementById(`pos-config-${cid}-${pos}`);
         if (el) el.remove();
     }
 
-    function togglePosition(idx, pos, checked) {
+    function togglePosition(cid, pos, checked) {
         if (checked) {
-            createPositionConfig(idx, parseInt(pos));
+            createPositionConfig(cid, parseInt(pos));
         } else {
-            removePositionConfig(idx, parseInt(pos));
+            removePositionConfig(cid, parseInt(pos));
         }
     }
 
-    function onPositionChange(idx) {
-        const positions = getCurrentPositions(idx);
-        const configsDiv = document.getElementById(`position-configs-${idx}`);
+    function onPositionChange(cid) {
+        const positions = getCurrentPositions(cid);
+        const configsDiv = document.getElementById(`position-configs-${cid}`);
         if (!configsDiv) return;
         configsDiv.innerHTML = '';
         positions.forEach(pos => {
-            createPositionConfig(idx, pos);
+            createPositionConfig(cid, pos);
         });
     }
 
-    function toggleGameDirect(idx, pos) {
-        const area = document.getElementById(`game-direct-area-${idx}-${pos}`);
-        area.style.display = document.getElementById(`game-direct-toggle-${idx}-${pos}`).checked ? 'block' : 'none';
-        if (document.getElementById(`game-direct-toggle-${idx}-${pos}`).checked) buildGameDirectOptions(idx, pos);
+    function toggleGameDirect(cid, pos) {
+        const area = document.getElementById(`game-direct-area-${cid}-${pos}`);
+        area.style.display = document.getElementById(`game-direct-toggle-${cid}-${pos}`).checked ? 'block' : 'none';
+        if (document.getElementById(`game-direct-toggle-${cid}-${pos}`).checked) buildGameDirectOptions(cid, pos);
     }
 
-    function buildGameDirectOptions(idx, pos) {
-        const container = document.getElementById(`game-direct-options-${idx}-${pos}`);
+    function buildGameDirectOptions(cid, pos) {
+        const container = document.getElementById(`game-direct-options-${cid}-${pos}`);
         if (!container) return;
-        const weightInputs = document.querySelectorAll(`.game-weight-${idx}`);
-        const blockedIdx = getBlockedSubIdxForPos(idx, pos);
+        const weightInputs = document.querySelectorAll(`.game-weight-${cid}`);
+        const blockedIdx = getBlockedSubIdxForPos(cid, pos);
         container.innerHTML = '';
         for (let i = 0; i < 10; i++) {
             if (i === blockedIdx) continue;
@@ -728,73 +748,73 @@
             if (w > 0) {
                 const label = document.createElement('label');
                 label.className = 'main-entry-item';
-                label.innerHTML = `<input type="checkbox" class="game-direct-check-${idx}-${pos}" value="${i}" onchange="limitGameDirect(${idx},${pos}, this)"> ${ENTRY_NAMES[i]}`;
+                label.innerHTML = `<input type="checkbox" class="game-direct-check-${cid}-${pos}" value="${i}" onchange="limitGameDirect('${cid}',${pos}, this)"> ${ENTRY_NAMES[i]}`;
                 container.appendChild(label);
             }
         }
     }
 
-    function limitGameDirect(idx, pos, cb) {
-        const checked = document.querySelectorAll(`.game-direct-check-${idx}-${pos}:checked`);
+    function limitGameDirect(cid, pos, cb) {
+        const checked = document.querySelectorAll(`.game-direct-check-${cid}-${pos}:checked`);
         if (checked.length > 2) cb.checked = false;
     }
 
-    function getGameDirectTypes(idx, pos) {
-        const toggle = document.getElementById(`game-direct-toggle-${idx}-${pos}`);
+    function getGameDirectTypes(cid, pos) {
+        const toggle = document.getElementById(`game-direct-toggle-${cid}-${pos}`);
         if (!toggle || !toggle.checked) return [];
-        return Array.from(document.querySelectorAll(`.game-direct-check-${idx}-${pos}:checked`)).map(cb => parseInt(cb.value));
+        return Array.from(document.querySelectorAll(`.game-direct-check-${cid}-${pos}:checked`)).map(cb => parseInt(cb.value));
     }
 
-    function renderMainEntriesForPos(idx, pos) {
-        const ct = document.getElementById(`main-${idx}-${pos}`); if (!ct) return;
+    function renderMainEntriesForPos(cid, pos) {
+        const ct = document.getElementById(`main-${cid}-${pos}`); if (!ct) return;
         ct.innerHTML = '';
         (MAIN_ENTRY_CONFIG[pos] || []).forEach(n => {
             const it = document.createElement('label'); it.className = 'main-entry-item';
-            it.innerHTML = `<input type="checkbox" value="${n}" onchange="onMainEntryChange(${idx},${pos})"> ${n}`;
+            it.innerHTML = `<input type="checkbox" value="${n}" onchange="onMainEntryChange('${cid}',${pos})"> ${n}`;
             ct.appendChild(it);
         });
     }
 
-    function onMainEntryChange(idx, pos) { updatePosScale(idx, pos); buildPosEnhance(idx, pos); buildGameDirectOptions(idx, pos); }
+    function onMainEntryChange(cid, pos) { updatePosScale(cid, pos); buildPosEnhance(cid, pos); buildGameDirectOptions(cid, pos); }
 
-    function buildPosEnhance(idx, pos) {
-        const area = document.getElementById(`enhance-${idx}-${pos}`); if (!area) return;
-        const weightInputs = document.querySelectorAll(`.game-weight-${idx}`);
-        const blockedIdx = getBlockedSubIdxForPos(idx, pos);
+    function buildPosEnhance(cid, pos) {
+        const area = document.getElementById(`enhance-${cid}-${pos}`); if (!area) return;
+        const weightInputs = document.querySelectorAll(`.game-weight-${cid}`);
+        const blockedIdx = getBlockedSubIdxForPos(cid, pos);
         area.innerHTML = '';
         for (let i = 0; i < weightInputs.length; i++) {
             if (i === blockedIdx) continue;
             const w = parseNumber(weightInputs[i].value);
             if (isNaN(w) || w <= 0) continue;
             const div = document.createElement('div'); div.className = 'enhance-row';
-            div.innerHTML = `<label class="enhance-name-col"><input type="checkbox" class="enhance-check-${idx}-${pos}" data-idx="${i}" onchange="calcPosScore(${idx},${pos})"> ${ENTRY_NAMES[i]}</label><span class="enhance-subval" id="sub-val-${idx}-${pos}-${i}">当前副词条数值：0</span><span>权重：${w}</span><div><input type="number" class="enhance-times-${idx}-${pos}" data-idx="${i}" min="0" max="5" value="0" style="width:60px;" onchange="calcPosScore(${idx},${pos})"></div>`;
+            div.innerHTML = `<label class="enhance-name-col"><input type="checkbox" class="enhance-check-${cid}-${pos}" data-idx="${i}" onchange="calcPosScore('${cid}',${pos})"> ${ENTRY_NAMES[i]}</label><span class="enhance-subval" id="sub-val-${cid}-${pos}-${i}">当前副词条数值：0</span><span>权重：${w}</span><div><input type="number" class="enhance-times-${cid}-${pos}" data-idx="${i}" min="0" max="5" value="0" style="width:60px;" onchange="calcPosScore('${cid}',${pos})"></div>`;
             area.appendChild(div);
         }
-        calcPosScore(idx, pos);
+        calcPosScore(cid, pos);
     }
 
-    function calcPosScore(idx, pos) {
-        const configDiv = document.getElementById(`pos-config-${idx}-${pos}`);
+    function calcPosScore(cid, pos) {
+        const configDiv = document.getElementById(`pos-config-${cid}-${pos}`);
         if (!configDiv) return;
-        const weightInputs = document.querySelectorAll(`.game-weight-${idx}`);
+        const weightInputs = document.querySelectorAll(`.game-weight-${cid}`);
         let score = 0;
-        const checks = configDiv.querySelectorAll(`.enhance-check-${idx}-${pos}:checked`);
+        const checks = configDiv.querySelectorAll(`.enhance-check-${cid}-${pos}:checked`);
         checks.forEach(cb => {
             const i = parseInt(cb.dataset.idx);
             const w = parseNumber(weightInputs[i]?.value);
             if (isNaN(w)) return;
-            const timesInput = configDiv.querySelector(`.enhance-times-${idx}-${pos}[data-idx="${i}"]`);
+            const timesInput = configDiv.querySelector(`.enhance-times-${cid}-${pos}[data-idx="${i}"]`);
             const times = parseInt(timesInput?.value || 0);
             score += (times + 1) * w;
         });
-        const maxScore = getMaxScoreForPos(idx, pos);
+        const maxScore = getMaxScoreForPos(cid, pos);
         const percent = maxScore > 0 ? (score / maxScore * 100).toFixed(1) : 0;
-        const el = document.getElementById(`score-percent-${idx}-${pos}`);
+        const el = document.getElementById(`score-percent-${cid}-${pos}`);
         if (el) { el.textContent = percent + '分'; el.dataset.internalScore = score; }
         const rows = configDiv.querySelectorAll('.enhance-row');
         rows.forEach(row => {
-            const cb = row.querySelector(`.enhance-check-${idx}-${pos}`);
-            const timesInput = row.querySelector(`.enhance-times-${idx}-${pos}`);
+            const cb = row.querySelector(`.enhance-check-${cid}-${pos}`);
+            const timesInput = row.querySelector(`.enhance-times-${cid}-${pos}`);
             const subValSpan = row.querySelector('.enhance-subval');
             if (!cb || !timesInput || !subValSpan) return;
             const i = parseInt(cb.dataset.idx);
@@ -820,15 +840,15 @@
         });
     }
 
-    function getPosGoal(idx, pos) {
-        const el = document.getElementById(`score-percent-${idx}-${pos}`);
+    function getPosGoal(cid, pos) {
+        const el = document.getElementById(`score-percent-${cid}-${pos}`);
         return el && el.dataset.internalScore ? parseFloat(el.dataset.internalScore) : 0;
     }
 
-    function updatePosScale(idx, pos) {
-        const input = document.getElementById(`scale-${idx}-${pos}`); if (!input) return;
+    function updatePosScale(cid, pos) {
+        const input = document.getElementById(`scale-${cid}-${pos}`); if (!input) return;
         if (pos <= 3) { input.value = (1/6).toFixed(15); return; }
-        const selected = getSelectedMainForPos(idx, pos);
+        const selected = getSelectedMainForPos(cid, pos);
         const probWeights = MAIN_PROB_WEIGHTS[pos];
         const totalWeight = Object.values(probWeights).reduce((a,b)=>a+b,0);
         let selectedWeight = selected.length === 0 ? totalWeight : selected.reduce((sum,name)=> sum + (probWeights[name]||0), 0);
@@ -836,9 +856,9 @@
         input.value = scale.toFixed(15);
     }
 
-    function collectEntryListForSingleMain(idx, pos, mainName) {
-        const rests = document.querySelectorAll(`.game-rest-${idx}`);
-        const weights = document.querySelectorAll(`.game-weight-${idx}`);
+    function collectEntryListForSingleMain(cid, pos, mainName) {
+        const rests = document.querySelectorAll(`.game-rest-${cid}`);
+        const weights = document.querySelectorAll(`.game-weight-${cid}`);
         const types = [];
         const blockedIdx = (pos >= 4 && mainName && MAIN_ATTR_TO_SUB[mainName] !== undefined) ? MAIN_ATTR_TO_SUB[mainName] : -1;
         for (let i = 0; i < 10; i++) {
@@ -853,26 +873,27 @@
     function calculateGame() {
         if (gameSelectedChars.length === 0) { alert('请至少选择一个角色'); return; }
         const allCharResults = [];
-        gameSelectedChars.forEach((ch, idx) => {
-            const positions = getCurrentPositions(idx);
+        gameSelectedChars.forEach(ch => {
+            const cid = getCid(ch);
+            const positions = getCurrentPositions(cid);
             if (positions.length === 0) return;
             let totalRandom = 0;
             const perPosResults = [];
             let sumA = 0, sumB = 0, countResults = 0;
             positions.forEach(pos => {
-                const goal = getPosGoal(idx, pos);
+                const goal = getPosGoal(cid, pos);
                 let mainList = [];
                 if (pos <= 3) mainList = [null];
                 else {
-                    const selected = getSelectedMainForPos(idx, pos);
+                    const selected = getSelectedMainForPos(cid, pos);
                     mainList = selected.length > 0 ? selected : [...MAIN_ENTRY_CONFIG[pos]];
                 }
                 const probWeights = pos >= 4 ? MAIN_PROB_WEIGHTS[pos] : null;
                 const totalWeight = probWeights ? Object.values(probWeights).reduce((a,b)=>a+b,0) : 1;
                 let posRandom = 0, posDirected = 0;
-                const directedTypes = getGameDirectTypes(idx, pos);
+                const directedTypes = getGameDirectTypes(cid, pos);
                 mainList.forEach(main => {
-                    const types = collectEntryListForSingleMain(idx, pos, main);
+                    const types = collectEntryListForSingleMain(cid, pos, main);
                     if (types.reduce((sum,t)=>sum+t.rest,0) < 4) { alert(`${ch.name} ${pos}号位（主词条：${main||'无'}）词条库存不足4`); return; }
                     let scaleFactor;
                     if (pos <= 3) scaleFactor = 1/6;
