@@ -28,7 +28,7 @@
 
         .mode-tabs-container { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
         .mode-tabs { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-        .tab-btn { padding: 10px 24px; border: 1px solid var(--primary-color); background: var(--bg-color); color: var(--primary-color); border-radius: 8px; cursor: pointer; transition: all .25s; font-size: 1rem; }
+        .tab-btn { padding: 12px 32px; border: 1px solid var(--primary-color); background: var(--bg-color); color: var(--primary-color); border-radius: 8px; cursor: pointer; transition: all .25s; font-size: 1.1rem; }
         .tab-btn.active { background: var(--primary-color); color: var(--text-on-primary); border-color: var(--primary-color); font-weight: 700; box-shadow: 0 0 20px var(--primary-color-alpha); }
         .tab-btn:hover { border-color: var(--primary-color); box-shadow: 0 0 15px var(--primary-color-alpha); }
 
@@ -37,7 +37,7 @@
         .theme-btn { width: 70px; height: 35px; border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease; background: linear-gradient(to right, var(--c1) 50%, var(--c2) 50%); flex-shrink: 0; }
         .theme-btn:hover { transform: scale(1.08); border-color: var(--primary-color); }
         .theme-btn.active { border-color: var(--primary-color); box-shadow: 0 0 12px var(--primary-color-alpha); }
-        #theme-toggle-btn { padding: 8px 20px; border: 1px solid var(--primary-color); color: var(--primary-color); background: var(--bg-color); border-radius: 8px; cursor: pointer; transition: all .25s; font-size: 1rem; font-weight: 600; }
+        #theme-toggle-btn { padding: 12px 32px; border: 1px solid var(--primary-color); color: var(--primary-color); background: var(--bg-color); border-radius: 8px; cursor: pointer; transition: all .25s; font-size: 1.1rem; font-weight: 600; }
         #theme-toggle-btn:hover { background: var(--primary-color); color: var(--text-on-primary); box-shadow: 0 0 15px var(--primary-color-alpha); }
 
         .panel { display: none; }
@@ -51,9 +51,9 @@
         .entry-grid { display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 10px; margin-bottom: 10px; align-items: end; }
         .entry-item { display: flex; flex-direction: column; }
         .entries-list { margin-bottom: 20px; padding: 16px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; max-height: 420px; overflow-y: auto; }
-        .btn { padding: 10px 28px; background: var(--primary-color); color: var(--text-on-primary); border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 700; transition: all .25s; letter-spacing: 0.5px; box-shadow: 0 4px 15px var(--primary-color-alpha); }
+        .btn { padding: 12px 32px; background: var(--primary-color); color: var(--text-on-primary); border: none; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: 700; transition: all .25s; letter-spacing: 0.5px; box-shadow: 0 4px 15px var(--primary-color-alpha); }
         .btn:hover { filter: brightness(1.1); box-shadow: 0 6px 25px var(--primary-color-alpha); transform: translateY(-1px); }
-        .btn-secondary { background: var(--bg-color); color: var(--primary-color); border: 1px solid var(--primary-color); font-weight: 600; }
+        .btn-secondary { padding: 12px 32px; background: var(--bg-color); color: var(--primary-color); border: 1px solid var(--primary-color); font-weight: 600; font-size: 1.1rem; }
         .result-area { margin-top: 28px; padding: 22px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; display: none; }
         .result-area h3 { margin-bottom: 14px; color: var(--primary-color); font-size: 1.2rem; }
         .result-item { margin-bottom: 10px; font-family: "Consolas","Monaco",monospace; font-size: 0.95rem; word-break: break-all; color: var(--text-color); }
@@ -112,7 +112,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>绝区零驱动盘练度提升概率计算器<span class="gold-title">V2.2</span></h1>
+    <h1>绝区零驱动盘练度提升概率计算器<span class="gold-title">V2.3</span></h1>
     <p class="subtitle">全网首发 | 全角色阵营分类 | 支持游戏版与自定义版双模式计算</p>
 
     <div class="mode-tabs-container">
@@ -128,6 +128,10 @@
     </div>
 
     <div id="game-panel" class="panel active">
+        <div style="display:flex; gap:12px; margin-bottom:15px; align-items:center; flex-wrap:wrap;">
+            <input type="text" id="enka-uid" placeholder="请输入游戏 UID (需开启角色展示)" style="flex:1; min-width:150px; padding:9px 12px; background:var(--bg-secondary); border:1px solid var(--border-color); color:var(--text-color); border-radius:6px; font-size:0.95rem;">
+            <button class="btn btn-secondary" onclick="importFromEnka()" style="padding:12px 20px; font-size:1.1rem;">Enka导入</button>
+        </div>
         <div class="character-select">
             <label>选择角色（可多选，再次点击取消选择）</label>
             <div class="faction-tabs" id="game-faction-tabs"></div>
@@ -183,7 +187,8 @@
             <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 8px;">微信赞赏</p>
         </div>
     </div>
-<div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.9rem; color: var(--text-muted);">
+
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.9rem; color: var(--text-muted);">
         <p>鸣谢（排名不分先后，均为b站昵称，感谢提供数据、建议及打赏的朋友们，不喜可删）：</p>
         <p>
             <p style="color: var(--primary-color);">衷心感谢所有提供帮助的朋友们！是你们的支持，让计算器有了今天！</p>
@@ -203,7 +208,7 @@
     </div>
 </div>
 
-  <div id="qr-modal" onclick="this.style.display='none'">
+<div id="qr-modal" onclick="this.style.display='none'">
     <span onclick="document.getElementById('qr-modal').style.display='none'">&times;</span>
     <img id="qr-modal-img" src="" alt="放大赞赏码">
 </div>
@@ -250,11 +255,11 @@
                 <li>可选择多个角色</li>
                 <li>增加推荐培养角色功能</li>
                 <li>增加配色与更新日志板块</li>
-				<li>使得取消勾选驱动盘号位后只有对应驱动盘号位会删除对应数据，其他号位驱动盘输入数据保留</li>
+		<li>使得取消勾选驱动盘号位后只有对应驱动盘号位会删除对应数据，其他号位驱动盘输入数据保留</li>
                 <li>在界面下方新增了我的B站号和打赏渠道以及鸣谢</li>
-				<li>增加角色蕾米埃尔</li>
+		<li>增加角色蕾米埃尔</li>
             </ul>
-			<p>B站讲解视频：<a href="https://www.bilibili.com/video/BV1x63m66EqC/?spm_id_from=333.1387.upload.video_card.click&vd_source=c5e79e86ae5117cf072f818557230b42" target="_blank">点击观看</a></p>
+		<p>B站讲解视频：<a href="https://www.bilibili.com/video/BV191uw6QEqB?spm_id_from=333.788.videopod.sections&vd_source=c5e79e86ae5117cf072f818557230b42" target="_blank">点击观看</a></p>
         </div>
     </div>
 </div>
@@ -368,6 +373,7 @@
     ];
 
     let gameSelectedChars = [];
+    let charConfigsCache = {};
 
     const themes = [
         { left: '#FF4500', right: '#121212', primary: '#FF4500', bg: '#121212', bg2: '#0a0a0a', text: '#e0e0e0', muted: '#888', border: '#333', textOnPrimary: '#121212' },
@@ -580,99 +586,114 @@
         });
     }
 
-    function getCid(ch) {
-        if (!ch.cid) ch.cid = ch.name.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_');
-        return ch.cid;
+    function cacheCurrentPanels() {
+        const panels = document.querySelectorAll('#char-configs-container .char-panel');
+        panels.forEach(panel => {
+            const charName = panel.dataset.charName;
+            if (!charName) return;
+            const idx = gameSelectedChars.findIndex(c => c.name === charName);
+            if (idx === -1) return;
+            const data = collectCharConfigData(idx);
+            if (data) charConfigsCache[charName] = data;
+        });
     }
 
     function renderAllCharacterConfigs() {
+        cacheCurrentPanels();
         const container = document.getElementById('char-configs-container');
-        const existingPanels = container.querySelectorAll('.char-panel');
-        const existingCids = new Set();
-        existingPanels.forEach(panel => existingCids.add(panel.dataset.cid));
-        const currentCids = new Set(gameSelectedChars.map(ch => getCid(ch)));
-        existingPanels.forEach(panel => {
-            if (!currentCids.has(panel.dataset.cid)) panel.remove();
-        });
-        gameSelectedChars.forEach(ch => {
-            const cid = getCid(ch);
-            if (!existingCids.has(cid)) {
-                const panel = document.createElement('div');
-                panel.className = 'char-panel';
-                panel.id = `char-panel-${cid}`;
-                panel.dataset.cid = cid;
-                let html = `<h3>${ch.name}</h3>`;
-                if (ch.special === 'alice') {
-                    html += `<div class="special-option"><input type="checkbox" id="char-alice-c6-${cid}" onchange="updateCharWeights('${cid}')"> <label for="char-alice-c6-${cid}">爱丽丝6命（额外增加爆伤权重0.3）</label></div>`;
-                }
-                if (ch.special === 'vivian') {
-                    html += `<div class="special-option"><input type="checkbox" id="char-vivian-c4-${cid}" onchange="updateCharWeights('${cid}')"> <label for="char-vivian-c4-${cid}">薇薇安4命（暴击伤害权重改为0.6）</label></div>`;
-                }
-                html += `<div class="form-group"><label>驱动盘号位（可多选）</label><div class="position-select" id="char-positions-${cid}">`;
-                for (let p = 1; p <= 6; p++) {
-                    html += `<label class="position-option"><input type="checkbox" value="${p}" onchange="togglePosition('${cid}', this.value, this.checked)"> ${p}号位</label>`;
-                }
-                html += `</div></div>`;
-                html += `<div id="position-configs-${cid}"></div>`;
-                html += `<label class="section-label">角色基础词条库</label><div class="entries-list" id="char-entries-${cid}"></div>`;
-                panel.innerHTML = html;
-                container.appendChild(panel);
-                initCharEntries(cid, ch);
-                updateCharWeights(cid);
+        container.innerHTML = '';
+        gameSelectedChars.forEach((ch, idx) => {
+            const panel = document.createElement('div');
+            panel.className = 'char-panel';
+            panel.id = `char-panel-${idx}`;
+            panel.dataset.charName = ch.name;
+            let html = `<h3>${ch.name}</h3>`;
+            if (ch.special === 'alice') {
+                html += `<div class="special-option"><input type="checkbox" id="char-alice-c6-${idx}" onchange="updateCharWeights(${idx})"> <label for="char-alice-c6-${idx}">爱丽丝6命（额外增加爆伤权重0.3）</label></div>`;
+            }
+            if (ch.special === 'vivian') {
+                html += `<div class="special-option"><input type="checkbox" id="char-vivian-c4-${idx}" onchange="updateCharWeights(${idx})"> <label for="char-vivian-c4-${idx}">薇薇安4命（暴击伤害权重改为0.6）</label></div>`;
+            }
+            html += `<div style="margin-top:14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">`;
+            html += `<select id="char-save-select-${idx}" class="char-save-select" data-idx="${idx}" style="flex:1;padding:5px;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-color);border-radius:4px;"></select>`;
+            html += `<button class="btn btn-secondary" onclick="newSave(${idx})" style="padding:5px 12px;font-size:0.85rem;">新建</button>`;
+	    html += `<button class="btn btn-secondary" onclick="readCurrentSave(${idx})" style="padding:5px 12px;font-size:0.85rem;">读取</button>`;
+            html += `<button class="btn btn-secondary" onclick="renameCurrentSave(${idx})" style="padding:5px 12px;font-size:0.85rem;">改名</button>`;
+            html += `<button class="btn btn-secondary" onclick="deleteCurrentSave(${idx})" style="padding:5px 12px;font-size:0.85rem;">删除</button>`;
+            html += `</div>`;
+            html += `<div class="form-group"><label>驱动盘号位（可多选）</label><div class="position-select" id="char-positions-${idx}">`;
+            for (let p = 1; p <= 6; p++) {
+                html += `<label class="position-option"><input type="checkbox" value="${p}" onchange="togglePosition(${idx}, this.value, this.checked)"> ${p}号位</label>`;
+            }
+            html += `</div></div>`;
+            html += `<div id="position-configs-${idx}"></div>`;
+            html += `<div style="margin-top:12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">`;
+            html += `<select id="char-save-select-bottom-${idx}" class="char-save-select-bottom" data-idx="${idx}" style="flex:1;padding:5px;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-color);border-radius:4px;"></select>`;
+            html += `<button class="btn btn-secondary" onclick="saveCurrentConfig(${idx})" style="padding:5px 12px;font-size:0.85rem;">保存</button>`;
+            html += `</div>`;
+            html += `<label class="section-label">角色基础词条库</label><div class="entries-list" id="char-entries-${idx}"></div>`;
+            panel.innerHTML = html;
+            container.appendChild(panel);
+            initCharEntries(idx, ch);
+            updateCharWeights(idx);
+            onPositionChange(idx);
+            refreshSaveSelect(idx);
+            if (charConfigsCache[ch.name]) {
+                restoreCharConfigData(idx, charConfigsCache[ch.name]);
             }
         });
     }
 
-    function initCharEntries(cid, ch) {
-        const ct = document.getElementById(`char-entries-${cid}`);
+    function initCharEntries(idx, ch) {
+        const ct = document.getElementById(`char-entries-${idx}`);
         ct.innerHTML = '';
         ENTRY_NAMES.forEach((n, i) => {
             const d = document.createElement('div'); d.className = 'entry-grid';
-            d.innerHTML = `<div class="entry-item"><label>词条名称</label><input type="text" value="${n}" disabled></div><div class="entry-item"><label>库存</label><input type="number" class="game-rest-${cid}" data-idx="${i}" min="0" value="1"></div><div class="entry-item"><label>权重</label><input type="text" class="game-weight-${cid}" data-idx="${i}" placeholder="整数/小数/分数"></div>`;
+            d.innerHTML = `<div class="entry-item"><label>词条名称</label><input type="text" value="${n}" disabled></div><div class="entry-item"><label>库存</label><input type="number" class="game-rest-${idx}" data-idx="${i}" min="0" value="1"></div><div class="entry-item"><label>权重</label><input type="text" class="game-weight-${idx}" data-idx="${i}" placeholder="整数/小数/分数"></div>`;
             ct.appendChild(d);
         });
-        document.querySelectorAll(`.game-weight-${cid}`).forEach(inp => inp.addEventListener('input', () => {
-            onPositionChange(cid);
+        document.querySelectorAll(`.game-weight-${idx}`).forEach(inp => inp.addEventListener('input', () => {
+            onPositionChange(idx);
         }));
     }
 
-    function updateCharWeights(cid) {
-        const ch = gameSelectedChars.find(c => getCid(c) === cid);
+    function updateCharWeights(idx) {
+        const ch = gameSelectedChars[idx];
         if (!ch) return;
         const weights = [...ch.weights];
-        const aliceCb = document.getElementById(`char-alice-c6-${cid}`);
-        const vivianCb = document.getElementById(`char-vivian-c4-${cid}`);
+        const aliceCb = document.getElementById(`char-alice-c6-${idx}`);
+        const vivianCb = document.getElementById(`char-vivian-c4-${idx}`);
         if (aliceCb && aliceCb.checked) weights[7] += 0.3;
         if (vivianCb && vivianCb.checked) weights[7] = 0.6;
-        const wi = document.querySelectorAll(`.game-weight-${cid}`);
-        const ri = document.querySelectorAll(`.game-rest-${cid}`);
+        const wi = document.querySelectorAll(`.game-weight-${idx}`);
+        const ri = document.querySelectorAll(`.game-rest-${idx}`);
         for (let i = 0; i < 10; i++) {
             if (wi[i]) { wi[i].value = weights[i] === 0 ? '' : weights[i]; wi[i].disabled = false; }
             if (ri[i]) { ri[i].disabled = false; ri[i].value = 1; }
         }
-        onPositionChange(cid);
+        onPositionChange(idx);
     }
 
-    function getCurrentPositions(cid) {
-        return Array.from(document.querySelectorAll(`#char-positions-${cid} input:checked`)).map(cb => parseInt(cb.value));
+    function getCurrentPositions(idx) {
+        return Array.from(document.querySelectorAll(`#char-positions-${idx} input:checked`)).map(cb => parseInt(cb.value));
     }
 
-    function getSelectedMainForPos(cid, pos) {
-        const container = document.getElementById(`main-${cid}-${pos}`);
+    function getSelectedMainForPos(idx, pos) {
+        const container = document.getElementById(`main-${idx}-${pos}`);
         if (!container) return [];
         return Array.from(container.querySelectorAll('input:checked')).map(c => c.value);
     }
 
-    function getBlockedSubIdxForPos(cid, pos) {
+    function getBlockedSubIdxForPos(idx, pos) {
         if (pos <= 3) return -1;
-        const selected = getSelectedMainForPos(cid, pos);
+        const selected = getSelectedMainForPos(idx, pos);
         if (selected.length === 1 && MAIN_ATTR_TO_SUB[selected[0]] !== undefined) return MAIN_ATTR_TO_SUB[selected[0]];
         return -1;
     }
 
-    function getMaxScoreForPos(cid, pos) {
-        const weightInputs = document.querySelectorAll(`.game-weight-${cid}`);
-        const blockedIdx = getBlockedSubIdxForPos(cid, pos);
+    function getMaxScoreForPos(idx, pos) {
+        const weightInputs = document.querySelectorAll(`.game-weight-${idx}`);
+        const blockedIdx = getBlockedSubIdxForPos(idx, pos);
         const weights = [];
         for (let i = 0; i < 10; i++) {
             if (i === blockedIdx) continue;
@@ -685,62 +706,62 @@
         return top4[0]*6 + (top4[1]||0) + (top4[2]||0) + (top4[3]||0);
     }
 
-    function createPositionConfig(cid, pos) {
-        const configsDiv = document.getElementById(`position-configs-${cid}`);
-        if (!configsDiv || document.getElementById(`pos-config-${cid}-${pos}`)) return;
+    function createPositionConfig(idx, pos) {
+        const configsDiv = document.getElementById(`position-configs-${idx}`);
+        if (!configsDiv || document.getElementById(`pos-config-${idx}-${pos}`)) return;
         const div = document.createElement('div');
         div.className = 'pos-config';
-        div.id = `pos-config-${cid}-${pos}`;
+        div.id = `pos-config-${idx}-${pos}`;
         let inner = `<h4>${pos}号位配置</h4>`;
-        if (pos >= 4) inner += `<label>主词条选择：</label><div class="main-entry-grid" id="main-${cid}-${pos}"></div>`;
-        inner += `<div class="special-option" style="margin:10px 0;"><input type="checkbox" id="game-direct-toggle-${cid}-${pos}" onchange="toggleGameDirect('${cid}',${pos})"> <label for="game-direct-toggle-${cid}-${pos}">定向副词条</label></div>`;
-        inner += `<div id="game-direct-area-${cid}-${pos}" style="display:none; margin-bottom:10px; padding:10px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:8px;"><label>选择定向副词条（最多2个）</label><div id="game-direct-options-${cid}-${pos}" class="main-entry-grid"></div></div>`;
-        inner += `<label>当前驱动盘强化次数：</label><div id="enhance-${cid}-${pos}"></div>`;
-        inner += `<div>当前驱动盘分数：<span id="score-percent-${cid}-${pos}">0分</span></div>`;
+        if (pos >= 4) inner += `<label>主词条选择：</label><div class="main-entry-grid" id="main-${idx}-${pos}"></div>`;
+        inner += `<div class="special-option" style="margin:10px 0;"><input type="checkbox" id="game-direct-toggle-${idx}-${pos}" onchange="toggleGameDirect(${idx},${pos})"> <label for="game-direct-toggle-${idx}-${pos}">定向副词条</label></div>`;
+        inner += `<div id="game-direct-area-${idx}-${pos}" style="display:none; margin-bottom:10px; padding:10px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:8px;"><label>选择定向副词条（最多2个）</label><div id="game-direct-options-${idx}-${pos}" class="main-entry-grid"></div></div>`;
+        inner += `<label>当前驱动盘强化次数：</label><div id="enhance-${idx}-${pos}"></div>`;
+        inner += `<div>当前驱动盘分数：<span id="score-percent-${idx}-${pos}">0分</span></div>`;
         inner += `<small style="color:var(--text-muted);">满分100分，为100倍当前驱动盘权重分数与驱动盘最大权重分数之比</small>`;
-        inner += `<label>抽中对应号位主词条概率：<input type="text" id="scale-${cid}-${pos}" readonly></label><small style="color:var(--text-muted);">示例：随机抽得该位置概率1/6；4/6号位主词条仅1种可用输入1/36</small>`;
+        inner += `<label>抽中对应号位主词条概率：<input type="text" id="scale-${idx}-${pos}" readonly></label><small style="color:var(--text-muted);">示例：随机抽得该位置概率1/6；4/6号位主词条仅1种可用输入1/36</small>`;
         div.innerHTML = inner;
         configsDiv.appendChild(div);
-        if (pos >= 4) renderMainEntriesForPos(cid, pos);
-        updatePosScale(cid, pos);
-        buildGameDirectOptions(cid, pos);
-        buildPosEnhance(cid, pos);
+        if (pos >= 4) renderMainEntriesForPos(idx, pos);
+        updatePosScale(idx, pos);
+        buildGameDirectOptions(idx, pos);
+        buildPosEnhance(idx, pos);
     }
 
-    function removePositionConfig(cid, pos) {
-        const el = document.getElementById(`pos-config-${cid}-${pos}`);
+    function removePositionConfig(idx, pos) {
+        const el = document.getElementById(`pos-config-${idx}-${pos}`);
         if (el) el.remove();
     }
 
-    function togglePosition(cid, pos, checked) {
+    function togglePosition(idx, pos, checked) {
         if (checked) {
-            createPositionConfig(cid, parseInt(pos));
+            createPositionConfig(idx, parseInt(pos));
         } else {
-            removePositionConfig(cid, parseInt(pos));
+            removePositionConfig(idx, parseInt(pos));
         }
     }
 
-    function onPositionChange(cid) {
-        const positions = getCurrentPositions(cid);
-        const configsDiv = document.getElementById(`position-configs-${cid}`);
+    function onPositionChange(idx) {
+        const positions = getCurrentPositions(idx);
+        const configsDiv = document.getElementById(`position-configs-${idx}`);
         if (!configsDiv) return;
         configsDiv.innerHTML = '';
         positions.forEach(pos => {
-            createPositionConfig(cid, pos);
+            createPositionConfig(idx, pos);
         });
     }
 
-    function toggleGameDirect(cid, pos) {
-        const area = document.getElementById(`game-direct-area-${cid}-${pos}`);
-        area.style.display = document.getElementById(`game-direct-toggle-${cid}-${pos}`).checked ? 'block' : 'none';
-        if (document.getElementById(`game-direct-toggle-${cid}-${pos}`).checked) buildGameDirectOptions(cid, pos);
+    function toggleGameDirect(idx, pos) {
+        const area = document.getElementById(`game-direct-area-${idx}-${pos}`);
+        area.style.display = document.getElementById(`game-direct-toggle-${idx}-${pos}`).checked ? 'block' : 'none';
+        if (document.getElementById(`game-direct-toggle-${idx}-${pos}`).checked) buildGameDirectOptions(idx, pos);
     }
 
-    function buildGameDirectOptions(cid, pos) {
-        const container = document.getElementById(`game-direct-options-${cid}-${pos}`);
+    function buildGameDirectOptions(idx, pos) {
+        const container = document.getElementById(`game-direct-options-${idx}-${pos}`);
         if (!container) return;
-        const weightInputs = document.querySelectorAll(`.game-weight-${cid}`);
-        const blockedIdx = getBlockedSubIdxForPos(cid, pos);
+        const weightInputs = document.querySelectorAll(`.game-weight-${idx}`);
+        const blockedIdx = getBlockedSubIdxForPos(idx, pos);
         container.innerHTML = '';
         for (let i = 0; i < 10; i++) {
             if (i === blockedIdx) continue;
@@ -748,73 +769,73 @@
             if (w > 0) {
                 const label = document.createElement('label');
                 label.className = 'main-entry-item';
-                label.innerHTML = `<input type="checkbox" class="game-direct-check-${cid}-${pos}" value="${i}" onchange="limitGameDirect('${cid}',${pos}, this)"> ${ENTRY_NAMES[i]}`;
+                label.innerHTML = `<input type="checkbox" class="game-direct-check-${idx}-${pos}" value="${i}" onchange="limitGameDirect(${idx},${pos}, this)"> ${ENTRY_NAMES[i]}`;
                 container.appendChild(label);
             }
         }
     }
 
-    function limitGameDirect(cid, pos, cb) {
-        const checked = document.querySelectorAll(`.game-direct-check-${cid}-${pos}:checked`);
+    function limitGameDirect(idx, pos, cb) {
+        const checked = document.querySelectorAll(`.game-direct-check-${idx}-${pos}:checked`);
         if (checked.length > 2) cb.checked = false;
     }
 
-    function getGameDirectTypes(cid, pos) {
-        const toggle = document.getElementById(`game-direct-toggle-${cid}-${pos}`);
+    function getGameDirectTypes(idx, pos) {
+        const toggle = document.getElementById(`game-direct-toggle-${idx}-${pos}`);
         if (!toggle || !toggle.checked) return [];
-        return Array.from(document.querySelectorAll(`.game-direct-check-${cid}-${pos}:checked`)).map(cb => parseInt(cb.value));
+        return Array.from(document.querySelectorAll(`.game-direct-check-${idx}-${pos}:checked`)).map(cb => parseInt(cb.value));
     }
 
-    function renderMainEntriesForPos(cid, pos) {
-        const ct = document.getElementById(`main-${cid}-${pos}`); if (!ct) return;
+    function renderMainEntriesForPos(idx, pos) {
+        const ct = document.getElementById(`main-${idx}-${pos}`); if (!ct) return;
         ct.innerHTML = '';
         (MAIN_ENTRY_CONFIG[pos] || []).forEach(n => {
             const it = document.createElement('label'); it.className = 'main-entry-item';
-            it.innerHTML = `<input type="checkbox" value="${n}" onchange="onMainEntryChange('${cid}',${pos})"> ${n}`;
+            it.innerHTML = `<input type="checkbox" value="${n}" onchange="onMainEntryChange(${idx},${pos})"> ${n}`;
             ct.appendChild(it);
         });
     }
 
-    function onMainEntryChange(cid, pos) { updatePosScale(cid, pos); buildPosEnhance(cid, pos); buildGameDirectOptions(cid, pos); }
+    function onMainEntryChange(idx, pos) { updatePosScale(idx, pos); buildPosEnhance(idx, pos); buildGameDirectOptions(idx, pos); }
 
-    function buildPosEnhance(cid, pos) {
-        const area = document.getElementById(`enhance-${cid}-${pos}`); if (!area) return;
-        const weightInputs = document.querySelectorAll(`.game-weight-${cid}`);
-        const blockedIdx = getBlockedSubIdxForPos(cid, pos);
+    function buildPosEnhance(idx, pos) {
+        const area = document.getElementById(`enhance-${idx}-${pos}`); if (!area) return;
+        const weightInputs = document.querySelectorAll(`.game-weight-${idx}`);
+        const blockedIdx = getBlockedSubIdxForPos(idx, pos);
         area.innerHTML = '';
         for (let i = 0; i < weightInputs.length; i++) {
             if (i === blockedIdx) continue;
             const w = parseNumber(weightInputs[i].value);
             if (isNaN(w) || w <= 0) continue;
             const div = document.createElement('div'); div.className = 'enhance-row';
-            div.innerHTML = `<label class="enhance-name-col"><input type="checkbox" class="enhance-check-${cid}-${pos}" data-idx="${i}" onchange="calcPosScore('${cid}',${pos})"> ${ENTRY_NAMES[i]}</label><span class="enhance-subval" id="sub-val-${cid}-${pos}-${i}">当前副词条数值：0</span><span>权重：${w}</span><div><input type="number" class="enhance-times-${cid}-${pos}" data-idx="${i}" min="0" max="5" value="0" style="width:60px;" onchange="calcPosScore('${cid}',${pos})"></div>`;
+            div.innerHTML = `<label class="enhance-name-col"><input type="checkbox" class="enhance-check-${idx}-${pos}" data-idx="${i}" onchange="calcPosScore(${idx},${pos})"> ${ENTRY_NAMES[i]}</label><span class="enhance-subval" id="sub-val-${idx}-${pos}-${i}">当前副词条数值：0</span><span>权重：${w}</span><div><input type="number" class="enhance-times-${idx}-${pos}" data-idx="${i}" min="0" max="5" value="0" style="width:60px;" onchange="calcPosScore(${idx},${pos})"></div>`;
             area.appendChild(div);
         }
-        calcPosScore(cid, pos);
+        calcPosScore(idx, pos);
     }
 
-    function calcPosScore(cid, pos) {
-        const configDiv = document.getElementById(`pos-config-${cid}-${pos}`);
+    function calcPosScore(idx, pos) {
+        const configDiv = document.getElementById(`pos-config-${idx}-${pos}`);
         if (!configDiv) return;
-        const weightInputs = document.querySelectorAll(`.game-weight-${cid}`);
+        const weightInputs = document.querySelectorAll(`.game-weight-${idx}`);
         let score = 0;
-        const checks = configDiv.querySelectorAll(`.enhance-check-${cid}-${pos}:checked`);
+        const checks = configDiv.querySelectorAll(`.enhance-check-${idx}-${pos}:checked`);
         checks.forEach(cb => {
             const i = parseInt(cb.dataset.idx);
             const w = parseNumber(weightInputs[i]?.value);
             if (isNaN(w)) return;
-            const timesInput = configDiv.querySelector(`.enhance-times-${cid}-${pos}[data-idx="${i}"]`);
+            const timesInput = configDiv.querySelector(`.enhance-times-${idx}-${pos}[data-idx="${i}"]`);
             const times = parseInt(timesInput?.value || 0);
             score += (times + 1) * w;
         });
-        const maxScore = getMaxScoreForPos(cid, pos);
+        const maxScore = getMaxScoreForPos(idx, pos);
         const percent = maxScore > 0 ? (score / maxScore * 100).toFixed(1) : 0;
-        const el = document.getElementById(`score-percent-${cid}-${pos}`);
+        const el = document.getElementById(`score-percent-${idx}-${pos}`);
         if (el) { el.textContent = percent + '分'; el.dataset.internalScore = score; }
         const rows = configDiv.querySelectorAll('.enhance-row');
         rows.forEach(row => {
-            const cb = row.querySelector(`.enhance-check-${cid}-${pos}`);
-            const timesInput = row.querySelector(`.enhance-times-${cid}-${pos}`);
+            const cb = row.querySelector(`.enhance-check-${idx}-${pos}`);
+            const timesInput = row.querySelector(`.enhance-times-${idx}-${pos}`);
             const subValSpan = row.querySelector('.enhance-subval');
             if (!cb || !timesInput || !subValSpan) return;
             const i = parseInt(cb.dataset.idx);
@@ -840,15 +861,15 @@
         });
     }
 
-    function getPosGoal(cid, pos) {
-        const el = document.getElementById(`score-percent-${cid}-${pos}`);
+    function getPosGoal(idx, pos) {
+        const el = document.getElementById(`score-percent-${idx}-${pos}`);
         return el && el.dataset.internalScore ? parseFloat(el.dataset.internalScore) : 0;
     }
 
-    function updatePosScale(cid, pos) {
-        const input = document.getElementById(`scale-${cid}-${pos}`); if (!input) return;
+    function updatePosScale(idx, pos) {
+        const input = document.getElementById(`scale-${idx}-${pos}`); if (!input) return;
         if (pos <= 3) { input.value = (1/6).toFixed(15); return; }
-        const selected = getSelectedMainForPos(cid, pos);
+        const selected = getSelectedMainForPos(idx, pos);
         const probWeights = MAIN_PROB_WEIGHTS[pos];
         const totalWeight = Object.values(probWeights).reduce((a,b)=>a+b,0);
         let selectedWeight = selected.length === 0 ? totalWeight : selected.reduce((sum,name)=> sum + (probWeights[name]||0), 0);
@@ -856,9 +877,9 @@
         input.value = scale.toFixed(15);
     }
 
-    function collectEntryListForSingleMain(cid, pos, mainName) {
-        const rests = document.querySelectorAll(`.game-rest-${cid}`);
-        const weights = document.querySelectorAll(`.game-weight-${cid}`);
+    function collectEntryListForSingleMain(idx, pos, mainName) {
+        const rests = document.querySelectorAll(`.game-rest-${idx}`);
+        const weights = document.querySelectorAll(`.game-weight-${idx}`);
         const types = [];
         const blockedIdx = (pos >= 4 && mainName && MAIN_ATTR_TO_SUB[mainName] !== undefined) ? MAIN_ATTR_TO_SUB[mainName] : -1;
         for (let i = 0; i < 10; i++) {
@@ -873,27 +894,26 @@
     function calculateGame() {
         if (gameSelectedChars.length === 0) { alert('请至少选择一个角色'); return; }
         const allCharResults = [];
-        gameSelectedChars.forEach(ch => {
-            const cid = getCid(ch);
-            const positions = getCurrentPositions(cid);
+        gameSelectedChars.forEach((ch, idx) => {
+            const positions = getCurrentPositions(idx);
             if (positions.length === 0) return;
             let totalRandom = 0;
             const perPosResults = [];
             let sumA = 0, sumB = 0, countResults = 0;
             positions.forEach(pos => {
-                const goal = getPosGoal(cid, pos);
+                const goal = getPosGoal(idx, pos);
                 let mainList = [];
                 if (pos <= 3) mainList = [null];
                 else {
-                    const selected = getSelectedMainForPos(cid, pos);
+                    const selected = getSelectedMainForPos(idx, pos);
                     mainList = selected.length > 0 ? selected : [...MAIN_ENTRY_CONFIG[pos]];
                 }
                 const probWeights = pos >= 4 ? MAIN_PROB_WEIGHTS[pos] : null;
                 const totalWeight = probWeights ? Object.values(probWeights).reduce((a,b)=>a+b,0) : 1;
                 let posRandom = 0, posDirected = 0;
-                const directedTypes = getGameDirectTypes(cid, pos);
+                const directedTypes = getGameDirectTypes(idx, pos);
                 mainList.forEach(main => {
-                    const types = collectEntryListForSingleMain(cid, pos, main);
+                    const types = collectEntryListForSingleMain(idx, pos, main);
                     if (types.reduce((sum,t)=>sum+t.rest,0) < 4) { alert(`${ch.name} ${pos}号位（主词条：${main||'无'}）词条库存不足4`); return; }
                     let scaleFactor;
                     if (pos <= 3) scaleFactor = 1/6;
@@ -1041,6 +1061,327 @@
         document.getElementById('recommend-area').style.display = 'none';
     }
 
+    function getSavesKey(chName) {
+        return `zzz_disk_saves_${chName}`;
+    }
+
+    function loadSavesList(chName) {
+        const raw = localStorage.getItem(getSavesKey(chName));
+        if (!raw) return [];
+        try { return JSON.parse(raw); } catch (e) { return []; }
+    }
+
+    function saveSavesList(chName, list) {
+        localStorage.setItem(getSavesKey(chName), JSON.stringify(list));
+    }
+
+    function refreshSaveSelect(idx) {
+        const mainSelect = document.getElementById(`char-save-select-${idx}`);
+        const topSelect = document.getElementById(`char-save-select-top-${idx}`);
+        const bottomSelect = document.getElementById(`char-save-select-bottom-${idx}`);
+        if (!mainSelect || !gameSelectedChars[idx]) return;
+        const chName = gameSelectedChars[idx].name;
+        const saves = loadSavesList(chName);
+        const fill = (select) => {
+            if (!select) return;
+            select.innerHTML = '';
+            saves.forEach((s, i) => {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = s.name;
+                select.appendChild(option);
+            });
+            if (saves.length === 0) {
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = '暂无存档';
+                select.appendChild(option);
+            }
+        };
+        fill(mainSelect);
+        fill(topSelect);
+        fill(bottomSelect);
+        if (topSelect) topSelect.value = mainSelect.value;
+        if (bottomSelect) bottomSelect.value = mainSelect.value;
+    }
+
+    function syncSaveSelects(idx, sourceSelect) {
+        const mainSelect = document.getElementById(`char-save-select-${idx}`);
+        const topSelect = document.getElementById(`char-save-select-top-${idx}`);
+        const bottomSelect = document.getElementById(`char-save-select-bottom-${idx}`);
+        const val = sourceSelect.value;
+        if (mainSelect && mainSelect !== sourceSelect) mainSelect.value = val;
+        if (topSelect && topSelect !== sourceSelect) topSelect.value = val;
+        if (bottomSelect && bottomSelect !== sourceSelect) bottomSelect.value = val;
+    }
+
+    document.addEventListener('change', function(e) {
+        const target = e.target;
+        if (target.classList.contains('char-save-select') || target.classList.contains('char-save-select-top') || target.classList.contains('char-save-select-bottom')) {
+            const idx = parseInt(target.dataset.idx);
+            if (!isNaN(idx)) syncSaveSelects(idx, target);
+        }
+    });
+
+    function collectCharConfigData(idx) {
+        if (!gameSelectedChars[idx]) return null;
+        const ch = gameSelectedChars[idx];
+        const positions = getCurrentPositions(idx);
+        const data = { charName: ch.name, positions: {}, special: {} };
+        if (ch.special === 'alice') {
+            const cb = document.getElementById(`char-alice-c6-${idx}`);
+            data.special.aliceC6 = cb ? cb.checked : false;
+        }
+        if (ch.special === 'vivian') {
+            const cb = document.getElementById(`char-vivian-c4-${idx}`);
+            data.special.vivianC4 = cb ? cb.checked : false;
+        }
+        positions.forEach(pos => {
+            const posData = {};
+            if (pos >= 4) {
+                posData.mains = getSelectedMainForPos(idx, pos);
+            }
+            const directToggle = document.getElementById(`game-direct-toggle-${idx}-${pos}`);
+            posData.directEnabled = directToggle ? directToggle.checked : false;
+            if (posData.directEnabled) {
+                posData.directTypes = getGameDirectTypes(idx, pos);
+            }
+            posData.enhance = {};
+            const rows = document.querySelectorAll(`#pos-config-${idx}-${pos} .enhance-row`);
+            rows.forEach(row => {
+                const cb = row.querySelector(`.enhance-check-${idx}-${pos}`);
+                const timesInput = row.querySelector(`.enhance-times-${idx}-${pos}`);
+                if (!cb || !timesInput) return;
+                const i = parseInt(cb.dataset.idx);
+                posData.enhance[i] = { checked: cb.checked, times: parseInt(timesInput.value) || 0 };
+            });
+            data.positions[pos] = posData;
+        });
+        return data;
+    }
+
+    function restoreCharConfigData(idx, data) {
+        if (!data || !gameSelectedChars[idx] || gameSelectedChars[idx].name !== data.charName) {
+            return;
+        }
+        if (data.special) {
+            if (data.special.aliceC6 !== undefined) {
+                const cb = document.getElementById(`char-alice-c6-${idx}`);
+                if (cb) { cb.checked = data.special.aliceC6; updateCharWeights(idx); }
+            }
+            if (data.special.vivianC4 !== undefined) {
+                const cb = document.getElementById(`char-vivian-c4-${idx}`);
+                if (cb) { cb.checked = data.special.vivianC4; updateCharWeights(idx); }
+            }
+        }
+        const allPosCheckboxes = document.querySelectorAll(`#char-positions-${idx} input[type="checkbox"]`);
+        allPosCheckboxes.forEach(cb => { cb.checked = false; });
+        const posKeys = Object.keys(data.positions).map(Number);
+        posKeys.forEach(pos => {
+            const cb = document.querySelector(`#char-positions-${idx} input[value="${pos}"]`);
+            if (cb) cb.checked = true;
+            createPositionConfig(idx, pos);
+        });
+        posKeys.forEach(pos => {
+            const posData = data.positions[pos];
+            if (pos >= 4 && posData.mains) {
+                const mainContainer = document.getElementById(`main-${idx}-${pos}`);
+                if (mainContainer) {
+                    const checkboxes = mainContainer.querySelectorAll('input[type="checkbox"]');
+                    checkboxes.forEach(cb => { cb.checked = posData.mains.includes(cb.value); });
+                }
+            }
+            const directToggle = document.getElementById(`game-direct-toggle-${idx}-${pos}`);
+            if (directToggle) {
+                directToggle.checked = !!posData.directEnabled;
+                toggleGameDirect(idx, pos);
+            }
+            if (posData.directEnabled && posData.directTypes) {
+                const directChecks = document.querySelectorAll(`.game-direct-check-${idx}-${pos}`);
+                directChecks.forEach(cb => { cb.checked = posData.directTypes.includes(parseInt(cb.value)); });
+            }
+            if (posData.enhance) {
+                Object.keys(posData.enhance).forEach(i => {
+                    const iNum = parseInt(i);
+                    const rowCb = document.querySelector(`#pos-config-${idx}-${pos} .enhance-check-${idx}-${pos}[data-idx="${iNum}"]`);
+                    const rowTimes = document.querySelector(`#pos-config-${idx}-${pos} .enhance-times-${idx}-${pos}[data-idx="${iNum}"]`);
+                    if (rowCb) rowCb.checked = posData.enhance[i].checked;
+                    if (rowTimes) rowTimes.value = posData.enhance[i].times;
+                });
+            }
+            updatePosScale(idx, pos);
+            calcPosScore(idx, pos);
+        });
+    }
+
+    function newSave(idx) {
+        if (!gameSelectedChars[idx]) return;
+        const chName = gameSelectedChars[idx].name;
+        const saves = loadSavesList(chName);
+        const defaultName = `${saves.length + 1}号存档`;
+        let name = prompt('请输入新存档名称：', defaultName);
+        if (!name || name.trim() === '') return;
+        name = name.trim();
+        const data = collectCharConfigData(idx);
+        if (!data) return;
+        saves.push({ name, data });
+        saveSavesList(chName, saves);
+        refreshSaveSelect(idx);
+        document.getElementById(`char-save-select-${idx}`).value = saves.length - 1;
+        syncSaveSelects(idx, document.getElementById(`char-save-select-${idx}`));
+    }
+
+    function saveCurrentConfig(idx) {
+        if (!gameSelectedChars[idx]) return;
+        const chName = gameSelectedChars[idx].name;
+        const select = document.getElementById(`char-save-select-${idx}`);
+        if (!select) return;
+        const saves = loadSavesList(chName);
+        if (saves.length === 0) {
+            newSave(idx);
+            return;
+        }
+        const index = parseInt(select.value);
+        if (isNaN(index) || index < 0 || index >= saves.length) {
+            newSave(idx);
+            return;
+        }
+        const data = collectCharConfigData(idx);
+        if (!data) return;
+        saves[index].data = data;
+        saveSavesList(chName, saves);
+        refreshSaveSelect(idx);
+        select.value = index;
+        syncSaveSelects(idx, select);
+        alert(`已保存至 ${chName} - ${saves[index].name}`);
+    }
+
+    function readCurrentSave(idx) {
+        if (!gameSelectedChars[idx]) return;
+        const chName = gameSelectedChars[idx].name;
+        const select = document.getElementById(`char-save-select-${idx}`);
+        if (!select) return;
+        const saves = loadSavesList(chName);
+        if (saves.length === 0) { alert('暂无存档'); return; }
+        const index = parseInt(select.value);
+        if (isNaN(index) || index < 0 || index >= saves.length) { alert('请选择有效存档'); return; }
+        restoreCharConfigData(idx, saves[index].data);
+        alert(`已读取 ${chName} - ${saves[index].name}`);
+    }
+
+    function deleteCurrentSave(idx) {
+        if (!gameSelectedChars[idx]) return;
+        const chName = gameSelectedChars[idx].name;
+        const select = document.getElementById(`char-save-select-${idx}`);
+        if (!select) return;
+        const saves = loadSavesList(chName);
+        if (saves.length === 0) { alert('暂无存档'); return; }
+        const index = parseInt(select.value);
+        if (isNaN(index) || index < 0 || index >= saves.length) { alert('请选择有效存档'); return; }
+        if (confirm(`确定删除 ${chName} 存档 “${saves[index].name}” 吗？`)) {
+            saves.splice(index, 1);
+            saveSavesList(chName, saves);
+            refreshSaveSelect(idx);
+        }
+    }
+
+    function renameCurrentSave(idx) {
+        if (!gameSelectedChars[idx]) return;
+        const chName = gameSelectedChars[idx].name;
+        const select = document.getElementById(`char-save-select-${idx}`);
+        if (!select) return;
+        const saves = loadSavesList(chName);
+        if (saves.length === 0) { alert('暂无存档'); return; }
+        const index = parseInt(select.value);
+        if (isNaN(index) || index < 0 || index >= saves.length) { alert('请选择有效存档'); return; }
+        const newName = prompt('请输入新名称：', saves[index].name);
+        if (!newName || newName.trim() === '') return;
+        saves[index].name = newName.trim();
+        saveSavesList(chName, saves);
+        refreshSaveSelect(idx);
+        select.value = index;
+        syncSaveSelects(idx, select);
+    }
+
+    const ENKA_STAT_MAP = {
+        "11103": "大生命", "11102": "小生命",
+        "12103": "大攻击", "12102": "小攻击",
+        "13103": "大防御", "13102": "小防御",
+        "20103": "暴击伤害", "21103": "暴击率",
+        "31203": "异常精通", "23203": "穿透值",
+        "30502": "冲击力", "31402": "异常掌控",
+        "31503": "穿透率", "31903": "冰属性伤害加成"
+    };
+
+    const ENKA_ID_MAP = {
+        1091: "星见雅", 1401: "艾莲·乔", 1391: "冯·莱卡恩", 1431: "浅羽悠真",
+        1311: "11号", 1241: "安比·德玛拉", 1301: "妮可·德玛拉", 1321: "猫宫又奈",
+        1331: "丽娜", 1341: "可琳·威克斯", 1371: "珂蕾妲·贝洛伯格", 1361: "格莉丝·霍华德",
+        1351: "安东·伊万诺夫", 1141: "本·比格", 1041: "苍角", 1411: "月城柳",
+        1031: "简·杜", 1101: "青衣", 1111: "朱鸢", 1121: "赛斯·洛威尔",
+        1151: "柏妮思·怀特", 1161: "凯撒·金", 1171: "露西", 1181: "派派·韦尔",
+        1211: "波可娜", 1231: "莱特", 1281: "伊芙琳·舒瓦利耶", 1201: "耀嘉音",
+        1251: "扳机", 1261: "席德", 1271: "奥菲丝&鬼火", 1291: "零号·安比"
+    };
+
+       async function importFromEnka() {
+        const uidInput = document.getElementById('enka-uid');
+        const uid = uidInput.value.trim();
+        if (!uid || uid.length < 8) {
+            alert('请输入正确的 9 位游戏 UID！');
+            return;
+        }
+        try {
+         const response = await fetch(`https://enka.network/api/zzz/uid/${uid}/`);
+                   if (!response.ok) {
+                if (response.status === 404) throw new Error("未找到该 UID 的数据，请确认已开启角色展示");
+                throw new Error(`请求失败，状态码: ${response.status}`);
+            }
+            const data = await response.json();
+            const avatarList = data.PlayerInfo?.ShowcaseDetail?.AvatarList;
+            if (!avatarList || avatarList.length === 0) {
+                throw new Error("该账号没有设置公开的角色数据");
+            }
+            const avatar = avatarList[0];
+            const charId = avatar.Id;
+            const charName = ENKA_ID_MAP[charId];
+            if (!charName) {
+                throw new Error(`未能自动匹配到角色 ID: ${charId}`);
+            }
+            selectCharacterByOCR(charName);
+            setTimeout(() => {
+                const idx = gameSelectedChars.findIndex(c => c.name === charName);
+                if (idx === -1) {
+                    alert('角色选择失败，请手动在下方点击选择。');
+                    return;
+                }
+                const ocrPositions = avatar.EquippedList.map(disc => {
+                    const pos = disc.Slot;
+                    const mainProp = disc.Equipment.MainPropertyList[0];
+                    const mainStatId = String(mainProp.PropertyId);
+                    const mainStatName = ENKA_STAT_MAP[mainStatId] || mainStatId;
+                    const substats = disc.Equipment.RandomPropertyList.map(sub => {
+                        const subId = String(sub.PropertyId);
+                        const entryName = ENKA_STAT_MAP[subId] || subId;
+                        return { entryName, times: sub.PropertyLevel || 0 };
+                    }).filter(s => s.times > 0);
+                    return { pos, mainStat: mainStatName, substats };
+                });
+                ocrPositions.forEach(posData => {
+                    const posCheckbox = document.querySelector(`#char-positions-${idx} input[value="${posData.pos}"]`);
+                    if (posCheckbox) posCheckbox.checked = true;
+                    onPositionChange(idx);
+                    setTimeout(() => {
+                        applyPosOcrData(idx, posData);
+                    }, 100);
+                });
+                alert('Enka 数据导入成功！');
+            }, 300);
+        } catch (error) {
+            console.error(error);
+            alert('导入失败：' + error.message);
+        }
+    }
     window.onload = () => {
         initThemeSelector();
         generateAdvancedEntries();
