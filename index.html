@@ -1331,10 +1331,9 @@
             alert('请输入正确的 9 位游戏 UID！');
             return;
         }
-        try {
-      
-const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(`https://enka.network/api/zzz/uid/${uid}/`)}`);
-                   if (!response.ok) {
+        try {      
+            const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(`https://enka.network/api/zzz/uid/${uid}/`)}`);
+            if (!response.ok) {
                 if (response.status === 404) throw new Error("未找到该 UID 的数据，请确认已开启角色展示");
                 throw new Error(`请求失败，状态码: ${response.status}`);
             }
