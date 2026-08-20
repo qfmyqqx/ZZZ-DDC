@@ -1,45 +1,31 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+    <link rel="icon" type="jpg" href="计算器图标.jpg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>绝区零驱动盘练度提升概率计算器</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft YaHei", "PingFang SC", serif; }
-
-        :root {
-            --primary-color: #FF4500;
-            --primary-color-alpha: rgba(255, 69, 0, 0.2);
-            --primary-color-alpha-light: rgba(255, 69, 0, 0.05);
-            --primary-color-alpha-border: rgba(255, 69, 0, 0.25);
-            --bg-color: #121212;
-            --bg-secondary: #0a0a0a;
-            --text-color: #e0e0e0;
-            --text-muted: #888888;
-            --border-color: #333333;
-            --text-on-primary: #121212;
-        }
-
+        :root { --primary-color: #FF4500; --primary-color-alpha: rgba(255,69,0,0.2); --primary-color-alpha-light: rgba(255,69,0,0.05); --primary-color-alpha-border: rgba(255,69,0,0.25); --bg-color: #121212; --bg-secondary: #0a0a0a; --text-color: #e0e0e0; --text-muted: #888888; --border-color: #333333; --text-on-primary: #121212; }
         body { background: var(--bg-color); color: var(--text-color); padding: 20px; line-height: 1.6; }
         .container { max-width: 1100px; margin: 0 auto; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 16px; box-shadow: 0 8px 32px var(--primary-color-alpha); padding: 36px; position: relative; }
-        h1 { text-align: center; color: var(--primary-color); margin-bottom: 12px; font-size: 1.7rem; font-weight: 700; letter-spacing: 2px; }
+        h1 { text-align: center; color: var(--primary-color); margin-bottom: 12px; font-size: 1.7rem; font-weight: 700; letter-spacing: 2px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; }
+        .logo-icon { width: 52px; height: 52px; border-radius: 12px; box-shadow: 0 0 14px var(--primary-color-alpha); object-fit: cover; vertical-align: middle; }
         .gold-title { background: var(--primary-color); color: var(--text-on-primary); padding: 0 8px; border-radius: 4px; background-clip: unset; -webkit-text-fill-color: var(--text-on-primary); font-weight: 700; font-size: 1.85rem; margin-left: 4px; letter-spacing: 4px; filter: none; }
         .subtitle { text-align: center; color: var(--text-muted); margin-bottom: 28px; font-size: 0.9rem; letter-spacing: 1px; }
-
         .mode-tabs-container { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
         .mode-tabs { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
         .tab-btn { padding: 10px 24px; border: 1px solid var(--primary-color); background: var(--bg-color); color: var(--primary-color); border-radius: 8px; cursor: pointer; transition: all .25s; font-size: 1rem; }
         .tab-btn.active { background: var(--primary-color); color: var(--text-on-primary); border-color: var(--primary-color); font-weight: 700; box-shadow: 0 0 20px var(--primary-color-alpha); }
         .tab-btn:hover { border-color: var(--primary-color); box-shadow: 0 0 15px var(--primary-color-alpha); }
-
         .theme-selector { display: none; flex-wrap: wrap; gap: 12px; margin-bottom: 25px; justify-content: center; padding: 15px 20px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; }
         .theme-selector.active { display: flex; }
         .theme-btn { width: 70px; height: 35px; border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease; background: linear-gradient(to right, var(--c1) 50%, var(--c2) 50%); flex-shrink: 0; }
         .theme-btn:hover { transform: scale(1.08); border-color: var(--primary-color); }
         .theme-btn.active { border-color: var(--primary-color); box-shadow: 0 0 12px var(--primary-color-alpha); }
-        #theme-toggle-btn { padding: 8px 20px; border: 1px solid var(--primary-color); color: var(--primary-color); background: var(--bg-color); border-radius: 8px; cursor: pointer; transition: all .25s; font-size: 1rem; font-weight: 600; }
+        #theme-toggle-btn { padding: 10px 24px; border: 1px solid var(--primary-color); color: var(--primary-color); background: var(--bg-color); border-radius: 10px; cursor: pointer; transition: all .25s; font-size: 1rem; font-weight: 600; }
         #theme-toggle-btn:hover { background: var(--primary-color); color: var(--text-on-primary); box-shadow: 0 0 15px var(--primary-color-alpha); }
-
         .panel { display: none; }
         .panel.active { display: block; }
         .form-group { margin-bottom: 18px; }
@@ -53,7 +39,7 @@
         .entries-list { margin-bottom: 20px; padding: 16px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; max-height: 420px; overflow-y: auto; }
         .btn { padding: 10px 28px; background: var(--primary-color); color: var(--text-on-primary); border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 700; transition: all .25s; letter-spacing: 0.5px; box-shadow: 0 4px 15px var(--primary-color-alpha); }
         .btn:hover { filter: brightness(1.1); box-shadow: 0 6px 25px var(--primary-color-alpha); transform: translateY(-1px); }
-        .btn-secondary { background: var(--bg-color); color: var(--primary-color); border: 1px solid var(--primary-color); font-weight: 600; }
+        .btn-secondary { padding: 10px 28px; background: var(--bg-color); color: var(--primary-color); border: 1px solid var(--primary-color); font-weight: 600; font-size: 1rem; }
         .result-area { margin-top: 28px; padding: 22px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; display: none; }
         .result-area h3 { margin-bottom: 14px; color: var(--primary-color); font-size: 1.2rem; }
         .result-item { margin-bottom: 10px; font-family: "Consolas","Monaco",monospace; font-size: 0.95rem; word-break: break-all; color: var(--text-color); }
@@ -78,12 +64,10 @@
         .section-label { display: block; margin-bottom: 6px; font-weight: 500; color: var(--text-color); }
         .main-entry-item { display: flex; align-items: center; gap: 4px; cursor: pointer; color: var(--text-color); font-size: 0.85rem; }
         .main-entry-item input { margin-right: 4px; }
-
-        #qr-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 9999; justify-content: center; align-items: center; cursor: pointer; }
+        #qr-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; cursor: pointer; }
         #qr-modal span { position: absolute; top: 20px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; }
         #qr-modal img { max-width: 90%; max-height: 90%; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-
-        #update-log-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 9999; justify-content: center; align-items: center; cursor: pointer; }
+        #update-log-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; cursor: pointer; }
         #update-log-modal .update-log-content { background: var(--bg-secondary); border: 1px solid var(--primary-color); border-radius: 12px; padding: 30px; max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto; color: var(--text-color); position: relative; }
         #update-log-modal .close-btn { position: absolute; top: 15px; right: 20px; color: var(--primary-color); font-size: 32px; font-weight: bold; cursor: pointer; background: none; border: none; }
         #update-log-modal h2 { color: var(--primary-color); margin-bottom: 20px; text-align: center; }
@@ -92,42 +76,71 @@
         #update-log-modal .version-block ul { padding-left: 20px; margin-bottom: 8px; }
         #update-log-modal .version-block li { margin-bottom: 4px; }
         #update-log-modal .version-block a { color: var(--primary-color); text-decoration: underline; }
-
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: inner-spin-button !important;
-            opacity: 1 !important;
-        }
-
-        input[type="number"] {
-            -webkit-appearance: auto !important;
-            -moz-appearance: number-input !important;
-            appearance: auto !important;
-        }
-
+        input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: inner-spin-button !important; opacity: 1 !important; }
+        input[type="number"] { -webkit-appearance: auto !important; -moz-appearance: number-input !important; appearance: auto !important; }
         .char-panel { border: 2px solid var(--primary-color); border-radius: 12px; padding: 20px; margin-bottom: 25px; background: var(--bg-secondary); }
         .char-panel h3 { color: var(--primary-color); margin-bottom: 15px; }
         .recommend-box { margin-top: 20px; padding: 15px; background: var(--primary-color-alpha-light); border: 1px solid var(--primary-color); border-radius: 10px; font-weight: bold; }
+        .resource-img { width: 16px; height: 16px; vertical-align: middle; margin: 0 2px; }
+        #update-log-btn, #use-tutorial-btn {
+            padding: 6px 16px;
+            font-size: 0.85rem;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            background: var(--bg-color);
+            border-radius: 6px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            z-index: 10;
+            transition: all .25s;
+        }
+        #update-log-btn { left: 10px; }
+        #use-tutorial-btn { right: 10px; }
+        #update-log-btn:hover, #use-tutorial-btn:hover {
+            background: var(--primary-color);
+            color: var(--text-on-primary);
+            box-shadow: 0 0 12px var(--primary-color-alpha);
+        }
+        .collapsible { cursor: pointer; user-select: none; }
+        .collapsible .collapse-icon::before { content: "▼"; display: inline-block; transition: transform 0.2s; margin-right: 6px; }
+        .collapsible.collapsed .collapse-icon::before { transform: rotate(-90deg); }
+        .panel-body, .role-result-body { transition: all 0.2s; }
+        .collapsed .panel-body, .collapsed .role-result-body { display: none; }
+        .role-result { border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; margin-bottom: 12px; background: var(--bg-secondary); }
+        .role-result-header { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .role-result-header h3 { margin: 0; color: var(--primary-color); }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>绝区零驱动盘练度提升概率计算器<span class="gold-title">V2.2</span></h1>
+    <button id="update-log-btn">更新日志</button>
+    <button id="use-tutorial-btn">使用教程</button>
+    <h1><img src="计算器图标.jpg" alt="图标" class="logo-icon">绝区零驱动盘练度提升概率计算器<span class="gold-title">V3.0</span></h1>
     <p class="subtitle">全网首发 | 全角色阵营分类 | 支持游戏版与自定义版双模式计算</p>
-
     <div class="mode-tabs-container">
         <div class="mode-tabs">
-            <button class="tab-btn active" data-mode="game">游戏版（1~6号盘）</button>
+            <button class="tab-btn active" data-mode="game">游戏版</button>
             <button class="tab-btn" data-mode="custom">自定义版</button>
         </div>
         <button class="btn btn-secondary" id="theme-toggle-btn">配色</button>
-        <button class="btn btn-secondary" id="update-log-btn">更新日志</button>
+        <button class="btn btn-secondary" id="settings-toggle-btn">设置</button>
     </div>
-
-    <div class="theme-selector" id="theme-selector">
-    </div>
-
+    <div class="theme-selector" id="theme-selector"></div>
     <div id="game-panel" class="panel active">
+        <div style="display:flex; gap:12px; margin-bottom:15px; align-items:center; flex-wrap:wrap;">
+    <input type="text" id="enka-uid" placeholder="若想从角色展柜直接导入角色驱动盘数据请输入游戏 UID" style="flex:1; min-width:150px; padding:9px 12px; background:var(--bg-secondary); border:1px solid var(--border-color); color:var(--text-color); border-radius:6px; font-size:0.95rem;" oninput="updateJsonLink()">
+</div>
+<div id="json-link-container" style="margin-bottom:15px; display:none;">
+    <p style="color:var(--text-muted); margin-bottom:5px;">请点击以下链接，打开后复制全部内容，粘贴到下方文本框中：</p>
+    <a id="json-link" href="#" target="_blank" style="color:var(--primary-color); text-decoration:underline; word-break:break-all;"></a>
+</div>
+
+       <div style="margin-bottom:15px;">
+    <textarea id="json-input" placeholder="在此处粘贴从网址获取的原始JSON数据" style="width:100%; height:80px; padding:9px 12px; background:var(--bg-secondary); border:1px solid var(--border-color); color:var(--text-color); border-radius:6px; resize:vertical; font-family: inherit; font-size:0.95rem;"></textarea>
+    <button class="btn btn-secondary" onclick="importFromJSON()" style="padding:12px 20px; font-size:1.1rem; margin-top:8px;">粘贴导入驱动盘数据</button>
+    <button id="one-click-save-btn" class="btn btn-secondary" style="display:none; padding:12px 20px; font-size:1.1rem; margin-top:8px;" onclick="oneClickSaveImported()">一键存档</button>
+</div>
         <div class="character-select">
             <label>选择角色（可多选，再次点击取消选择）</label>
             <div class="faction-tabs" id="game-faction-tabs"></div>
@@ -170,98 +183,79 @@
         <div class="result-item" id="res-a" style="display:none;">初始四词条驱动盘强化后练度提升概率：--</div>
         <div class="result-item" id="res-b" style="display:none;">初始三词条驱动盘强化后练度提升概率：--</div>
         <div class="result-item" id="res-random" style="display:none;">随机抽取综合练度提升概率：--</div>
-        <div id="recommend-area" class="recommend-box" style="display:none;"></div>
+        <div id="recommend-area"></div>
     </div>
-
-    <div style="margin-top: 50px; padding-top: 25px; border-top: 1px solid var(--border-color); text-align: center;">
-        <p style="margin-bottom: 10px; font-size: 0.95rem; color: var(--text-muted);">作者：<a href="https://space.bilibili.com/3546385901161355" target="_blank" style="color: var(--primary-color); text-decoration: underline; font-weight: bold;">B站账号</a></p>
-        <p style="margin-bottom: 20px; color: var(--text-color);">
-            如果这个计算器能帮你刷盘省下一点心力，那它的使命就达成啦！祝你驱动盘强化全中有效词条~(*╹▽╹*)
-        </p>
-		<p style="margin-bottom:20px; color:var(--text-color);">这个计算器花了大量时间制作和打磨。如果它对你有帮助，欢迎打赏支持！Thanks♪(･ω･)ﾉ</p>
-
-        <div id="sponsor-wrapper" style="display: inline-block; cursor: pointer; border-radius: 12px; border: 1px solid var(--border-color); padding: 12px; background: var(--bg-secondary); transition: transform 0.2s;">
-            <img src="微信图片_20260817233740.jpg" alt="赞赏码" style="width: 160px; height: 160px; border-radius: 8px; display: block;">
-            <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 8px;">微信赞赏</p>
+    <div style="margin-top:50px; padding-top:25px; border-top:1px solid var(--border-color); text-align:center;">
+        <p style="margin-bottom:10px; font-size:0.95rem; color:var(--text-muted);">作者：<a href="https://space.bilibili.com/3546385901161355" target="_blank" style="color:var(--primary-color); text-decoration:underline; font-weight:bold;">B站账号</a></p>
+        <p style="margin-bottom:20px; color:var(--text-color);">如果这个计算器能帮你刷盘省下一点心力，那它的使命就达成啦！祝你驱动盘强化全中有效词条~(*╹▽╹*)</p>
+	<p style="margin-bottom:20px; color:var(--text-color);">这个计算器花了大量时间制作和打磨。如果它对你有帮助，欢迎打赏支持！Thanks♪(･ω･)ﾉ</p>
+        <div id="sponsor-wrapper" style="display:inline-block; cursor:pointer; border-radius:12px; border:1px solid var(--border-color); padding:12px; background:var(--bg-secondary); transition:transform 0.2s;">
+            <img src="微信图片_20260817233740.jpg" alt="赞赏码" style="width:160px; height:160px; border-radius:8px; display:block;">
+            <p style="color:var(--text-muted); font-size:0.8rem; margin-top:8px;">微信赞赏</p>
         </div>
     </div>
-<div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.9rem; color: var(--text-muted);">
-        <p>鸣谢（排名不分先后，均为b站昵称，感谢提供数据、建议及打赏的朋友们，不喜可删）：</p>
+    <div style="margin-top:30px; padding-top:20px; border-top:1px solid var(--border-color); text-align:center; font-size:0.9rem; color:var(--text-muted);">
+        <p>向所有提供数据、建议及打赏的朋友鸣谢（排名不分先后，均为b站昵称，在更新日志里有提出建议的朋友做出的具体贡献，不喜可删）：</p>
         <p>
-            <p style="color: var(--primary-color);">衷心感谢所有提供帮助的朋友们！是你们的支持，让计算器有了今天！</p>
-	    <p style="color: var(--primary-color);">无论在眼前在天边</p>
-	    <p style="color: var(--primary-color);">真心的为你祝愿</p>
-            <p style="color: var(--primary-color);">&nbsp;&nbsp;&nbsp;祝愿你幸福平安！</p>
-	    <p style="color: var(--primary-color);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;——《让世界充满爱》</p>
-	    <a href="https://space.bilibili.com/38597682" target="_blank" style="color: var(--primary-color);">qwerty1454</a>、
-            <a href="https://space.bilibili.com/497509737" target="_blank" style="color: var(--primary-color);">bili_61161198286</a>、
-            <a href="https://space.bilibili.com/16070999" target="_blank" style="color: var(--primary-color);">不知道是什么控</a>、
-            <a href="https://space.bilibili.com/157237724" target="_blank" style="color: var(--primary-color);">芥各就是爱情</a>、
-            <a href="https://space.bilibili.com/267411577" target="_blank" style="color: var(--primary-color);">孤胆飞客</a>、
-            <a href="https://space.bilibili.com/2542448" target="_blank" style="color: var(--primary-color);">星灯铃兰</a>、
-            <a href="https://space.bilibili.com/24383668" target="_blank" style="color: var(--primary-color);">南秋cC丶</a>、
-			<a href="https://space.bilibili.com/321264417" target="_blank" style="color: var(--primary-color);">就猜呗</a>、
-			<a target="_blank" style="color: var(--primary-color);">魈</a>
-        </p>        
+            <p style="color:var(--primary-color);">衷心感谢所有提供帮助的朋友们！是你们的支持，让计算器有了今天！</p>
+            <p style="color:var(--primary-color);">无论在眼前在天边</p>
+            <p style="color:var(--primary-color);">真心的为你祝愿</p>
+            <p style="color:var(--primary-color);">&nbsp;&nbsp;&nbsp;祝愿你幸福平安！</p>
+            <p style="color:var(--primary-color);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;——《让世界充满爱》</p>
+            <a href="https://space.bilibili.com/38597682" target="_blank" style="color:var(--primary-color);">qwerty1454</a>、
+            <a href="https://space.bilibili.com/497509737" target="_blank" style="color:var(--primary-color);">bili_61161198286</a>、
+            <a href="https://space.bilibili.com/16070999" target="_blank" style="color:var(--primary-color);">不知道是什么控</a>、
+            <a href="https://space.bilibili.com/157237724" target="_blank" style="color:var(--primary-color);">芥各就是爱情</a>、
+            <a href="https://space.bilibili.com/267411577" target="_blank" style="color:var(--primary-color);">孤胆飞客</a>、
+            <a href="https://space.bilibili.com/2542448" target="_blank" style="color:var(--primary-color);">星灯铃兰</a>、
+            <a href="https://space.bilibili.com/24383668" target="_blank" style="color:var(--primary-color);">南秋cC丶</a>、
+	    <a href="https://space.bilibili.com/321264417" target="_blank" style="color: var(--primary-color);">就猜呗</a>、
+	    <a target="_blank" style="color: var(--primary-color);">魈</a>、
+	    <a href="https://space.bilibili.com/430839215" target="_blank" style="color:var(--primary-color);">驾六</a>、
+            <a href="https://space.bilibili.com/12402928" target="_blank" style="color:var(--primary-color);">永不消失的信使</a>、
+            <a href="https://space.bilibili.com/3707020922325078" target="_blank" style="color:var(--primary-color);">晚的归霞</a>、
+            <a href="https://space.bilibili.com/437550094" target="_blank" style="color:var(--primary-color);">是祁岁同学</a>
+        </p>
     </div>
 </div>
-
-  <div id="qr-modal" onclick="this.style.display='none'">
+<div id="qr-modal" onclick="this.style.display='none'">
     <span onclick="document.getElementById('qr-modal').style.display='none'">&times;</span>
     <img id="qr-modal-img" src="" alt="放大赞赏码">
 </div>
-
 <div id="update-log-modal" onclick="if(event.target===this) this.style.display='none'">
     <div class="update-log-content">
         <button class="close-btn" onclick="document.getElementById('update-log-modal').style.display='none'">&times;</button>
         <h2>更新日志</h2>
-        <div class="version-block">
-            <h3>V1.0（2026.7.9）</h3>
-            <ul>
-                <li>功能非常少且操作繁琐。</li>
-            </ul>
-            <p>B站讲解视频：<a href="https://www.bilibili.com/video/BV1ucMH6hEJ1/?spm_id_from=333.1387.homepage.video_card.click&vd_source=c5e79e86ae5117cf072f818557230b42" target="_blank">点击观看</a></p>
-        </div>
-        <div class="version-block">
-            <h3>V2.0（2026.7.11）</h3>
-            <ul>
-                <li>可选择单个角色，自动生成对应角色词条库</li>
-                <li>用户填完对应驱动盘强化次数后可自动计算驱动盘缩放系数并生成对应驱动盘权重分数</li>
-                <li>可选择多个驱动盘号位计算，4、5、6号位驱动盘可选择多个主词条</li>
-                <li>对于一些词条权重随着命座的变化而变化的角色打了补丁</li>
-                <li>操作流程和操作页面大幅优化</li>
-            </ul>
-            <p>B站讲解视频：<a href="https://www.bilibili.com/video/BV1KSNA6NEP2/?spm_id_from=333.1387.homepage.video_card.click&vd_source=c5e79e86ae5117cf072f818557230b42" target="_blank">点击观看</a></p>
-        </div>
-        <div class="version-block">
-            <h3>V2.1（2026.7.11）</h3>
-            <ul>
-                <li>驱动盘可定向副词条</li>
-                <li>驱动盘分数计算方式优化</li>
-                <li>修改了不同副词条及4、5、6号位驱动盘不同主词条出现的概率，使他们更贴近游戏里的实际概率</li>
-                <li>增加了当前驱动盘练度评价的功能</li>
-                <li>提示文本优化</li>
-                <li>删除了简便版板块</li>
-                <li>界面采用了3Z风格的配色</li>
-            </ul>
-            <p>B站讲解视频：<a href="https://www.bilibili.com/video/BV1mJNR61EEg?spm_id_from=333.788.videopod.sections&vd_source=c5e79e86ae5117cf072f818557230b42" target="_blank">点击观看</a></p>
-        </div>
-        <div class="version-block">
-            <h3>V2.2（2026.7.31）</h3>
-            <ul>
-		<li>修正副词条强化概率</li>
-                <li>可选择多个角色</li>
-                <li>增加推荐培养角色功能</li>
-                <li>增加配色与更新日志板块</li>
-				<li>使得取消勾选驱动盘号位后只有对应驱动盘号位会删除对应数据，其他号位驱动盘输入数据保留</li>
-                <li>在界面下方新增了我的B站号和打赏渠道以及鸣谢</li>
-				<li>增加角色蕾米埃尔</li>
-            </ul>
-			<p>B站讲解视频：<a href="https://www.bilibili.com/video/BV1x63m66EqC/?spm_id_from=333.1387.upload.video_card.click&vd_source=c5e79e86ae5117cf072f818557230b42" target="_blank">点击观看</a></p>
-        </div>
+        <div class="version-block"><h3>V1.0（2026.7.9）</h3><ul><li>功能非常少且操作繁琐。</li></ul><p>B站讲解视频：<a href="https://www.bilibili.com/video/BV1ucMH6hEJ1/?spm_id_from=333.1387.homepage.video_card.click&vd_source=c5e79e86ae5117cf072f818557230b42" target="_blank">点击观看</a></p></div>
+        <div class="version-block"><h3>V2.0（2026.7.11）</h3><ul><li>可选择单个角色，自动生成对应角色词条库</li><li>用户填完对应驱动盘强化次数后可自动计算驱动盘缩放系数并生成对应驱动盘权重分数</li><li>可选择多个驱动盘号位计算，4、5、6号位驱动盘可选择多个主词条</li><li>对于一些词条权重随着命座的变化而变化的角色打了补丁</li><li>操作流程和操作页面大幅优化</li></ul><p>B站讲解视频：<a href="https://www.bilibili.com/video/BV1KSNA6NEP2/?spm_id_from=333.1387.homepage.video_card.click&vd_source=c5e79e86ae5117cf072f818557230b42" target="_blank">点击观看</a></p></div>
+        <div class="version-block"><h3>V2.1（2026.7.11）</h3><ul><li>驱动盘可定向副词条</li><li>驱动盘分数计算方式优化</li><li>修改了不同副词条及4、5、6号位驱动盘不同主词条出现的概率，使他们更贴近游戏里的实际概率</li><li>增加了当前驱动盘练度评价的功能</li><li>提示文本优化</li><li>删除了简便版板块</li><li>界面采用了3Z风格的配色</li></ul><p>B站讲解视频：<a href="https://www.bilibili.com/video/BV1mJNR61EEg?spm_id_from=333.788.videopod.sections&vd_source=c5e79e86ae5117cf072f818557230b42" target="_blank">点击观看</a></p></div>
+        <div class="version-block"><h3>V2.2（2026.7.31）</h3><ul><li>修正副词条强化概率</li><li>可选择多个角色</li><li>增加推荐培养角色功能</li><li>增加配色与更新日志板块</li><li>使得取消勾选驱动盘号位后只有对应驱动盘号位会删除对应数据，其他号位驱动盘输入数据保留</li><li>在界面下方新增了我的B站号和打赏渠道以及鸣谢</li><li>增加角色蕾米埃尔</li></ul><p>B站讲解视频：<a href="https://www.bilibili.com/video/BV191uw6QEqB?spm_id_from=333.788.videopod.sections&vd_source=c5e79e86ae5117cf072f818557230b42" target="_blank">点击观看</a></p></div>
+	<div class="version-block"><h3>V3.0（2026.8.19）</h3><ul><li>新增粘贴从Enka API 链接获取的JSON数据即可自动导入驱动盘数据的功能（且导入完成后会出现一键存档按钮，导入的驱动盘数据和输出的计算结果按套装分类）</li><li>新增存档功能，存档个数无上限，可新建、保存、读取、改名、删除存档</li><li>删除了推荐培养角色功能。在输出中新增音像店刷出更好驱动盘期望消耗和哨站刷出更好驱动盘期望消耗，以及根据用户需求不同给出的多种抽取方式推荐</li><li>增加输入框与输出框的折叠与展开功能及粘贴导入驱动盘数据时，角色输入界面默认折叠和选择多个角色时，单角色计算结果默认折叠功能（在设置中可更改）</li><li>新增设置模块</li><li>新增使用教程模块</li><li>新增了计算器LOGO</li><li>修改了部分按钮的位置</li><li>修复了更改角色基础词条库中副词条权重时，之前输入的驱动盘配置会重置和可能出现显示的副词条与主词条冲突的问题</li></ul></div>
     </div>
 </div>
+<div id="settings-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center;" onclick="if(event.target===this) closeSettingsModal()">
+    <div style="background:var(--bg-secondary); border:1px solid var(--primary-color); border-radius:12px; padding:30px; max-width:500px; width:90%; color:var(--text-color); position:relative;">
+        <button style="position:absolute; top:15px; right:20px; color:var(--primary-color); font-size:32px; background:none; border:none; cursor:pointer;" onclick="closeSettingsModal()">&times;</button>
+        <h2 style="color:var(--primary-color); margin-bottom:20px; text-align:center;">设置</h2>
+        <label style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+            <input type="checkbox" id="setting-auto-collapse-import" onchange="updateSetting('autoCollapseImport', this.checked)">
+            <span>粘贴导入驱动盘数据时，输入界面默认折叠</span>
+        </label>
+        <label style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+            <input type="checkbox" id="setting-auto-collapse-output" onchange="updateSetting('autoCollapseOutput', this.checked)">
+            <span>选择多个角色时，单角色计算结果默认折叠</span>
+        </label>
+    </div>
+</div>
+<div id="tutorial-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center;" onclick="if(event.target===this) closeTutorialModal()">
+    <div style="background:var(--bg-secondary); border:1px solid var(--primary-color); border-radius:12px; padding:30px; max-width:800px; width:90%; max-height:80vh; overflow-y:auto; color:var(--text-color); position:relative;">
+        <button style="position:absolute; top:15px; right:20px; color:var(--primary-color); font-size:32px; background:none; border:none; cursor:pointer;" onclick="closeTutorialModal()">&times;</button>
+        <h2 style="color:var(--primary-color); margin-bottom:20px; text-align:center;">使用教程</h2>
 
+       <div id="tutorial-content" style="white-space: pre-wrap; tab-size: 4; font-size:0.95rem; line-height:1.7;"></div>
+
+    </div>
+</div>
 <script>
     const Achance = 0.2011577424023155;
     const Bchance = 0.798842257597684516;
@@ -281,623 +275,394 @@
     };
     const MAIN_ATTR_TO_SUB = { "攻击力百分比":2, "生命值百分比":0, "防御力百分比":5, "暴击率":8, "暴击伤害":7, "异常精通":9 };
     const CHARACTER_DATA = [
-        { faction:"狡兔屋", roles:[
-            { name:"猫宫又奈", image:"屏幕截图 2026-07-10 194828.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] },
-            { name:"安比·德玛拉", image:"屏幕截图 2026-07-10 194848.png", weights:[0,0,0.75,0.225,0.25,0,0,1,1,0] },
-            { name:"妮可·德玛拉", image:"屏幕截图 2026-07-10 194842.png", weights:[0,0,1,0.3,0.2,0,0,0,0,1] },
-            { name:"比利·奇德", image:"屏幕截图 2026-07-10 194834.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] },
-            { name:"星徽·比利", image:"屏幕截图 2026-07-10 194819.png", weights:[0.75,0.225,0.45,0.135,0,0,0,1,1,0] }
-        ]},
-        { faction:"白祇重工", roles:[
-            { name:"珂蕾妲·贝洛伯格", image:"屏幕截图 2026-07-10 194754.png", weights:[0,0,0.75,0.225,0.25,0,0,1,1,0] },
-            { name:"格莉丝·霍华德", image:"屏幕截图 2026-07-10 194737.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1] },
-            { name:"安东·伊万诺夫", image:"屏幕截图 2026-07-10 194746.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] },
-            { name:"本·比格", image:"屏幕截图 2026-07-10 194742.png", weights:[0,0,0.75,0.225,0.3,0.75,0.225,1,1,0] }
-        ]},
-        { faction:"维多利亚家政", roles:[
-            { name:"艾莲·乔", image:"屏幕截图 2026-07-10 194711.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] },
-            { name:"丽娜", image:"屏幕截图 2026-07-10 194715.png", weights:[0,0,0.75,0.225,0.25,0,0,0,0,1] },
-            { name:"冯·莱卡恩", image:"屏幕截图 2026-07-10 194724.png", weights:[0,0,0.75,0.225,0.25,0,0,1,1,0] },
-            { name:"可琳·威克斯", image:"屏幕截图 2026-07-10 194731.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] }
-        ]},
-        { faction:"对空六课", roles:[
-            { name:"星见雅", image:"屏幕截图 2026-07-10 194323.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0.3] },
-            { name:"浅羽悠真", image:"屏幕截图 2026-07-10 194311.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] },
-            { name:"苍角", image:"屏幕截图 2026-07-10 194334.png", weights:[0,0,1,0.3,0.25,0,0,0.75,0.75,1] },
-            { name:"月城柳", image:"屏幕截图 2026-07-10 194315.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1] }
-        ]},
-        { faction:"治安局", roles:[
-            { name:"简·杜", image:"屏幕截图 2026-07-10 194526.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1] },
-            { name:"青衣", image:"屏幕截图 2026-07-10 194549.png", weights:[0,0,0.75,0.225,0.25,0,0,1,1,0] },
-            { name:"朱鸢", image:"屏幕截图 2026-07-10 194558.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] },
-            { name:"赛斯·洛威尔", image:"屏幕截图 2026-07-10 194543.png", weights:[0,0,1,0.3,0.25,0,0,0,0,0.75] },
-            { name:"希希芙", image:"屏幕截图 2026-07-10 195047.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] }
-        ]},
-        { faction:"卡吕冬之子", roles:[
-            { name:"柏妮思·怀特", image:"屏幕截图 2026-07-10 194454.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1] },
-            { name:"凯撒·金", image:"屏幕截图 2026-07-10 194507.png", weights:[0,0,0.75,0.225,0.25,0,0,1,1,0] },
-            { name:"露西", image:"屏幕截图 2026-07-10 194517.png", weights:[0,0,1,0.3,0.25,0,0,0.75,0.75,0] },
-            { name:"派派·韦尔", image:"屏幕截图 2026-07-10 194512.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] },
-            { name:"波可娜", image:"屏幕截图 2026-07-10 194340.png", weights:[0,0,0.75,0.225,0.25,0,0,1,1,0] },
-            { name:"莱特", image:"屏幕截图 2026-07-10 194346.png", weights:[0,0,0.75,0.225,0.25,0,0,1,1,0] }
-        ]},
-        { faction:"天琴座", roles:[
-            { name:"伊芙琳·舒瓦利耶", image:"屏幕截图 2026-07-10 194300.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] },
-            { name:"耀嘉音", image:"屏幕截图 2026-07-10 194305.png", weights:[0,0,1,0.3,0.25,0,0,0.75,0.75,0] }
-        ]},
-        { faction:"防卫军奥波勒斯小队", roles:[
-            { name:"11号", image:"屏幕截图 2026-07-10 194703.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] },
-            { name:"扳机", image:"屏幕截图 2026-07-10 194617.png", weights:[0,0,0.75,0.225,0.25,0,0,0.75,1,0] },
-            { name:"席德", image:"屏幕截图 2026-07-10 194613.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] },
-            { name:"奥菲丝&鬼火", image:"屏幕截图 2026-07-10 194608.png", weights:[0,0,1,0.3,0.6,0,0,1,1,0] }
-        ]},
+        { faction:"狡兔屋", roles:[ { name:"猫宫又奈", image:"屏幕截图 2026-07-10 194828.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] }, { name:"安比·德玛拉", image:"屏幕截图 2026-07-10 194848.png", weights:[0,0,0.75,0.225,0.25,0,0,1,1,0] }, { name:"妮可·德玛拉", image:"屏幕截图 2026-07-10 194842.png", weights:[0,0,1,0.3,0.2,0,0,0,0,1] }, { name:"比利·奇德", image:"屏幕截图 2026-07-10 194834.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] }, { name:"星徽·比利", image:"屏幕截图 2026-07-10 194819.png", weights:[0.75,0.225,0.45,0.135,0,0,0,1,1,0] } ]},
+        { faction:"白祇重工", roles:[ { name:"珂蕾妲·贝洛伯格", image:"屏幕截图 2026-07-10 194754.png", weights:[0,0,0.75,0.225,0.25,0,0,1,1,0] }, { name:"格莉丝·霍华德", image:"屏幕截图 2026-07-10 194737.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1] }, { name:"安东·伊万诺夫", image:"屏幕截图 2026-07-10 194746.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] }, { name:"本·比格", image:"屏幕截图 2026-07-10 194742.png", weights:[0,0,0.75,0.225,0.3,0.75,0.225,1,1,0] } ]},
+        { faction:"维多利亚家政", roles:[ { name:"艾莲·乔", image:"屏幕截图 2026-07-10 194711.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] }, { name:"丽娜", image:"屏幕截图 2026-07-10 194715.png", weights:[0,0,0.75,0.225,0.25,0,0,0,0,1] }, { name:"冯·莱卡恩", image:"屏幕截图 2026-07-10 194724.png", weights:[0,0,0.75,0.225,0.25,0,0,1,1,0] }, { name:"可琳·威克斯", image:"屏幕截图 2026-07-10 194731.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] } ]},
+        { faction:"对空六课", roles:[ { name:"星见雅", image:"屏幕截图 2026-07-10 194323.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0.3] }, { name:"浅羽悠真", image:"屏幕截图 2026-07-10 194311.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] }, { name:"苍角", image:"屏幕截图 2026-07-10 194334.png", weights:[0,0,1,0.3,0.25,0,0,0.75,0.75,1] }, { name:"月城柳", image:"屏幕截图 2026-07-10 194315.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1] } ]},
+        { faction:"治安局", roles:[ { name:"简·杜", image:"屏幕截图 2026-07-10 194526.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1] }, { name:"青衣", image:"屏幕截图 2026-07-10 194549.png", weights:[0,0,0.75,0.225,0.25,0,0,1,1,0] }, { name:"朱鸢", image:"屏幕截图 2026-07-10 194558.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] }, { name:"赛斯·洛威尔", image:"屏幕截图 2026-07-10 194543.png", weights:[0,0,1,0.3,0.25,0,0,0,0,0.75] }, { name:"希希芙", image:"屏幕截图 2026-07-10 195047.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] } ]},
+        { faction:"卡吕冬之子", roles:[ { name:"柏妮思·怀特", image:"屏幕截图 2026-07-10 194454.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1] }, { name:"凯撒·金", image:"屏幕截图 2026-07-10 194507.png", weights:[0,0,0.75,0.225,0.25,0,0,1,1,0] }, { name:"露西", image:"屏幕截图 2026-07-10 194517.png", weights:[0,0,1,0.3,0.25,0,0,0.75,0.75,0] }, { name:"派派·韦尔", image:"屏幕截图 2026-07-10 194512.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] }, { name:"波可娜", image:"屏幕截图 2026-07-10 194340.png", weights:[0,0,0.75,0.225,0.25,0,0,1,1,0] }, { name:"莱特", image:"屏幕截图 2026-07-10 194346.png", weights:[0,0,0.75,0.225,0.25,0,0,1,1,0] } ]},
+        { faction:"天琴座", roles:[ { name:"伊芙琳·舒瓦利耶", image:"屏幕截图 2026-07-10 194300.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] }, { name:"耀嘉音", image:"屏幕截图 2026-07-10 194305.png", weights:[0,0,1,0.3,0.25,0,0,0.75,0.75,0] } ]},
+        { faction:"防卫军奥波勒斯小队", roles:[ { name:"11号", image:"屏幕截图 2026-07-10 194703.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] }, { name:"扳机", image:"屏幕截图 2026-07-10 194617.png", weights:[0,0,0.75,0.225,0.25,0,0,0.75,1,0] }, { name:"席德", image:"屏幕截图 2026-07-10 194613.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] }, { name:"奥菲丝&鬼火", image:"屏幕截图 2026-07-10 194608.png", weights:[0,0,1,0.3,0.6,0,0,1,1,0] } ]},
         { faction:"防卫军白银小队", roles:[ { name:"零号·安比", image:"屏幕截图 2026-07-10 194251.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] } ]},
-        { faction:"反舌鸟", roles:[
-            { name:"雨果·维拉德", image:"屏幕截图 2026-07-10 194227.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] },
-            { name:"薇薇安·班希", image:"屏幕截图 2026-07-10 194244.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1], special:"vivian" }
-        ]},
-        { faction:"坎卜斯黑枝", roles:[
-            { name:"照", image:"屏幕截图 2026-07-10 195122.png", weights:[1,0.3,0,0,0,0,0,0.5,0.5,0] },
-            { name:"普罗米娅", image:"屏幕截图 2026-07-10 195115.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1] },
-            { name:"琉音", image:"屏幕截图 2026-07-10 195139.png", weights:[0,0,0.75,0.225,0.25,0,0,0.75,1,0] },
-            { name:"般岳", image:"屏幕截图 2026-07-10 195130.png", weights:[0.75,0.225,0.45,0.135,0,0,0,1,1,0] }
-        ]},
-        { faction:"妄想天使", roles:[
-            { name:"南宫羽", image:"屏幕截图 2026-07-10 195055.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1] },
-            { name:"千夏", image:"屏幕截图 2026-07-10 195107.png", weights:[0,0,1,0.3,0,0,0,0.5,0.5,0] },
-            { name:"爱芮", image:"屏幕截图 2026-07-10 195101.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1] }
-        ]},
-        { faction:"云岿山", roles:[
-            { name:"叶瞬光", image:"屏幕截图 2026-07-10 193955.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] },
-            { name:"橘福福", image:"屏幕截图 2026-07-10 194214.png", weights:[0,0,1,0.3,0.25,0,0,0.75,1,0] },
-            { name:"仪玄", image:"屏幕截图 2026-07-10 194237.png", weights:[0.75,0.225,0.45,0.135,0,0,0,1,1,0] },
-            { name:"潘引壶", image:"屏幕截图 2026-07-10 194219.png", weights:[0,0,1,0.3,0.25,0,0,0.75,0.75,0] }
-        ]},
-        { faction:"怪啖屋", roles:[
-            { name:"爱丽丝·泰姆菲尔德", image:"屏幕截图 2026-07-10 193916.png", weights:[0,0,1,0.3,0.3,0,0,0,0,1], special:"alice" },
-            { name:"伊德海莉·墨菲", image:"屏幕截图 2026-07-10 193846.png", weights:[0.75,0.225,0.45,0.135,0,0,0,1,1,0] },
-            { name:"卢西娅", image:"屏幕截图 2026-07-10 193903.png", weights:[1,0.3,0,0,0,0,0,0.5,0.5,0] },
-            { name:"浮波柚叶", image:"屏幕截图 2026-07-10 193927.png", weights:[0,0,1,0.225,0.25,0,0,0,0,1] },
-            { name:"狛野真斗", image:"屏幕截图 2026-07-10 193857.png", weights:[0.75,0.225,0.45,0.135,0,0,0,1,1,0] }
-        ]},
-        { faction:"罗斯凯利法外务筹策局", roles:[
-            { name:"维琳娜·艾嘉德", image:"屏幕截图 2026-07-10 194910.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1] },
-            { name:"诺姆·霍洛维尔", image:"屏幕截图 2026-07-10 194905.png", weights:[0,0,0.75,0.225,0.25,0,0,0.75,1,0] }
-        ]},
-        { faction:"法厄同", roles:[ { name:"佩洛伊斯", image:"屏幕截图 2026-07-10 194933.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] } ]},
-        { faction:"达识结社", roles:[
-            { name:"蕾米埃尔", image:"屏幕截图 2026-07-30 115504.png", weights:[0,0,1,0.3,0.3,0,0,0,0,1] }
-        ]}
+        { faction:"反舌鸟", roles:[ { name:"雨果·维拉德", image:"屏幕截图 2026-07-10 194227.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] }, { name:"薇薇安·班希", image:"屏幕截图 2026-07-10 194244.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1], special:"vivian" } ]},
+        { faction:"坎卜斯黑枝", roles:[ { name:"照", image:"屏幕截图 2026-07-10 195122.png", weights:[1,0.3,0,0,0,0,0,0.5,0.5,0] }, { name:"普罗米娅", image:"屏幕截图 2026-07-10 195115.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1] }, { name:"琉音", image:"屏幕截图 2026-07-10 195139.png", weights:[0,0,0.75,0.225,0.25,0,0,0.75,1,0] }, { name:"般岳", image:"屏幕截图 2026-07-10 195130.png", weights:[0.75,0.225,0.45,0.135,0,0,0,1,1,0] } ]},
+        { faction:"妄想天使", roles:[ { name:"南宫羽", image:"屏幕截图 2026-07-10 195055.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1] }, { name:"千夏", image:"屏幕截图 2026-07-10 195107.png", weights:[0,0,1,0.3,0,0,0,0.5,0.5,0] }, { name:"爱芮", image:"屏幕截图 2026-07-10 195101.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1] } ]},
+        { faction:"云岿山", roles:[ { name:"叶瞬光", image:"屏幕截图 2026-07-10 193955.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] }, { name:"橘福福", image:"屏幕截图 2026-07-10 194214.png", weights:[0,0,1,0.3,0.25,0,0,0.75,1,0] }, { name:"仪玄", image:"屏幕截图 2026-07-10 194237.png", weights:[0.75,0.225,0.45,0.135,0,0,0,1,1,0] }, { name:"潘引壶", image:"屏幕截图 2026-07-10 194219.png", weights:[0,0,1,0.3,0.25,0,0,0.75,0.75,0] } ]},
+        { faction:"怪啖屋", roles:[ { name:"爱丽丝·泰姆菲尔德", image:"屏幕截图 2026-07-10 193916.png", weights:[0,0,1,0.3,0.3,0,0,0,0,1], special:"alice" }, { name:"伊德海莉·墨菲", image:"屏幕截图 2026-07-10 193846.png", weights:[0.75,0.225,0.45,0.135,0,0,0,1,1,0] }, { name:"卢西娅", image:"屏幕截图 2026-07-10 193903.png", weights:[1,0.3,0,0,0,0,0,0.5,0.5,0] }, { name:"浮波柚叶", image:"屏幕截图 2026-07-10 193927.png", weights:[0,0,1,0.225,0.25,0,0,0,0,1] }, { name:"狛野真斗", image:"屏幕截图 2026-07-10 193857.png", weights:[0.75,0.225,0.45,0.135,0,0,0,1,1,0] } ]},
+        { faction:"罗斯凯利法·外务筹策局", roles:[ { name:"维琳娜·艾嘉德", image:"屏幕截图 2026-07-10 194910.png", weights:[0,0,0.75,0.225,0.3,0,0,0,0,1] }, { name:"诺姆·霍洛维尔", image:"屏幕截图 2026-07-10 194905.png", weights:[0,0,0.75,0.225,0.25,0,0,0.75,1,0] } ]},
+        { faction:"罗斯凯利法·空域戍巡局", roles:[ { name:"希格莉德", image:"屏幕截图 2026-08-20 184344.png", weights:[0,0,1,0.3,0.3,0,0,1,0.5,0] } ]},
+	{ faction:"法厄同", roles:[ { name:"佩洛伊斯", image:"屏幕截图 2026-07-10 194933.png", weights:[0,0,1,0.3,0.3,0,0,1,1,0] } ]},
+        { faction:"达识结社", roles:[ { name:"蕾米埃尔", image:"屏幕截图 2026-07-30 115504.png", weights:[0,0,1,0.3,0.3,0,0,0,0,1] } ]}
     ];
-
     let gameSelectedChars = [];
-
-    const themes = [
-        { left: '#FF4500', right: '#121212', primary: '#FF4500', bg: '#121212', bg2: '#0a0a0a', text: '#e0e0e0', muted: '#888', border: '#333', textOnPrimary: '#121212' },
-        { left: '#2C2C34', right: '#00D4FF', primary: '#00D4FF', bg: '#2C2C34', bg2: '#1A1A20', text: '#e0e0e0', muted: '#999', border: '#4A4A52', textOnPrimary: '#2C2C34' },
-        { left: '#7B2CBF', right: '#F9D308', primary: '#F9D308', bg: '#7B2CBF', bg2: '#5A1A8A', text: '#ffffff', muted: '#cccccc', border: '#9C5CD4', textOnPrimary: '#7B2CBF' },
-        { left: '#6A0DAD', right: '#FF0080', primary: '#FF0080', bg: '#6A0DAD', bg2: '#50008A', text: '#ffffff', muted: '#cccccc', border: '#8C3AC4', textOnPrimary: '#6A0DAD' },
-        { left: '#FFD300', right: '#0066FF', primary: '#0066FF', bg: '#FFD300', bg2: '#E6BE00', text: '#111111', muted: '#444444', border: '#CCAA00', textOnPrimary: '#FFD300' },
-        { left: '#8B0000', right: '#0F5132', primary: '#0F5132', bg: '#8B0000', bg2: '#6A0000', text: '#e0e0e0', muted: '#999', border: '#AA2020', textOnPrimary: '#8B0000' },
-        { left: '#B19CD9', right: '#D3D3D3', primary: '#D3D3D3', bg: '#B19CD9', bg2: '#9A85C5', text: '#ffffff', muted: '#E6DFEF', border: '#D1C5E6', textOnPrimary: '#B19CD9' },
-        { left: '#000000', right: '#FFD700', primary: '#FFD700', bg: '#000000', bg2: '#1A1A1A', text: '#e0e0e0', muted: '#888', border: '#333', textOnPrimary: '#000000' },
-        { left: '#00B4D8', right: '#9F7AEA', primary: '#9F7AEA', bg: '#00B4D8', bg2: '#009CC2', text: '#ffffff', muted: '#CCE6F0', border: '#33C5E2', textOnPrimary: '#00B4D8' },
-        { left: '#89C2FF', right: '#E6F7FF', primary: '#89C2FF', bg: '#E6F7FF', bg2: '#FFFFFF', text: '#111111', muted: '#444444', border: '#B0D8FF', textOnPrimary: '#E6F7FF' },
-        { left: '#012696', right: '#A4E2C6', primary: '#A4E2C6', bg: '#012696', bg2: '#011E7A', text: '#F0F8F8', muted: '#80B0B0', border: '#19509A', textOnPrimary: '#012696' },
-        { left: '#0C567D', right: '#EDB79C', primary: '#EDB79C', bg: '#0C567D', bg2: '#08405E', text: '#FDF0E9', muted: '#B58B76', border: '#177A9A', textOnPrimary: '#0C567D' },
-        { left: '#549688', right: '#F4EAC5', primary: '#F4EAC5', bg: '#549688', bg2: '#3A7367', text: '#FDF9F0', muted: '#A0B8B0', border: '#68B0A0', textOnPrimary: '#549688' },
-        { left: '#ED9874', right: '#E9EEB9', primary: '#E9EEB9', bg: '#ED9874', bg2: '#CC7F5F', text: '#FDF8F0', muted: '#F2C8B4', border: '#F3A88C', textOnPrimary: '#5E3E2E' },
-        { left: '#425066', right: '#E4C6D0', primary: '#E4C6D0', bg: '#425066', bg2: '#303B4C', text: '#FDF0F4', muted: '#8A9AB0', border: '#5F6F89', textOnPrimary: '#425066' },
-        { left: '#AE3B35', right: '#24322A', primary: '#AE3B35', bg: '#24322A', bg2: '#161E1C', text: '#EEEEEE', muted: '#888A88', border: '#3A4440', textOnPrimary: '#FFFFFF' },
-        { left: '#E9C4A3', right: '#CB2D1D', primary: '#E9C4A3', bg: '#CB2D1D', bg2: '#A02010', text: '#FFFFFF', muted: '#E0B0B0', border: '#E04030', textOnPrimary: '#CB2D1D' },
-        { left: '#ED6927', right: '#203A32', primary: '#ED6927', bg: '#203A32', bg2: '#152822', text: '#FFFFFF', muted: '#80A090', border: '#305040', textOnPrimary: '#203A32' },
-        { left: '#A7D2EE', right: '#244973', primary: '#A7D2EE', bg: '#244973', bg2: '#1A3658', text: '#FFFFFF', muted: '#80A0C0', border: '#305880', textOnPrimary: '#244973' },
-        { left: '#E8D3D4', right: '#E2802B', primary: '#E2802B', bg: '#E8D3D4', bg2: '#D3B8B9', text: '#331111', muted: '#6A5050', border: '#C08080', textOnPrimary: '#FFFFFF' },
-        { left: '#98FF98', right: '#D2042D', primary: '#98FF98', bg: '#D2042D', bg2: '#A00020', text: '#FFFFFF', muted: '#E0C0C0', border: '#E03040', textOnPrimary: '#D2042D' },
-        { left: '#FF6400', right: '#6EF0FF', primary: '#6EF0FF', bg: '#FF6400', bg2: '#E05000', text: '#FFFFFF', muted: '#FFD0B0', border: '#FF8030', textOnPrimary: '#FF6400' },
-        { left: '#BFFF00', right: '#222222', primary: '#BFFF00', bg: '#222222', bg2: '#111111', text: '#FFFFFF', muted: '#88A0A0', border: '#444444', textOnPrimary: '#222222' },
-        { left: '#E61A23', right: '#0A090C', primary: '#E61A23', bg: '#0A090C', bg2: '#000000', text: '#FFFFFF', muted: '#888888', border: '#333333', textOnPrimary: '#FFFFFF' }
-    ];
-
-    function hexToRgb(hex) {
-        let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255, 69, 0';
-    }
-
-    function applyTheme(t) {
-        const root = document.documentElement;
-        root.style.setProperty('--primary-color', t.primary);
-        root.style.setProperty('--bg-color', t.bg);
-        root.style.setProperty('--bg-secondary', t.bg2);
-        root.style.setProperty('--text-color', t.text);
-        root.style.setProperty('--text-muted', t.muted);
-        root.style.setProperty('--border-color', t.border);
-        root.style.setProperty('--text-on-primary', t.textOnPrimary);
-        const rgb = hexToRgb(t.primary);
-        root.style.setProperty('--primary-color-alpha', `rgba(${rgb}, 0.2)`);
-        root.style.setProperty('--primary-color-alpha-light', `rgba(${rgb}, 0.05)`);
-        root.style.setProperty('--primary-color-alpha-border', `rgba(${rgb}, 0.25)`);
-    }
-
-    function initThemeSelector() {
-        const container = document.getElementById('theme-selector');
-        container.innerHTML = '';
-        themes.forEach((t, i) => {
-            const btn = document.createElement('button');
-            btn.className = 'theme-btn' + (i === 0 ? ' active' : '');
-            btn.style.setProperty('--c1', t.left);
-            btn.style.setProperty('--c2', t.right);
-            btn.dataset.index = i;
-            btn.onclick = () => {
-                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                applyTheme(t);
-            };
-            container.appendChild(btn);
-        });
-    }
-
-    document.getElementById('theme-toggle-btn').addEventListener('click', function() {
-        var panel = document.getElementById('theme-selector');
-        panel.classList.toggle('active');
-        this.textContent = panel.classList.contains('active') ? '✕ 关闭配色' : '配色';
-    });
-
-    document.getElementById('update-log-btn').addEventListener('click', function() {
-        document.getElementById('update-log-modal').style.display = 'flex';
-    });
-
-    document.getElementById('sponsor-wrapper').onclick = function() {
-        var modal = document.getElementById('qr-modal');
-        var modalImg = document.getElementById('qr-modal-img');
-        modal.style.display = 'flex';
-        modalImg.src = this.querySelector('img').src;
+    let lastImportedChars = [];
+    let charConfigsCache = {};
+    let enkaIdToNameMap = {};
+    let extractionList = [];
+    let settings = {
+        autoCollapseImport: true,
+        autoCollapseOutput: true
     };
-
-    function parseNumber(str) {
-        str = str.trim();
-        if (str === '') return 0;
-        if (str.includes('/')) { const p = str.split('/'); if (p.length !== 2) return NaN; return parseFloat(p[0]) / parseFloat(p[1]); }
-        return parseFloat(str);
+    try {
+        const saved = JSON.parse(localStorage.getItem('zzz_calc_settings'));
+        if (saved) settings = Object.assign(settings, saved);
+    } catch(e) {}
+    function saveSettings() {
+        localStorage.setItem('zzz_calc_settings', JSON.stringify(settings));
     }
+    const tutorialText = `
+<span style="color:var(--primary-color); font-weight:bold;">基础：</span>
+	1、前往游戏内打开角色展柜，在里面放入你想要培养的角色（可有多个）
+	2、在计算器内输入UID，点击生成的链接，复制全部内容，粘贴导入驱动盘数据
+	3、点击开始计算
+	4、根据自身需求，从 出货概率最大的具体抽取方式/斯科特哨站资源消耗最小的具体抽取方式/音像店抽取方式为随机，定向位置时资源消耗最小的具体抽取方式/定向主词条时资源消耗最小的具体抽取方式 中选择，去游戏里实施。
 
-    function dfsUp(leaveTimes, nowAdd, need, nowGroup, counter) {
-        if (leaveTimes <= 0) { counter.total++; if (nowAdd > need) counter.pass++; return; }
-        for (let i = 0; i < nowGroup.length; i++) dfsUp(leaveTimes - 1, nowAdd + nowGroup[i].score, need, nowGroup, counter);
+<span style="color:var(--primary-color); font-weight:bold;">进阶：</span>
+	1、粘贴导入驱动盘数据后会出现一个一键存档按钮，点击它可以保存你导入的所有角色的驱动盘数据（注意，若清除浏览器数据，存档将被清除。同一设备更换浏览器，或更换设备将无法继承原来设备中原来浏览器中的存档）
+        2、除了粘贴导入驱动盘数据还可以手动填写驱动盘数据：
+		（1）、在计算器内选择你想要培养的角色（一次可选择多个角色，再点一次取消选择）
+		（2）、这时候会出现一个角色输入框，在输入框的左上角有个三角形，点击可以展开或折叠输入框
+		（3）、角色选择页面下方可以读取之前存了档的驱动盘数据或新建存档或给存档改名、删除存档。保存存档按钮在角色最后一个驱动盘数据输入框与角色基础词条库之间
+		（4）、勾选你不知道要如何刷取或不知道是否要刷取的套装对应的驱动盘号位
+		（5）、定向副词条功能根据你在刷取驱动盘时是否打算使用定向副词条道具，定向哪些副词条来勾选
+		（6）、勾选你面前对应位置驱动盘的副词条，并填写强化次数（大生命，大攻击，大防御代表副词条里带百分比的那个。小生命等对应的是不带百分比的那个。）
+		（7）、当前副词条数值指的是在游戏内驱动盘对应副词条呈现的数值。权重指的是1个当前副词条对角色练度提升的价值
+	3、关于计算结果：
+		（1）、计算结果中可以展开每个角色的详细计算结果
+		（2）、若通过粘贴导入数据会按套装分类，若手动输入则统一为“未知套装”
+		（3）、详细计算结果中各词语意思：
+			①、随机抽取综合练度提升概率：在音像店随机抽（指不做任何定向）取或在斯科特哨站刷取一个对应套装的驱动盘，抽取并强化驱动盘后对比现有驱动盘练度（即在驱动盘配置输入界面出现的“当前驱动盘分数”）有提升的概率
+			②、	音像店刷出更好驱动盘期望消耗与哨站刷出更好驱动盘期望消耗：根据对应概率算出的按照对应抽取方式抽取并强化驱动盘后对比现有驱动盘练度有提升平均所需的消耗
+			③、约和XX天体力：根据哨站刷出更好驱动盘期望消耗除以每日最高可通过咖啡和电量自动恢复获取的电量总和（即80+240电量）算出
+			④、随机：抽取方式的一种，也指在音像店随机抽取（指不做任何定向）或在斯科特哨站刷取一个对应套装的驱动盘，抽出来的是对应位置的驱动盘且强化驱动盘后对比现有驱动盘练度有提升的概率
+			⑤、定向位置：抽取方式的一种，也指在音像店定向对应位置抽取对应套装的驱动盘并强化驱动盘后对比现有驱动盘练度有提升的概率
+			⑥、定向主词条：抽取方式的一种，也指在音像店定向对应位置的对应主词条抽取对应套装的驱动盘并强化驱动盘后对比现有驱动盘练度有提升的概率
+			⑦、驱动盘练度评价：根据多种抽取方式抽取驱动盘并强化后练度有提升的概率进行平均，一共有5种评价：完美毕业、大毕业、小毕业、能用、可提升空间级大
+			⑧、初始三词条驱动盘强化后练度提升概率与初始四词条驱动盘强化后练度提升概率：1、2、3号位定向位置抽取，4、5、6号位定向主词条抽取抽出来初始三词条驱动盘强化后练度提升概率与抽出来初始四词条驱动盘强化后练度提升概率
+
+<span style="color:var(--primary-color); font-weight:bold;">精通：</span>
+	1、计算器的作用：可以告诉你通过不同方式（比如说刷两件套还是刷四件套，四件套应该随机抽还是定向抽，定向应该定向哪个位置）抽取驱动盘并强化后对比你现在的驱动盘有提升的概率，你可以利用这个判断出现在应该去刷哪	个角色的驱动盘，怎么刷最有可能出货。不可替代性解释：不同角色的不同词条权重不同，初始三词条和初始四词条出现概率不同，不同副词条出现概率不同，不同主词条出现概率不同，这么多的数据再加上最多可达五次的强化出现	的大量可能强化情况以及一个角色有6个号位的驱动盘 会导致人脑难以计算。而如果估算，比如说看有效词条数或权重分数，由于忽略了大量其他数据，可能会导致反直觉的情况出现，比如说像我视频里的例子：仪玄5号位以太伤害	加成 副词条暴击伤害+5和6号位生命值百分比暴击伤害+4，大攻击+1。不管你是看有效词条数（5号位为6,6号位为5）还是权重分数（5号位为6，6号位为5.9），似乎都是定向6号位更容易出货，但实际上用这个计算器计算会发现定	向5号位出货概率高达约2.4%，定向6号位出货概率却只有1.6%。这是因为5号位本身有10个主词条，且抽出以太伤害主词条概率只有约6%，而6号位抽出生命值百分比主词条概率约为21%，在这种情况下定向主词条对5号位出货概率	提升作用比对6号位的大。
+		B站讲解视频：<a href="https://www.bilibili.com/video/BV191uw6QEqB/" target="_blank" style="color:var(--primary-color); text-decoration:underline;">点击观看</a>
+	2、打不开？
+		（1）、打不开计算器网址的原因：我把网页代码托管给了github而github是外国服务器，国内有时候访问不稳定。可以多试一下或者检查一下网址是否输入完整，或手动输入网址（可能是格式原因，有时候手动输入可以进去但		（2）、打不开计算器网址的解决方案：
+			①、可以多试一下或者检查一下网址是否输入完整，或手动输入网址（可能是格式原因，有时候手动输入可以进去但直接复制就不行）
+			②、如果是电脑端的话可以试试下个Watt Toolkit然后点开里面的网络加速，点平台加速，下拉找到Github就行了（是加速器，在Microsoft Store就能下，就是电脑自带的那个商城）
+			③、过段时间再试一下
+	3、设置里可以选择关闭粘贴导入驱动盘数据时，输入界面默认折叠与选择多个角色时，单角色计算结果默认折叠功能
+	4、可以再配色里选择你喜欢的计算器界面配色
+	5、角色基础词条库：计算器在每计算模拟一个位置的一种可能副词条抽取情况时会从其对应的词条库中抽取。而这个“对应的词条库”就是根据主词条的不同从角色基础词条库修改而来的（如主词条为异常精通的词条库是在角色基	础词条库的基础上将异常精通的库存改为0得到的）
+	6、库存：指角色词条库里对应副词条的数量。比如说如果这个副词条库存为2，那一个驱动盘中最多出现两个一样的这个词条，如果为1（就是现在计算器中默认设置的数量），同一个驱动盘就不能出现两个一样的副词条
+	7、如果不认可默认的角色副词条权重，可在角色基础词条库中修改副词条权重`;
+    const LOC_ZH_TW = {"": "", "TitleText_3800166": "護花使者", "Avatar_Male_Size03_Pyrois": "佩洛伊斯", "Avatar_Female_Size03_ZhuYuan": "朱鳶", "Item_Weapon_B_Common_04_Name": "「殘響」-Ⅰ型", "ArmorMax": "護甲值", "MedalName4006": "無邊末路·窮途", "TitleText_3800224": "清湯大繩匠", "EquipmentSuit_33700_name": "雪兔夢遊仙境 ", "Avatar_Female_Size02_Cissia": "希希芙", "Item_Weapon_S_1161_Name": "焰心桂冠", "TitleText_3800171": "阿朔的貴賓級顧客", "TitleText_380021402": "神探·前{0}%", "MedalName13004": "迷宮財富·豪客", "EquipmentSuit_32800_name": "靜聽嘉音", "Item_Weapon_S_1461_Name": "機巧心種", "TitleText_3800217": "舞台享受者", "SpMax": "能量上限", "Item_Weapon_S_1201_Name": "殘心青囊", "TitleText_3800102": "全勤模範店主", "Item_Weapon_S_1591_Name": "驍騎禮讚", "TitleText_380023103": "榮耀卡司·第{0}幕", "Item_Weapon_A_Common_10_Name": "兔能環", "TitleText_3800135": "常勝冠軍的摯友", "Avatar_Female_Size01_Aokaku": "蒼角", "TitleText_3800238": "鋒芒契影獵手", "Avatar_Female_Size00_XiaoZhao": "照", "MedalName14003": "危局強襲·肅清Ⅲ", "TitleText_3800228": "命運之裁決官", "Avatar_Male_Size03_Ben": "本", "TitleText_3800134": "大小姐的人", "TitleText_3800237": "極限運算主宰者", "EquipmentSuit_31300_name": "自由藍調", "Item_Weapon_S_1531_Name": "輝騎面鎧", "TitleText_3800145": "惡鬼飯搭子", "Item_Weapon_B_Common_07_Name": "「湍流」-銃型", "TitleText_380021502": "心靈共感者", "Avatar_Male_Size03_SPBilly": "星徽·比利", "TitleText_3800141": "直至無人之境", "Item_Weapon_A_1441_Name": "燔火朧夜", "Avatar_Female_Size02_Yuzuha": "柚葉", "Avatar_Male_Size01_Seth": "賽斯", "TitleText_3800223": "災潮對策專員", "TitleText_380024003": "危境Ⅱ·荊冠", "TitleText_3800136": "紅豆包和你", "MedalName1002": "式輿防衛·應變", "Item_Weapon_S_1141_Name": "拘縛者", "TitleText_3800104": "生物學拆卸專家", "TitleText_3800148": "誰為「牲祭」？", "Item_Weapon_S_1191_Name": "深海訪客", "MedalName10006": "狂瀾勳冠·極境", "Item_Weapon_S_1221_Name": "時流賢者", "TitleText_3800180": "冠冕的『魔王』", "TitleText_3800150": "末路的先鋒", "TitleText_3800226": "遛狗專家", "ShieldMax_base": "基礎護盾值", "TitleText_3800203": "在TOPS有熟人", "RpGetRatio": "閃能獲得效率", "Item_Weapon_S_1451_Name": "鑄夢爐歌", "TitleText_3800233": "首席嗯呢專家", "Item_Weapon_S_1341_Name": "半糖雪兔", "Avatar_Male_Size03_Lycaon": "萊卡恩", "TitleText_380021501": "氛圍營造者", "MedalName5005": "榮耀所眷Ⅴ", "TitleText_3800127": "下班邀約首選", "TitleText_3800201": "朝花夕拾", "TitleText_3800192": "星夜旅伴", "TitleText_3800215": "測評中", "TitleText_3800175": "有大師姐撐腰的", "TitleText_3800199": "末日暫停，遊園中", "Item_Weapon_S_1301_Name": "囂槍喧焰", "MedalName4002": "無邊末路Ⅱ", "MedalName12001": "擬境湮滅·遊刃", "TitleText_3800100": "合格的繩匠", "Item_Weapon_B_Common_13_Name": "「恆等式」-本格", "Item_Weapon_A_1281_Name": "轟鳴座駕", "TitleText_3800113": "老道登山客", "Item_Weapon_S_1521_Name": "鱗齒尋蹤", "AddedDamageRatio_Elec": "電屬性傷害加成", "PenRatio": "穿透率", "Avatar_Male_Size02_HugoVlad": "雨果", "TitleText_3800241": "億萬富翁", "Item_Weapon_A_1421_Name": "震元奇樞", "TitleText_3800186": "『釜底抽薪』", "TitleText_3800139": "閃擊作戰專家", "Avatar_Female_Size03_Velina": "維琳娜", "Def_base": "基礎防禦力", "EquipmentSuit_31200_name": "震星迪斯可", "TitleText_3800194": "泅瓏的「捉鬼人」", "TitleText_3800167": "「X號」玩家", "TitleText_3800154": "金手指征服者", "MedalName2003": "無盡攀登Ⅲ", "MedalName2006": "無盡攀登·坦途", "Item_Weapon_S_1321_Name": "心弦夜響", "TitleText_380020702": "仗劍·前{0}%", "HpMax_Ratio": "生命值百分比", "MedalName4005": "無邊末路Ⅴ", "Avatar_Female_Size02_SilverAnby": "零號·安比", "TitleText_3800181": "純粹的強者", "Item_Weapon_S_1021_Name": "鋼鐵肉墊", "Item_Weapon_A_Common_11_Name": "春日融融", "MedalName5002": "榮耀所眷Ⅱ", "HpMax_base": "基礎生命值", "MedalName9001": "千面", "Crit": "暴擊率", "TitleText_380016902": "第{0}次早安，新艾利都", "Item_Weapon_S_1051_Name": "海妖搖籃", "MedalName10003": "狂瀾勳冠Ⅲ", "TitleText_3800229": "熔落日冕", "RpMax": "閃能最大值", "TitleText_3800207": "步溟仗劍開天光", "ElementAbnormalPower": "異常掌控", "TitleText_3800156": "目可觸及的你", "EquipmentSuit_32900_name": "如影相隨", "AddedDamageRatio_Wind": "風屬性傷害加成", "Avatar_Female_Size03_Evelyn": "伊芙琳", "Item_Weapon_S_1491_Name": "思絡成歌", "MedalName11001": "湮滅·太初夢魘", "TitleText_3800169": "早安，新艾利都", "Item_Weapon_A_1271_Name": "維序者-特化型", "EquipmentSuit_34100_name": "讖羽之誓", "StunMax": "失衡值", "EquipmentSuit_34200_name": "荊棘玫瑰", "Item_Weapon_A_Common_15_Name": "強音熱望", "TitleText_3800195": "「捉迷藏」高手", "MedalName4003": "無邊末路Ⅲ", "TitleText_3800183": "釋詭齋VIP", "TitleText_3800218": "滿秩破界", "Item_Weapon_S_1471_Name": "怒目金剛", "EquipmentSuit_31100_name": "河豚電音", "Item_Weapon_S_1311_Name": "玲瓏妝匣", "TitleText_3800182": "擁抱榮耀時刻", "StunMax_base": "基礎失衡值", "EquipmentSuit_31400_name": "激素龐克", "MedalName10002": "狂瀾勳冠Ⅱ", "Def": "防禦力", "TitleText_3800129": "我的一個普通朋友", "Item_Weapon_S_Common_01_Name": "加農轉子", "TitleText_3800208": "夢中銀繩", "Item_Weapon_A_1351_Name": "裁紙刀", "Def_Ratio": "防禦力百分比", "Item_Weapon_A_1131_Name": "含羞惡面", "Item_Weapon_B_Common_05_Name": "「殘響」-Ⅱ型", "Item_Weapon_S_1261_Name": "淬鋒鉗刺", "MedalName4004": "無邊末路Ⅳ", "TitleText_3800111": "紛爭終結者", "Avatar_Female_Size02_Vivian": "薇薇安", "Item_Weapon_S_1211_Name": "啜泣搖籃", "Item_Weapon_A_Common_03_Name": "雨林饕客", "MedalName10001": "狂瀾勳冠Ⅰ", "Avatar_Female_Size03_Promeia": "普羅米婭", "TitleText_3800177": "特級廚師的食客", "Item_Weapon_A_Common_19_Name": "青漪靈鼎", "TitleText_3800146": "時間管理大師", "TitleText_380024004": "危境Ⅲ·曜芒", "Item_Weapon_B_Common_02_Name": "「月相」-晦", "Item_Weapon_S_1291_Name": "千面日隕", "TitleText_3800149": "冠軍車手·街機版", "TitleText_380023102": "卓越卡司·第{0}幕", "Item_Weapon_S_1041_Name": "硫磺石", "Item_Weapon_S_1501_Name": "殼中之靈", "Atk_base": "基礎攻擊力", "TitleText_3800170": "衛非地先行者", "MedalName1001": "式輿防衛·錨點", "EquipmentSuit_33900_name": "呼嘯沙龍", "Avatar_Female_Size01_QingYi": "青衣", "Item_Weapon_A_Common_13_Name": "鎏金花信", "Avatar_Female_Size03_Trigger": "「扳機」", "MedalName5003": "榮耀所眷Ⅲ", "Avatar_Female_Size02_Anbi": "安比", "Item_Weapon_A_1121_Name": "比格氣缸", "Item_Weapon_S_1401_Name": "十方鍛星", "Item_Weapon_A_Common_18_Name": "咚噠回聲", "TitleText_3800147": "嗯呢戰鬥導師", "Avatar_Female_Size01_OokumaMari": "珂蕾妲", "TitleText_3800244": "羽化的終結者", "TitleText_380023802": "獵手·前{0}%", "TitleText_3800185": "暴力美學藝術家", "SkipDefAtk": "貫穿力", "TitleText_3800110": "劇變鎮壓者", "TitleText_3800118": "賽博貓薄荷", "TitleText_3800198": "終極掠食者", "TitleText_3800116": "專業賺錢搭子", "BreakStun": "衝擊力", "MedalName2005": "無盡攀登Ⅴ", "MedalName9002": "偵探不只一個！", "BreakStun_base": "基礎衝擊力", "TitleText_3800158": "愛貓會會員", "Item_Weapon_A_Common_16_Name": "光影刻刀", "TitleText_380021902": "極境·前{0}%", "CritDmg": "暴擊傷害", "MedalName5006": "榮耀所眷·冠冕", "Item_Weapon_S_1331_Name": "飛鳥星夢", "TitleText_3800211": "電子貓咪飼養顧問", "TitleText_3800114": "哀惋的謎底", "PenDelta": "穿透值", "CritRes": "抗暴率", "TitleText_3800143": "「虛狩」守護者", "Avatar_Male_Size02_Lighter": "萊特", "EquipmentSuit_33800_name": "囚徒手記", "Avatar_Female_Size02_Longinus": "「11號」", "Avatar_Female_Size02_Brujas": "奧菲絲&「鬼火」", "TitleText_3800221": "天使長", "MedalName2002": "無盡攀登Ⅱ", "TitleText_3800153": "為她披上風衣", "TitleText_3800106": "外環交通協管員", "Item_Weapon_S_1241_Name": "防暴者Ⅵ型", "EquipmentSuit_33100_name": "雲巋如我", "Avatar_Female_Size01_Lucy": "露西", "AddedDamageRatio_Fire": "火屬性傷害加成", "Item_Weapon_S_1571_Name": "首席跟班", "TitleText_3800243": "傳說中的摯友", "Item_Weapon_B_Common_15_Name": "「灰燼」-鈷藍", "AddedDamageRatio_Ice": "冰屬性傷害加成", "ElementMystery": "異常精通", "TitleText_3800112": "殘酷園藝師", "TitleText_3800234": "吼吼品鑑師", "Item_Weapon_A_1151_Name": "好鬥的阿炮", "TitleText_3800159": "溯影行者", "HpMax": "生命值", "TitleText_3800236": "特聘榮譽助手", "Item_Weapon_A_1031_Name": "聚寶箱", "TitleText_3800187": "悲天憫魚", "TitleText_380019102": "推演·前{0}%", "TitleText_3800227": "遊樂島淘金客", "TitleText_3800191": "不敗的推演者", "Avatar_Female_Size03_Lisa": "格莉絲", "TitleText_3800124": "有點人脈", "MedalName11002": "湮滅·溺想者", "TitleText_3800220": "直破狂瀾", "TitleText_3800197": "獅心不滅", "TitleText_3800131": "霸主至交", "EquipmentSuit_32500_name": "極地重金屬", "Item_Weapon_S_1101_Name": "燃獄齒輪", "MedalName2001": "無盡攀登Ⅰ", "TitleText_380024002": "危境Ⅰ·霜刃", "TitleText_3800151": "末路之旌幟", "TitleText_3800179": "洞虛棋宗", "TitleText_3800172": "非常規商業人才", "Item_Weapon_B_Common_01_Name": "「月相」-望", "TitleText_380024005": "危境∞·無冕極刃", "TitleText_3800205": "雲眸蕩霾", "MedalName15001": "危局強襲·破殛", "Item_Weapon_S_1411_Name": "狸法七變化", "UI_Level": "等級{0}", "Avatar_Male_Size03_PanYinhu": "潘引壺", "Item_Weapon_B_Common_14_Name": "「恆等式」-變格", "TitleText_3800231": "卓越卡司", "TitleText_3800245": "勁脆『激推』寶！", "EquipmentSuit_33300_name": "拂曉生花", "Item_Weapon_A_Common_14_Name": "電波漫步", "Item_Weapon_A_1061_Name": "家政員", "Avatar_Female_Size03_YiXuan": "儀玄", "Avatar_Female_Size02_Alice": "愛麗絲", "TitleText_3800204": "閒庭信步", "Avatar_Female_Size01_Azural": "琉音", "Avatar_Male_Size03_Billy": "比利", "TitleText_3800190": "裁奪時刻", "Item_Weapon_A_Common_20_Name": "炎炙沸釜", "RpRecover": "閃能自動累積", "EquipmentSuit_33400_name": "月光騎士頌", "AddedDamageRatio": "傷害加成", "TitleText_3800138": " 不建議展示的稱號", "EquipmentSuit_32400_name": "雷暴重金屬", "EquipmentSuit_33600_name": "流光詠嘆", "TitleText_3800109": "夢魘為你退卻", "TitleText_3800165": "我將點燃新艾利都", "Item_Weapon_A_Common_09_Name": "觸電唇彩", "TitleText_3800184": "專屬你的天鵝座", "TitleText_3800176": "雲巋山真傳弟子", "TitleText_3800168": "電影節特聘評審", "ArmorMax_base": "基礎護甲值", "TitleText_380021003": "繩網漫遊者", "TitleText_3800126": "黑暗料理品鑑師", "TitleText_3800133": "外環最強乘客", "TitleText_3800140": "太好了噗噗！", "TitleText_380022302": "御災·前{0}%", "Avatar_Female_Size02_Lucia": "盧西婭", "Item_Weapon_S_1581_Name": "空羽復歸之詩", "Item_Weapon_S_Common_04_Name": "日冕遺蛻", "TitleText_3800122": "社長特助", "Avatar_Female_Size01_Norma": "諾姆", "TitleText_380021503": "務實守護者", "Avatar_Female_Size02_Unagi": "雅", "Item_Weapon_S_1071_Name": "奔襲獠牙", "TitleText_380018002": "冠冕·前{0}%", "TitleText_3800120": "天下第一好兄弟", "TitleText_3800117": "星徽騎士的認證", "TitleText_3800152": "緋聞密友", "SpRecover": "能量自動回復", "MedalName13002": "迷宮財富·優渥", "EquipmentSuit_34000_name": "拂曉行紀", "Item_Weapon_S_1171_Name": "灼心搖壺", "EquipmentSuit_33000_name": "法厄同之歌", "Item_Weapon_A_1011_Name": "德瑪拉電池Ⅱ型", "Avatar_Female_Size02_Seed": "「席德」", "Avatar_Female_Size02_Burnice": "柏妮思", "TitleText_380021505": "靈感激發者", "TitleText_3800115": "比漢堡更熟", "MedalName10004": "狂瀾勳冠Ⅳ", "EquipmentSuit_32700_name": "折枝劍歌", "TitleText_3800206": "與光同行者", "TitleText_3800239": "盜星之人", "TitleText_380023602": "特聘數域專員", "Item_Weapon_B_Common_11_Name": "「電磁暴」-貳式", "Avatar_Female_Size02_Nostradamus": "妮可", "TitleText_3800196": "全麗都第二好客服", "TitleText_3800101": "法厄同歸來", "TitleText_380023702": "主宰·前{0}%", "TitleText_3800213": "妄想成真", "EquipmentSuit_31500_name": "靈魂搖滾", "HPHealRatio": "治療加成", "Avatar_Female_Size03_Pulchra": "波可娜", "TitleText_3800200": "弈天棋尊", "MedalName3001": "危局強襲·破陣", "AddedElementAccumulationRatio": "屬性異常積蓄效率", "Item_Weapon_S_1511_Name": "霓虹妄想", "Atk_Ratio": "攻擊力百分比", "TitleText_3800128": "互道晚安之人", "Item_Weapon_S_1541_Name": "朔月裁霜", "MedalName9003": "真相埋於虛無", "MedalName6001": "式輿防衛·繼晷", "EquipmentSuit_31800_name": "混沌爵士", "TitleText_3800162": "勤勉蘿布", "EquipmentSuit_32600_name": "獠牙重金屬", "MedalName14002": "危局強襲·肅清Ⅱ", "TitleText_3800144": "我們都長命百歲", "Item_Weapon_S_1561_Name": "琳琅鎏心", "TitleText_3800242": "頭號共犯", "Item_Weapon_A_1111_Name": "旋鑽機-赤軸", "TitleText_3809999": "無稱號", "MedalName13005": "迷宮財富·富翁", "Avatar_Female_Size01_Clara": "派派", "MedalName13001": "迷宮財富·殷實", "Avatar_Female_Size03_Astra": "耀嘉音", "EquipmentSuit_31900_name": "原始龐克", "Avatar_Female_Size02_Ellen": "艾蓮", "Item_Weapon_S_Common_02_Name": "逍遙遊球", "AddedDamageRatio_Physics": "物理傷害加成", "Avatar_Female_Size02_Remielle": "蕾米埃爾", "ElementAbnormalPower_Ratio": "異常掌控", "TitleText_3800142": "王牌調查團", "TitleText_3800123": "女僕寫真攝影師", "SpRecover_Base": "基礎能量自動回復", "TitleText_3800155": "『槓龜』指揮部", "MedalName7001": "危局強襲·崩解", "TitleText_3800240": "危境·試鋒", "Item_Weapon_S_Common_03_Name": "左輪轉子", "Item_Weapon_S_1431_Name": "雲霓孤光", "Item_Weapon_S_1391_Name": "福虓爐爐", "Avatar_Female_Size03_Rina": "麗娜", "MedalName2004": "無盡攀登Ⅳ", "ShieldMax": "護盾值", "TitleText_3800137": "紅圍巾合夥人", "Avatar_Female_Size01_Aria": "愛芮", "TitleText_3800157": "一直都是法厄同", "TitleText_3800188": "為你獻上愛的花束", "Avatar_Female_Size01_Summer": "千夏", "TitleText_3800235": "滅「蟲」技術員", "EquipmentSuit_31000_name": "啄木鳥電音", "Item_Weapon_S_1371_Name": "青溟籠舍", "MedalName5001": "榮耀所眷Ⅰ", "TitleText_3800164": "反正不是你的粉絲", "EquipmentSuit_33200_name": "山大王", "AddedDamageRatio_Ether": "以太傷害加成", "Avatar_Female_Size01_Jufufu": "橘福福", "TitleText_3800125": "摸魚搭子", "Avatar_Female_Size03_Caesar": "凱撒", "Item_Weapon_B_Common_03_Name": "「月相」-朔", "Atk": "攻擊力", "Avatar_Male_Size03_Anton": "安東", "TitleText_3800189": "槍管上的鮮花", "TitleText_3800130": "協理治安官", "Item_Weapon_A_1081_Name": "仿製星徽引擎", "Avatar_Female_Size03_Yanagi": "柳", "Item_Weapon_A_Common_05_Name": "人為刀俎", "Item_Weapon_S_1181_Name": "嵌合編譯器", "TitleText_380022702": "淘金·{0}", "TitleText_3800119": "魔女的學徒", "TitleText_3800202": "流光縈繞", "TitleText_3800222": "膨化食品殲滅使", "Item_Weapon_B_Common_09_Name": "「湍流」-斧型", "TitleText_380021504": "劇情解構者", "MedalName8003": "吞沒", "MedalName13003": "迷宮財富·雄厚", "Item_Weapon_B_Common_10_Name": "「電磁暴」-壹式", "TitleText_3800108": "電子耍蛇人", "Avatar_Female_Size01_Corin": "可琳", "Item_Weapon_A_Common_07_Name": "正版變身器", "Avatar_Female_Size01_Tsubaki": "貓又", "Item_Weapon_B_Common_08_Name": "「湍流」-矢型", "Item_Weapon_A_Common_06_Name": "貴重骨核", "TitleText_3800232": "茶會紅人", "TitleText_3800105": "謝幕時間到", "SkipDefDamageRatio": "貫穿傷害加成", "Avatar_Female_Size03_JaneDoe": "簡", "TitleText_3800209": "虛實一念間", "TitleText_3800121": "大手牽小手", "Avatar_Female_Size02_Zhenzhen": "葉瞬光", "TitleText_3800107": "三頭犬之飼主", "Item_Weapon_A_Common_04_Name": "星徽引擎", "TitleText_3800193": "觸手可及", "TitleText_380021002": "熱心網友", "TitleText_3800219": "極境執勳者", "MedalName8001": "歧路", "TitleText_3800174": "驅逐厄影者", "TitleText_3800132": "柏妮思特別關心", "Item_Weapon_S_1251_Name": "玉壺青冰", "Item_Weapon_S_1361_Name": "索魂影眸", "TitleText_3800230": "心靈布手", "Avatar_Female_Size03_Yidhari": "伊德海莉", "EquipmentSuit_31600_name": "搖擺爵士", "Item_Weapon_B_Common_06_Name": "「殘響」-Ⅲ型", "Avatar_Male_Size01_Harumasa": "悠真", "Item_Weapon_S_1091_Name": "霰落星殿", "TitleText_3800103": "屠夫之屠夫", "MedalName10005": "狂瀾勳冠Ⅴ", "TitleText_3800173": "袚穢淨誓之約", "MedalName4001": "無邊末路Ⅰ", "Avatar_Male_Size03_BanYue": "般岳", "TitleText_3800225": "特邀探店達人", "EquipmentSuit_33500_name": "滄浪行歌", "MedalName8002": "引領者", "MedalName11003": "湮滅·閃耀之誓", "Item_Weapon_A_Common_01_Name": "街頭巨星", "TitleText_3800216": "大家我都喜歡喔", "Item_Weapon_B_Common_12_Name": "「電磁暴」-參式", "EquipmentSuit_32200_name": "炎獄重金屬", "TitleText_3800214": "百變空洞偵探", "Item_Weapon_A_Common_02_Name": "時光切片", "Item_Weapon_A_Common_12_Name": "幻變魔方", "MedalName5004": "榮耀所眷Ⅳ", "Avatar_Female_Size01_NangongYu": "南宮羽", "EquipmentSuit_32300_name": "混沌重金屬", "Item_Weapon_A_Common_08_Name": "雙生泣星", "TitleText_380022703": "趣嶼淘金·極", "MaxBuddyBattery": "MaxBuddyBattery", "TitleText_3800210": "『萌新』", "TitleText_3800212": "構造體夢想家", "MedalName8004": "以傳奇之名", "TitleText_3800161": "並非衰仔", "Avatar_Female_Size03_Sigrid": "希格莉德", "MedalName13006": "迷宮財富·大富豪", "Avatar_Male_Size03_Norano": "真斗", "CritDmgRes": "暴傷減免", "MedalName14001": "危局強襲·肅清Ⅰ", "TitleText_3800160": "木偶劇團的觀眾", "Item_Weapon_S_1381_Name": "犧牲潔純", "Item_Weapon_S_1481_Name": "昨夜來電"};
+    const LOC_ZH_CN = {"": "", "TitleText_3800166": "护花使者", "Avatar_Male_Size03_Pyrois": "佩洛伊斯", "Avatar_Female_Size03_ZhuYuan": "朱鸢", "Item_Weapon_B_Common_04_Name": "「残响」-Ⅰ型", "ArmorMax": "护甲值", "MedalName4006": "无边末路·穷途", "TitleText_3800224": "清汤大绳匠", "EquipmentSuit_33700_name": "雪兔梦游仙境 ", "Avatar_Female_Size02_Cissia": "希希芙", "Item_Weapon_S_1161_Name": "焰心桂冠", "TitleText_3800171": "阿朔的贵宾级顾客", "TitleText_380021402": "神探·前{0}%", "MedalName13004": "迷宫财富·豪客", "EquipmentSuit_32800_name": "静听嘉音", "Item_Weapon_S_1461_Name": "机巧心种", "TitleText_3800217": "舞台享受者", "SpMax": "能量上限", "Item_Weapon_S_1201_Name": "残心青囊", "TitleText_3800102": "全勤模范店主", "Item_Weapon_S_1591_Name": "骁骑礼赞", "TitleText_380023103": "荣耀卡司·第{0}幕", "Item_Weapon_A_Common_10_Name": "兔能环", "TitleText_3800135": "常胜冠军的挚友", "Avatar_Female_Size01_Aokaku": "苍角", "TitleText_3800238": "锋芒契影猎手", "Avatar_Female_Size00_XiaoZhao": "照", "MedalName14003": "危局强袭·肃清Ⅲ", "TitleText_3800228": "命运之裁决官", "Avatar_Male_Size03_Ben": "本", "TitleText_3800134": "大小姐的人", "TitleText_3800237": "极限运算主宰者", "EquipmentSuit_31300_name": "自由蓝调", "Item_Weapon_S_1531_Name": "辉骑面铠", "TitleText_3800145": "恶鬼饭搭子", "Item_Weapon_B_Common_07_Name": "「湍流」-铳型", "TitleText_380021502": "心灵共感者", "Avatar_Male_Size03_SPBilly": "星徽·比利", "TitleText_3800141": "直至无人之境", "Item_Weapon_A_1441_Name": "燔火胧夜", "Avatar_Female_Size02_Yuzuha": "柚叶", "Avatar_Male_Size01_Seth": "赛斯", "TitleText_3800223": "灾潮对策专员", "TitleText_380024003": "危境Ⅱ·荆冠", "TitleText_3800136": "红豆包和你", "MedalName1002": "式舆防卫·应变", "Item_Weapon_S_1141_Name": "拘缚者", "TitleText_3800104": "生物学拆卸专家", "TitleText_3800148": "谁为『牲祭』？", "Item_Weapon_S_1191_Name": "深海访客", "MedalName10006": "狂澜勋冠·极境", "Item_Weapon_S_1221_Name": "时流贤者", "TitleText_3800180": "冠冕的『魔王』", "TitleText_3800150": "末路的先锋", "TitleText_3800226": "遛狗专家", "ShieldMax_base": "基础护盾值", "TitleText_3800203": "在TOPS有熟人", "RpGetRatio": "闪能获得效率", "Item_Weapon_S_1451_Name": "铸梦炉歌", "TitleText_3800233": "首席嗯呢专家", "Item_Weapon_S_1341_Name": "半糖雪兔", "Avatar_Male_Size03_Lycaon": "莱卡恩", "TitleText_380021501": "氛围营造者", "MedalName5005": "荣耀所眷Ⅴ", "TitleText_3800127": "下班邀约首选", "TitleText_3800201": "朝花夕拾", "TitleText_3800192": "星夜旅伴", "TitleText_3800215": "测评中", "TitleText_3800175": "有大师姐撑腰的", "TitleText_3800199": "末日暂停，游园中", "Item_Weapon_S_1301_Name": "嚣枪喧焰", "MedalName4002": "无边末路Ⅱ", "MedalName12001": "拟境湮灭·游刃", "TitleText_3800100": "合格的绳匠", "Item_Weapon_B_Common_13_Name": "「恒等式」-本格", "Item_Weapon_A_1281_Name": "轰鸣座驾", "TitleText_3800113": "老道登山客", "Item_Weapon_S_1521_Name": "鳞齿寻踪", "AddedDamageRatio_Elec": "电属性伤害加成", "PenRatio": "穿透率", "Avatar_Male_Size02_HugoVlad": "雨果", "TitleText_3800241": "亿万富翁", "Item_Weapon_A_1421_Name": "震元奇枢", "TitleText_3800186": "『釜底抽薪』", "TitleText_3800139": "闪击作战专家", "Avatar_Female_Size03_Velina": "维琳娜", "Def_base": "基础防御力", "EquipmentSuit_31200_name": "震星迪斯科", "TitleText_3800194": "泅珑的「捉鬼人」", "TitleText_3800167": "「X号」玩家", "TitleText_3800154": "金手指征服者", "MedalName2003": "无尽攀登Ⅲ", "MedalName2006": "无尽攀登·坦途", "Item_Weapon_S_1321_Name": "心弦夜响", "TitleText_380020702": "仗剑·前{0}%", "HpMax_Ratio": "生命值百分比", "MedalName4005": "无边末路Ⅴ", "Avatar_Female_Size02_SilverAnby": "零号·安比", "TitleText_3800181": "纯粹的强者", "Item_Weapon_S_1021_Name": "钢铁肉垫", "Item_Weapon_A_Common_11_Name": "春日融融", "MedalName5002": "荣耀所眷Ⅱ", "HpMax_base": "基础生命值", "MedalName9001": "千面", "Crit": "暴击率", "TitleText_380016902": "第{0}次早安，新艾利都", "Item_Weapon_S_1051_Name": "海妖摇篮", "MedalName10003": "狂澜勋冠Ⅲ", "TitleText_3800229": "熔落日冕", "RpMax": "闪能最大值", "TitleText_3800207": "步溟仗剑开天光", "ElementAbnormalPower": "异常掌控", "TitleText_3800156": "目可触及的你", "EquipmentSuit_32900_name": "如影相随", "AddedDamageRatio_Wind": "风属性伤害加成", "Avatar_Female_Size03_Evelyn": "伊芙琳", "Item_Weapon_S_1491_Name": "思络成歌", "MedalName11001": "湮灭·太初梦魇", "TitleText_3800169": "早安，新艾利都", "Item_Weapon_A_1271_Name": "维序者-特化型", "EquipmentSuit_34100_name": "谶羽之誓", "StunMax": "失衡值", "EquipmentSuit_34200_name": "荆棘玫瑰", "Item_Weapon_A_Common_15_Name": "强音热望", "TitleText_3800195": "「捉迷藏」高手", "MedalName4003": "无边末路Ⅲ", "TitleText_3800183": "释诡斋VIP", "TitleText_3800218": "满秩破界", "Item_Weapon_S_1471_Name": "怒目金刚", "EquipmentSuit_31100_name": "河豚电音", "Item_Weapon_S_1311_Name": "玲珑妆匣", "TitleText_3800182": "拥抱荣耀时刻", "StunMax_base": "基础失衡值", "EquipmentSuit_31400_name": "激素朋克", "MedalName10002": "狂澜勋冠Ⅱ", "Def": "防御力", "TitleText_3800129": "我的一个普通朋友", "Item_Weapon_S_Common_01_Name": "加农转子", "TitleText_3800208": "梦中银绳", "Item_Weapon_A_1351_Name": "裁纸刀", "Def_Ratio": "防御力百分比", "Item_Weapon_A_1131_Name": "含羞恶面", "Item_Weapon_B_Common_05_Name": "「残响」-Ⅱ型", "Item_Weapon_S_1261_Name": "淬锋钳刺", "MedalName4004": "无边末路Ⅳ", "TitleText_3800111": "纷争终结者", "Avatar_Female_Size02_Vivian": "薇薇安", "Item_Weapon_S_1211_Name": "啜泣摇篮", "Item_Weapon_A_Common_03_Name": "雨林饕客", "MedalName10001": "狂澜勋冠Ⅰ", "Avatar_Female_Size03_Promeia": "普罗米娅", "TitleText_3800177": "特级厨师的食客", "Item_Weapon_A_Common_19_Name": "青漪灵鼎", "TitleText_3800146": "时间管理大师", "TitleText_380024004": "危境Ⅲ·曜芒", "Item_Weapon_B_Common_02_Name": "「月相」-晦", "Item_Weapon_S_1291_Name": "千面日陨", "TitleText_3800149": "冠军车手·街机版", "TitleText_380023102": "卓越卡司·第{0}幕", "Item_Weapon_S_1041_Name": "硫磺石", "Item_Weapon_S_1501_Name": "壳中之灵", "Atk_base": "基础攻击力", "TitleText_3800170": "卫非地先行者", "MedalName1001": "式舆防卫·锚点", "EquipmentSuit_33900_name": "呼啸沙龙", "Avatar_Female_Size01_QingYi": "青衣", "Item_Weapon_A_Common_13_Name": "鎏金花信", "Avatar_Female_Size03_Trigger": "「扳机」", "MedalName5003": "荣耀所眷Ⅲ", "Avatar_Female_Size02_Anbi": "安比", "Item_Weapon_A_1121_Name": "比格气缸", "Item_Weapon_S_1401_Name": "十方锻星", "Item_Weapon_A_Common_18_Name": "咚哒回声", "TitleText_3800147": "嗯呢战斗导师", "Avatar_Female_Size01_OokumaMari": "珂蕾妲", "TitleText_3800244": "羽化的终结者", "TitleText_380023802": "猎手·前{0}%", "TitleText_3800185": "暴力美学艺术家", "SkipDefAtk": "贯穿力", "TitleText_3800110": "剧变镇压者", "TitleText_3800118": "赛博猫薄荷", "TitleText_3800198": "终极掠食者", "TitleText_3800116": "专业赚钱搭子", "BreakStun": "冲击力", "MedalName2005": "无尽攀登Ⅴ", "MedalName9002": "侦探不止一个！", "BreakStun_base": "基础冲击力", "TitleText_3800158": "爱猫会会员", "Item_Weapon_A_Common_16_Name": "光影刻刀", "TitleText_380021902": "极境·前{0}%", "CritDmg": "暴击伤害", "MedalName5006": "荣耀所眷·冠冕", "Item_Weapon_S_1331_Name": "飞鸟星梦", "TitleText_3800211": "电子猫咪饲养顾问", "TitleText_3800114": "哀惋的谜底", "PenDelta": "穿透值", "CritRes": "抗暴率", "TitleText_3800143": "『虚狩』守护者", "Avatar_Male_Size02_Lighter": "莱特", "EquipmentSuit_33800_name": "囚徒手记", "Avatar_Female_Size02_Longinus": "「11号」", "Avatar_Female_Size02_Brujas": "奥菲丝&「鬼火」", "TitleText_3800221": "天使长", "MedalName2002": "无尽攀登Ⅱ", "TitleText_3800153": "为她披上风衣", "TitleText_3800106": "外环交通协管员", "Item_Weapon_S_1241_Name": "防暴者Ⅵ型", "EquipmentSuit_33100_name": "云岿如我", "Avatar_Female_Size01_Lucy": "露西", "AddedDamageRatio_Fire": "火属性伤害加成", "Item_Weapon_S_1571_Name": "首席跟班", "TitleText_3800243": "传说中的挚友", "Item_Weapon_B_Common_15_Name": "「灰烬」-钴蓝", "AddedDamageRatio_Ice": "冰属性伤害加成", "ElementMystery": "异常精通", "TitleText_3800112": "残酷园艺师", "TitleText_3800234": "吼吼品鉴师", "Item_Weapon_A_1151_Name": "好斗的阿炮", "TitleText_3800159": "溯影行者", "HpMax": "生命值", "TitleText_3800236": "特聘荣誉助手", "Item_Weapon_A_1031_Name": "聚宝箱", "TitleText_3800187": "悲天悯鱼", "TitleText_380019102": "推演·前{0}%", "TitleText_3800227": "游乐岛淘金客", "TitleText_3800191": "不败的推演者", "Avatar_Female_Size03_Lisa": "格莉丝", "TitleText_3800124": "有点人脉", "MedalName11002": "湮灭·溺想者", "TitleText_3800220": "直破狂澜", "TitleText_3800197": "狮心不灭", "TitleText_3800131": "霸主至交", "EquipmentSuit_32500_name": "极地重金属", "Item_Weapon_S_1101_Name": "燃狱齿轮", "MedalName2001": "无尽攀登Ⅰ", "TitleText_380024002": "危境Ⅰ·霜刃", "TitleText_3800151": "末路之旌帜", "TitleText_3800179": "洞虚棋宗", "TitleText_3800172": "非常规商业人才", "Item_Weapon_B_Common_01_Name": "「月相」-望", "TitleText_380024005": "危境∞·无冕极刃", "TitleText_3800205": "云眸荡霾", "MedalName15001": "危局强袭·破殛", "Item_Weapon_S_1411_Name": "狸法七变化", "UI_Level": "等级{0}", "Avatar_Male_Size03_PanYinhu": "潘引壶", "Item_Weapon_B_Common_14_Name": "「恒等式」-变格", "TitleText_3800231": "卓越卡司", "TitleText_3800245": "劲脆『激推』宝！", "EquipmentSuit_33300_name": "拂晓生花", "Item_Weapon_A_Common_14_Name": "电波漫步", "Item_Weapon_A_1061_Name": "家政员", "Avatar_Female_Size03_YiXuan": "仪玄", "Avatar_Female_Size02_Alice": "爱丽丝", "TitleText_3800204": "闲庭信步", "Avatar_Female_Size01_Azural": "琉音", "Avatar_Male_Size03_Billy": "比利", "TitleText_3800190": "裁夺时刻", "Item_Weapon_A_Common_20_Name": "炎炙沸釜", "RpRecover": "闪能自动累积", "EquipmentSuit_33400_name": "月光骑士颂", "AddedDamageRatio": "伤害加成", "TitleText_3800138": " 不建议展示的称号", "EquipmentSuit_32400_name": "雷暴重金属", "EquipmentSuit_33600_name": "流光咏叹", "TitleText_3800109": "梦魇为你退却", "TitleText_3800165": "我将点燃新艾利都", "Item_Weapon_A_Common_09_Name": "触电唇彩", "TitleText_3800184": "专属你的天鹅座", "TitleText_3800176": "云岿山真传弟子", "TitleText_3800168": "电影节特聘评委", "ArmorMax_base": "基础护甲值", "TitleText_380021003": "绳网漫游者", "TitleText_3800126": "黑暗料理品鉴师", "TitleText_3800133": "外环最强乘客", "TitleText_3800140": "太好了噗噗！", "TitleText_380022302": "御灾·前{0}%", "Avatar_Female_Size02_Lucia": "卢西娅", "Item_Weapon_S_1581_Name": "空羽复归之诗", "Item_Weapon_S_Common_04_Name": "日冕遗蜕", "TitleText_3800122": "社长特助", "Avatar_Female_Size01_Norma": "诺姆", "TitleText_380021503": "务实守护者", "Avatar_Female_Size02_Unagi": "雅", "Item_Weapon_S_1071_Name": "奔袭獠牙", "TitleText_380018002": "冠冕·前{0}%", "TitleText_3800120": "天下第一好兄弟", "TitleText_3800117": "星徽骑士的认证", "TitleText_3800152": "绯闻密友", "SpRecover": "能量自动回复", "MedalName13002": "迷宫财富·优渥", "EquipmentSuit_34000_name": "拂晓行纪", "Item_Weapon_S_1171_Name": "灼心摇壶", "EquipmentSuit_33000_name": "法厄同之歌", "Item_Weapon_A_1011_Name": "德玛拉电池Ⅱ型", "Avatar_Female_Size02_Seed": "「席德」", "Avatar_Female_Size02_Burnice": "柏妮思", "TitleText_380021505": "灵感激发者", "TitleText_3800115": "比汉堡更熟", "MedalName10004": "狂澜勋冠Ⅳ", "EquipmentSuit_32700_name": "折枝剑歌", "TitleText_3800206": "与光同行者", "TitleText_3800239": "盗星之人", "TitleText_380023602": "特聘数域专员", "Item_Weapon_B_Common_11_Name": "「电磁暴」-贰式", "Avatar_Female_Size02_Nostradamus": "妮可", "TitleText_3800196": "全丽都第二好客服", "TitleText_3800101": "法厄同归来", "TitleText_380023702": "主宰·前{0}%", "TitleText_3800213": "妄想成真", "EquipmentSuit_31500_name": "灵魂摇滚", "HPHealRatio": "治疗加成", "Avatar_Female_Size03_Pulchra": "波可娜", "TitleText_3800200": "弈天棋尊", "MedalName3001": "危局强袭·破阵", "AddedElementAccumulationRatio": "属性异常积蓄效率", "Item_Weapon_S_1511_Name": "霓虹妄想", "Atk_Ratio": "攻击力百分比", "TitleText_3800128": "互道晚安之人", "Item_Weapon_S_1541_Name": "朔月裁霜", "MedalName9003": "真相埋于虚无", "MedalName6001": "式舆防卫·继晷", "EquipmentSuit_31800_name": "混沌爵士", "TitleText_3800162": "勤勉萝布", "EquipmentSuit_32600_name": "獠牙重金属", "MedalName14002": "危局强袭·肃清Ⅱ", "TitleText_3800144": "我们都长命百岁", "Item_Weapon_S_1561_Name": "琳琅鎏心", "TitleText_3800242": "头号共犯", "Item_Weapon_A_1111_Name": "旋钻机-赤轴", "TitleText_3809999": "无称号", "MedalName13005": "迷宫财富·富翁", "Avatar_Female_Size01_Clara": "派派", "MedalName13001": "迷宫财富·殷实", "Avatar_Female_Size03_Astra": "耀嘉音", "EquipmentSuit_31900_name": "原始朋克", "Avatar_Female_Size02_Ellen": "艾莲", "Item_Weapon_S_Common_02_Name": "逍遥游球", "AddedDamageRatio_Physics": "物理伤害加成", "Avatar_Female_Size02_Remielle": "蕾米埃尔", "ElementAbnormalPower_Ratio": "异常掌控", "TitleText_3800142": "王牌调查团", "TitleText_3800123": "女仆写真摄影师", "SpRecover_Base": "基础能量自动回复", "TitleText_3800155": "『空军』指挥部", "MedalName7001": "危局强袭·崩解", "TitleText_3800240": "危境·试锋", "Item_Weapon_S_Common_03_Name": "左轮转子", "Item_Weapon_S_1431_Name": "云霓孤光", "Item_Weapon_S_1391_Name": "福虓炉炉", "Avatar_Female_Size03_Rina": "丽娜", "MedalName2004": "无尽攀登Ⅳ", "ShieldMax": "护盾值", "TitleText_3800137": "红围巾合伙人", "Avatar_Female_Size01_Aria": "爱芮", "TitleText_3800157": "一直都是法厄同", "TitleText_3800188": "为你献上爱的花束", "Avatar_Female_Size01_Summer": "千夏", "TitleText_3800235": "灭『虫』技术员", "EquipmentSuit_31000_name": "啄木鸟电音", "Item_Weapon_S_1371_Name": "青溟笼舍", "MedalName5001": "荣耀所眷Ⅰ", "TitleText_3800164": "反正不是你的粉丝", "EquipmentSuit_33200_name": "山大王", "AddedDamageRatio_Ether": "以太伤害加成", "Avatar_Female_Size01_Jufufu": "橘福福", "TitleText_3800125": "摸鱼搭子", "Avatar_Female_Size03_Caesar": "凯撒", "Item_Weapon_B_Common_03_Name": "「月相」-朔", "Atk": "攻击力", "Avatar_Male_Size03_Anton": "安东", "TitleText_3800189": "枪管上的鲜花", "TitleText_3800130": "协理治安官", "Item_Weapon_A_1081_Name": "仿制星徽引擎", "Avatar_Female_Size03_Yanagi": "柳", "Item_Weapon_A_Common_05_Name": "人为刀俎", "Item_Weapon_S_1181_Name": "嵌合编译器", "TitleText_380022702": "淘金·{0}", "TitleText_3800119": "魔女的学徒", "TitleText_3800202": "流光萦绕", "TitleText_3800222": "膨化食品歼灭使", "Item_Weapon_B_Common_09_Name": "「湍流」-斧型", "TitleText_380021504": "剧情解构者", "MedalName8003": "吞没", "MedalName13003": "迷宫财富·雄厚", "Item_Weapon_B_Common_10_Name": "「电磁暴」-壹式", "TitleText_3800108": "电子耍蛇人", "Avatar_Female_Size01_Corin": "可琳", "Item_Weapon_A_Common_07_Name": "正版变身器", "Avatar_Female_Size01_Tsubaki": "猫又", "Item_Weapon_B_Common_08_Name": "「湍流」-矢型", "Item_Weapon_A_Common_06_Name": "贵重骨核", "TitleText_3800232": "茶会红人", "TitleText_3800105": "谢幕时间到", "SkipDefDamageRatio": "贯穿伤害加成", "Avatar_Female_Size03_JaneDoe": "简", "TitleText_3800209": "虚实一念间", "TitleText_3800121": "大手牵小手", "Avatar_Female_Size02_Zhenzhen": "叶瞬光", "TitleText_3800107": "三头犬之饲主", "Item_Weapon_A_Common_04_Name": "星徽引擎", "TitleText_3800193": "触手可及", "TitleText_380021002": "热心网友", "TitleText_3800219": "极境执勋者", "MedalName8001": "歧路", "TitleText_3800174": "驱逐厄影者", "TitleText_3800132": "柏妮思特别关心", "Item_Weapon_S_1251_Name": "玉壶青冰", "Item_Weapon_S_1361_Name": "索魂影眸", "TitleText_3800230": "心灵布手", "Avatar_Female_Size03_Yidhari": "伊德海莉", "EquipmentSuit_31600_name": "摇摆爵士", "Item_Weapon_B_Common_06_Name": "「残响」-Ⅲ型", "Avatar_Male_Size01_Harumasa": "悠真", "Item_Weapon_S_1091_Name": "霰落星殿", "TitleText_3800103": "屠夫之屠夫", "MedalName10005": "狂澜勋冠Ⅴ", "TitleText_3800173": "袚秽净誓之约", "MedalName4001": "无边末路Ⅰ", "Avatar_Male_Size03_BanYue": "般岳", "TitleText_3800225": "特邀探店达人", "EquipmentSuit_33500_name": "沧浪行歌", "MedalName8002": "引领者", "MedalName11003": "湮灭·闪耀之誓", "Item_Weapon_A_Common_01_Name": "街头巨星", "TitleText_3800216": "大家我都喜欢哦", "Item_Weapon_B_Common_12_Name": "「电磁暴」-叁式", "EquipmentSuit_32200_name": "炎狱重金属", "TitleText_3800214": "百变空洞侦探", "Item_Weapon_A_Common_02_Name": "时光切片", "Item_Weapon_A_Common_12_Name": "幻变魔方", "MedalName5004": "荣耀所眷Ⅳ", "Avatar_Female_Size01_NangongYu": "南宫羽", "EquipmentSuit_32300_name": "混沌重金属", "Item_Weapon_A_Common_08_Name": "双生泣星", "TitleText_380022703": "趣屿淘金·极", "MaxBuddyBattery": "MaxBuddyBattery", "TitleText_3800210": "『萌新』", "TitleText_3800212": "构造体梦想家", "MedalName8004": "以传奇之名", "TitleText_3800161": "并非衰仔", "Avatar_Female_Size03_Sigrid": "希格莉德", "MedalName13006": "迷宫财富·大富豪", "Avatar_Male_Size03_Norano": "真斗", "CritDmgRes": "暴伤减免", "MedalName14001": "危局强袭·肃清Ⅰ", "TitleText_3800160": "木偶剧团的观众", "Item_Weapon_S_1381_Name": "牺牲洁纯", "Item_Weapon_S_1481_Name": "昨夜来电"};
+    const SUIT_NAME_MAP = {};
+    for (const key in LOC_ZH_CN) {
+        if (key.startsWith('EquipmentSuit_') && key.endsWith('_name')) {
+            const numStr = key.substring('EquipmentSuit_'.length, key.length - '_name'.length);
+            const suitId = numStr.slice(0, 3);
+            SUIT_NAME_MAP[suitId] = LOC_ZH_CN[key];
+        }
     }
-
+    const ENKA_ID_MAP = {
+        1011: "安比", 1021: "猫又", 1031: "妮可", 1041: "11号", 1051: "伊德海莉",
+        1061: "可琳", 1071: "凯撒", 1081: "比利", 1091: "雅", 1101: "珂蕾妲",
+        1111: "安东", 1121: "本", 1131: "苍角", 1141: "莱卡恩", 1151: "露西",
+        1161: "莱特", 1171: "柏妮思", 1181: "格莉丝", 1191: "艾莲", 1201: "悠真",
+        1211: "丽娜", 1221: "柳", 1241: "朱鸢", 1251: "青衣", 1261: "简",
+        1271: "赛斯", 1281: "派派", 1291: "雨果", 1301: "奥菲丝", 1311: "耀嘉音",
+        1321: "伊芙琳", 1331: "薇薇安", 1341: "照", 1351: "波可娜", 1361: "扳机",
+        1371: "仪玄", 1381: "零号·安比", 1391: "橘福福", 1401: "爱丽丝", 1411: "柚叶",
+        1421: "潘引壶", 1431: "叶瞬光", 1441: "真斗", 1451: "卢西娅", 1461: "席德",
+        1471: "般岳", 1481: "琉音", 1491: "千夏", 1501: "爱芮", 1511: "南宫羽",
+        1521: "希希芙", 1531: "星徽·比利", 1541: "普罗米娅", 1551: "佩洛伊斯",
+        1561: "维琳娜", 1571: "诺姆", 1581: "蕾米埃尔", 1591: "希格莉德"
+    };
+    const MAIN_STAT_NAME_MAP = {
+        "11102": "生命值百分比", "12102": "攻击力百分比", "13102": "防御力百分比",
+        "20103": "暴击率", "21103": "暴击伤害", "31203": "异常精通",
+        "23103": "穿透率", "31503": "物理伤害加成", "31603": "火属性伤害加成",
+        "31703": "冰属性伤害加成", "31803": "电属性伤害加成", "31903": "以太伤害加成",
+        "32303": "风属性伤害加成", "31402": "异常掌控", "12202": "冲击力", "30502": "能量自动回复"
+    };
+    const SUBSTAT_INDEX_MAP = {
+        "11102": 0, "11103": 1, "12102": 2, "12103": 3,
+        "23203": 4, "13102": 5, "13103": 6, "21103": 7, "20103": 8, "31203": 9
+    };
+    const themes = [ { left:'#FF4500', right:'#121212', primary:'#FF4500', bg:'#121212', bg2:'#0a0a0a', text:'#e0e0e0', muted:'#888', border:'#333', textOnPrimary:'#121212' }, { left:'#2C2C34', right:'#00D4FF', primary:'#00D4FF', bg:'#2C2C34', bg2:'#1A1A20', text:'#e0e0e0', muted:'#999', border:'#4A4A52', textOnPrimary:'#2C2C34' }, { left:'#7B2CBF', right:'#F9D308', primary:'#F9D308', bg:'#7B2CBF', bg2:'#5A1A8A', text:'#ffffff', muted:'#cccccc', border:'#9C5CD4', textOnPrimary:'#7B2CBF' }, { left:'#6A0DAD', right:'#FF0080', primary:'#FF0080', bg:'#6A0DAD', bg2:'#50008A', text:'#ffffff', muted:'#cccccc', border:'#8C3AC4', textOnPrimary:'#6A0DAD' }, { left:'#FFD300', right:'#0066FF', primary:'#0066FF', bg:'#FFD300', bg2:'#E6BE00', text:'#111111', muted:'#444444', border:'#CCAA00', textOnPrimary:'#FFD300' }, { left:'#8B0000', right:'#0F5132', primary:'#0F5132', bg:'#8B0000', bg2:'#6A0000', text:'#e0e0e0', muted:'#999', border:'#AA2020', textOnPrimary:'#8B0000' }, { left:'#B19CD9', right:'#D3D3D3', primary:'#D3D3D3', bg:'#B19CD9', bg2:'#9A85C5', text:'#ffffff', muted:'#E6DFEF', border:'#D1C5E6', textOnPrimary:'#B19CD9' }, { left:'#000000', right:'#FFD700', primary:'#FFD700', bg:'#000000', bg2:'#1A1A1A', text:'#e0e0e0', muted:'#888', border:'#333', textOnPrimary:'#000000' }, { left:'#00B4D8', right:'#9F7AEA', primary:'#9F7AEA', bg:'#00B4D8', bg2:'#009CC2', text:'#ffffff', muted:'#CCE6F0', border:'#33C5E2', textOnPrimary:'#00B4D8' }, { left:'#89C2FF', right:'#E6F7FF', primary:'#89C2FF', bg:'#E6F7FF', bg2:'#FFFFFF', text:'#111111', muted:'#444444', border:'#B0D8FF', textOnPrimary:'#E6F7FF' }, { left:'#012696', right:'#A4E2C6', primary:'#A4E2C6', bg:'#012696', bg2:'#011E7A', text:'#F0F8F8', muted:'#80B0B0', border:'#19509A', textOnPrimary:'#012696' }, { left:'#0C567D', right:'#EDB79C', primary:'#EDB79C', bg:'#0C567D', bg2:'#08405E', text:'#FDF0E9', muted:'#B58B76', border:'#177A9A', textOnPrimary:'#0C567D' }, { left:'#549688', right:'#F4EAC5', primary:'#F4EAC5', bg:'#549688', bg2:'#3A7367', text:'#FDF9F0', muted:'#A0B8B0', border:'#68B0A0', textOnPrimary:'#549688' }, { left:'#ED9874', right:'#E9EEB9', primary:'#E9EEB9', bg:'#ED9874', bg2:'#CC7F5F', text:'#FDF8F0', muted:'#F2C8B4', border:'#F3A88C', textOnPrimary:'#5E3E2E' }, { left:'#425066', right:'#E4C6D0', primary:'#E4C6D0', bg:'#425066', bg2:'#303B4C', text:'#FDF0F4', muted:'#8A9AB0', border:'#5F6F89', textOnPrimary:'#425066' }, { left:'#AE3B35', right:'#24322A', primary:'#AE3B35', bg:'#24322A', bg2:'#161E1C', text:'#EEEEEE', muted:'#888A88', border:'#3A4440', textOnPrimary:'#FFFFFF' }, { left:'#E9C4A3', right:'#CB2D1D', primary:'#E9C4A3', bg:'#CB2D1D', bg2:'#A02010', text:'#FFFFFF', muted:'#E0B0B0', border:'#E04030', textOnPrimary:'#CB2D1D' }, { left:'#ED6927', right:'#203A32', primary:'#ED6927', bg:'#203A32', bg2:'#152822', text:'#FFFFFF', muted:'#80A090', border:'#305040', textOnPrimary:'#203A32' }, { left:'#A7D2EE', right:'#244973', primary:'#A7D2EE', bg:'#244973', bg2:'#1A3658', text:'#FFFFFF', muted:'#80A0C0', border:'#305880', textOnPrimary:'#244973' }, { left:'#E8D3D4', right:'#E2802B', primary:'#E2802B', bg:'#E8D3D4', bg2:'#D3B8B9', text:'#331111', muted:'#6A5050', border:'#C08080', textOnPrimary:'#FFFFFF' }, { left:'#98FF98', right:'#D2042D', primary:'#98FF98', bg:'#D2042D', bg2:'#A00020', text:'#FFFFFF', muted:'#E0C0C0', border:'#E03040', textOnPrimary:'#D2042D' }, { left:'#FF6400', right:'#6EF0FF', primary:'#6EF0FF', bg:'#FF6400', bg2:'#E05000', text:'#FFFFFF', muted:'#FFD0B0', border:'#FF8030', textOnPrimary:'#FF6400' }, { left:'#BFFF00', right:'#222222', primary:'#BFFF00', bg:'#222222', bg2:'#111111', text:'#FFFFFF', muted:'#88A0A0', border:'#444444', textOnPrimary:'#222222' }, { left:'#E61A23', right:'#0A090C', primary:'#E61A23', bg:'#0A090C', bg2:'#000000', text:'#FFFFFF', muted:'#888888', border:'#333333', textOnPrimary:'#FFFFFF' } ];
+    function hexToRgb(hex) { let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex); return result ? `${parseInt(result[1],16)}, ${parseInt(result[2],16)}, ${parseInt(result[3],16)}` : '255, 69, 0'; }
+    function applyTheme(t) { const root = document.documentElement; root.style.setProperty('--primary-color', t.primary); root.style.setProperty('--bg-color', t.bg); root.style.setProperty('--bg-secondary', t.bg2); root.style.setProperty('--text-color', t.text); root.style.setProperty('--text-muted', t.muted); root.style.setProperty('--border-color', t.border); root.style.setProperty('--text-on-primary', t.textOnPrimary); const rgb = hexToRgb(t.primary); root.style.setProperty('--primary-color-alpha', `rgba(${rgb}, 0.2)`); root.style.setProperty('--primary-color-alpha-light', `rgba(${rgb}, 0.05)`); root.style.setProperty('--primary-color-alpha-border', `rgba(${rgb}, 0.25)`); }
+    function initThemeSelector() { const container = document.getElementById('theme-selector'); container.innerHTML = ''; themes.forEach((t, i) => { const btn = document.createElement('button'); btn.className = 'theme-btn' + (i === 0 ? ' active' : ''); btn.style.setProperty('--c1', t.left); btn.style.setProperty('--c2', t.right); btn.dataset.index = i; btn.onclick = () => { document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); applyTheme(t); }; container.appendChild(btn); }); }
+    document.getElementById('theme-toggle-btn').addEventListener('click', function() { var panel = document.getElementById('theme-selector'); panel.classList.toggle('active'); this.textContent = panel.classList.contains('active') ? '✕ 关闭配色' : '配色'; });
+    document.getElementById('update-log-btn').addEventListener('click', function() { document.getElementById('update-log-modal').style.display = 'flex'; });
+    document.getElementById('use-tutorial-btn').addEventListener('click', openTutorialModal);
+    document.getElementById('sponsor-wrapper').onclick = function() { var modal = document.getElementById('qr-modal'); var modalImg = document.getElementById('qr-modal-img'); modal.style.display = 'flex'; modalImg.src = this.querySelector('img').src; };
+    document.getElementById('settings-toggle-btn').addEventListener('click', openSettingsModal);
+    function openSettingsModal() {
+        document.getElementById('setting-auto-collapse-import').checked = settings.autoCollapseImport;
+        document.getElementById('setting-auto-collapse-output').checked = settings.autoCollapseOutput;
+        document.getElementById('settings-modal').style.display = 'flex';
+    }
+    function closeSettingsModal() {
+        document.getElementById('settings-modal').style.display = 'none';
+    }
+    function updateSetting(key, value) {
+        settings[key] = value;
+        saveSettings();
+    }
+    function openTutorialModal() {
+        document.getElementById('tutorial-modal').style.display = 'flex';
+        document.getElementById('tutorial-content').innerHTML = tutorialText;
+    }
+    function closeTutorialModal() {
+        document.getElementById('tutorial-modal').style.display = 'none';
+    }
+    function parseNumber(str) { str = str.trim(); if (str === '') return 0; if (str.includes('/')) { const p = str.split('/'); if (p.length !== 2) return NaN; return parseFloat(p[0]) / parseFloat(p[1]); } return parseFloat(str); }
+    function dfsUp(leaveTimes, nowAdd, need, nowGroup, counter) { if (leaveTimes <= 0) { counter.total++; if (nowAdd > need) counter.pass++; return; } for (let i = 0; i < nowGroup.length; i++) dfsUp(leaveTimes - 1, nowAdd + nowGroup[i].score, need, nowGroup, counter); }
     function passChance(times, need, nowGroup) { const c = { total: 0, pass: 0 }; dfsUp(times, 0, need, nowGroup, c); return c.total === 0 ? 0 : c.pass / c.total; }
+    function firstGroup(savePool, shortGroup, basicSc, presentWeight, allGroups, requiredTypes = []) { if (shortGroup.length === 4) { if (requiredTypes.length > 0) { const typesInGroup = new Set(shortGroup.map(item => item.typeIndex)); if (!requiredTypes.every(t => typesInGroup.has(t))) return; } allGroups.push({ firstFour: [...shortGroup], basicsc: basicSc, weight: presentWeight }); return; } for (let i = 0; i < savePool.length; i++) { if (savePool[i].rest <= 0) continue; const nP = savePool.map(item => ({ ...item })); nP[i].rest--; shortGroup.push({ ...savePool[i] }); firstGroup(nP, shortGroup, basicSc + savePool[i].score, presentWeight * savePool[i].rest, allGroups, requiredTypes); shortGroup.pop(); } }
+    function calculateCore(entryList, goal, scaleFactor, directedTypes = []) { const allGroups = []; firstGroup(entryList, [], 0, 1, allGroups, directedTypes); let gA = 0, gB = 0, tW = 0; for (const gr of allGroups) { let sA, sB; if (gr.basicsc > goal) { sA = 1; sB = 1; } else { const nd = goal - gr.basicsc; sA = passChance(Atimes, nd, gr.firstFour); sB = passChance(Btimes, nd, gr.firstFour); } gA += sA * gr.weight; gB += sB * gr.weight; tW += gr.weight; } const mA = tW === 0 ? 0 : gA / tW; const mB = tW === 0 ? 0 : gB / tW; const ch = Achance * mA + Bchance * mB; return { mchanceA: mA, mchanceB: mB, chance: ch, scaledChance: ch * scaleFactor }; }
+    function calculateCoreGame(types, goal, scaleFactor, directedTypes = []) { const combinationMap = new Map(); function enumerate(seqIndices, seqScores, currentWeight, remaining) { if (seqIndices.length === 4) { const key = [...seqIndices].sort((a,b)=>a-b).join(','); if (combinationMap.has(key)) combinationMap.get(key).weight += currentWeight; else combinationMap.set(key, { weight: currentWeight, scores: seqScores.map(s => ({score: s})) }); return; } const totalW = remaining.reduce((sum, t) => sum + (t.rest > 0 ? t.specialWeight : 0), 0); for (let i = 0; i < remaining.length; i++) { const t = remaining[i]; if (t.rest <= 0) continue; const prob = t.specialWeight / totalW; const nextRemaining = remaining.map(item => ({...item})); nextRemaining[i].rest--; enumerate([...seqIndices, t.typeIndex], [...seqScores, t.score], currentWeight * prob, nextRemaining); } } const initialRemaining = types.map(t => ({...t})); enumerate([], [], 1, initialRemaining); let totalWeight = 0, totalA = 0, totalB = 0; for (const [key, entry] of combinationMap.entries()) { const typeIndices = key.split(',').map(Number); if (directedTypes.length > 0 && !directedTypes.every(dt => typeIndices.includes(dt))) continue; const baseScore = entry.scores.reduce((sum, s) => sum + s.score, 0); const pA = baseScore > goal ? 1 : passChance(Atimes, goal - baseScore, entry.scores); const pB = baseScore > goal ? 1 : passChance(Btimes, goal - baseScore, entry.scores); totalWeight += entry.weight; totalA += pA * entry.weight; totalB += pB * entry.weight; } if (totalWeight === 0) return { mchanceA:0, mchanceB:0, chance:0, scaledChance:0 }; const mA = totalA / totalWeight; const mB = totalB / totalWeight; const ch = Achance * mA + Bchance * mB; return { mchanceA: mA, mchanceB: mB, chance: ch, scaledChance: ch * scaleFactor }; }
+    document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => { document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); b.classList.add('active'); document.getElementById(`${b.dataset.mode}-panel`).classList.add('active'); document.getElementById('result-area').style.display = 'none'; }));
+    function renderFactionTabs(cId) { const ct = document.getElementById(cId); ct.innerHTML = ''; CHARACTER_DATA.forEach((f, i) => { const tb = document.createElement('div'); tb.className = `faction-tab ${i===0?'active':''}`; tb.textContent = f.faction; tb.onclick = () => { ct.querySelectorAll('.faction-tab').forEach(x => x.classList.remove('active')); tb.classList.add('active'); renderCharacterGrid(i); }; ct.appendChild(tb); }); }
+    function renderCharacterGrid(fi = 0) { const g = document.getElementById('game-character-grid'); g.innerHTML = ''; CHARACTER_DATA[fi].roles.forEach(ch => { const cd = document.createElement('div'); cd.className = 'character-card'; const isActive = gameSelectedChars.some(c => c.name === ch.name); if (isActive) cd.classList.add('active'); cd.innerHTML = `<img src="./${ch.image}" alt="${ch.name}" class="character-avatar" onerror="this.style.display='none'"><div class="character-name">${ch.name}</div>`; cd.onclick = () => { const idx = gameSelectedChars.findIndex(c => c.name === ch.name); if (idx >= 0) gameSelectedChars.splice(idx, 1); else gameSelectedChars.push(ch); renderCharacterGrid(fi); renderAllCharacterConfigs(); }; g.appendChild(cd); }); }
+    function cacheCurrentPanels() { const panels = document.querySelectorAll('#char-configs-container .char-panel'); panels.forEach(panel => { const charName = panel.dataset.charName; if (!charName) return; const idx = gameSelectedChars.findIndex(c => c.name === charName); if (idx === -1) return; const data = collectCharConfigData(idx); if (data) charConfigsCache[charName] = data; }); }
+    function renderAllCharacterConfigs() { cacheCurrentPanels(); const container = document.getElementById('char-configs-container'); container.innerHTML = ''; gameSelectedChars.forEach((ch, idx) => { const panel = document.createElement('div'); panel.className = 'char-panel collapsible'; panel.id = `char-panel-${idx}`; panel.dataset.charName = ch.name; let html = `<div class="char-panel-header" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+            <span class="collapse-icon"></span>
+            <h3 style="margin:0;">${ch.name}</h3>
+        </div>`;
+        html += `<div class="panel-body">`;
+        if (ch.special === 'alice') html += `<div class="special-option"><input type="checkbox" id="char-alice-c6-${idx}" onchange="updateCharWeights(${idx})"> <label for="char-alice-c6-${idx}">爱丽丝6命（额外增加爆伤权重0.3）</label></div>`;
+        if (ch.special === 'vivian') html += `<div class="special-option"><input type="checkbox" id="char-vivian-c4-${idx}" onchange="updateCharWeights(${idx})"> <label for="char-vivian-c4-${idx}">薇薇安4命（暴击伤害权重改为0.6）</label></div>`;
 
-    function firstGroup(savePool, shortGroup, basicSc, presentWeight, allGroups, requiredTypes = []) {
-        if (shortGroup.length === 4) {
-            if (requiredTypes.length > 0) {
-                const typesInGroup = new Set(shortGroup.map(item => item.typeIndex));
-                if (!requiredTypes.every(t => typesInGroup.has(t))) return;
+html += `<div style="margin-top:14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">`;
+html += `<select id="char-save-select-${idx}" class="char-save-select" data-idx="${idx}" style="flex:1.5;padding:5px;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-color);border-radius:4px;"></select>`;
+html += `<button class="btn btn-secondary" onclick="newSave(${idx})" style="padding:5px 12px;font-size:0.85rem;">新建</button>`;
+html += `<button class="btn btn-secondary" onclick="readCurrentSave(${idx})" style="padding:5px 12px;font-size:0.85rem;">读取</button>`;
+html += `<button class="btn btn-secondary" onclick="saveCurrentConfig(${idx})" style="padding:5px 12px;font-size:0.85rem;">保存</button>`;
+html += `<button class="btn btn-secondary" onclick="renameCurrentSave(${idx})" style="padding:5px 12px;font-size:0.85rem;">改名</button>`;
+html += `<button class="btn btn-secondary" onclick="deleteCurrentSave(${idx})" style="padding:5px 12px;font-size:0.85rem;">删除</button>`;
+html += `</div>`;
+
+
+
+
+        html += `<div class="form-group"><label>驱动盘号位（可多选）</label><div class="position-select" id="char-positions-${idx}">`;
+        for (let p = 1; p <= 6; p++) html += `<label class="position-option"><input type="checkbox" value="${p}" onchange="togglePosition(${idx}, this.value, this.checked)"> ${p}号位</label>`;
+        html += `</div></div>`;
+        html += `<div id="position-configs-${idx}"></div>`;
+        html += `<div style="margin-top:12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">`;
+        html += `<select id="char-save-select-bottom-${idx}" class="char-save-select-bottom" data-idx="${idx}" style="flex:1.5;padding:5px;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-color);border-radius:4px;"></select>`;
+        html += `<button class="btn btn-secondary" onclick="saveCurrentConfig(${idx})" style="padding:5px 12px;font-size:0.85rem;">保存</button>`;
+        html += `</div>`;
+        html += `<label class="section-label">角色基础词条库</label><div class="entries-list" id="char-entries-${idx}"></div>`;
+        html += `</div>`;
+        panel.innerHTML = html;
+        container.appendChild(panel);
+
+        const header = panel.querySelector('.char-panel-header');
+        header.addEventListener('click', () => toggleCharPanel(panel));
+
+        if (charConfigsCache[ch.name] && charConfigsCache[ch.name].collapsed) {
+            panel.classList.add('collapsed');
+        }
+
+        initCharEntries(idx, ch);
+        updateCharWeights(idx);
+        onPositionChange(idx);
+        refreshSaveSelect(idx);
+        if (charConfigsCache[ch.name]) restoreCharConfigData(idx, charConfigsCache[ch.name]);
+    }); }
+    function toggleCharPanel(panel) {
+        panel.classList.toggle('collapsed');
+        const charName = panel.dataset.charName;
+        if (!charConfigsCache[charName]) charConfigsCache[charName] = {};
+        charConfigsCache[charName].collapsed = panel.classList.contains('collapsed');
+    }
+    function onMainEntryChange(idx, pos) {
+        updatePosScale(idx, pos);
+        buildPosEnhance(idx, pos);
+        buildGameDirectOptions(idx, pos);
+    }
+    function initCharEntries(idx, ch) { const ct = document.getElementById(`char-entries-${idx}`); ct.innerHTML = ''; ENTRY_NAMES.forEach((n, i) => { const d = document.createElement('div'); d.className = 'entry-grid'; d.innerHTML = `<div class="entry-item"><label>词条名称</label><input type="text" value="${n}" disabled></div><div class="entry-item"><label>库存</label><input type="number" class="game-rest-${idx}" data-idx="${i}" min="0" value="1"></div><div class="entry-item"><label>权重</label><input type="text" class="game-weight-${idx}" data-idx="${i}" placeholder="整数/小数/分数"></div>`; ct.appendChild(d); }); document.querySelectorAll(`.game-weight-${idx}`).forEach(inp => inp.addEventListener('input', () => { onPositionChange(idx); })); }
+    function updateCharWeights(idx) { const ch = gameSelectedChars[idx]; if (!ch) return; const weights = [...ch.weights]; const aliceCb = document.getElementById(`char-alice-c6-${idx}`); const vivianCb = document.getElementById(`char-vivian-c4-${idx}`); if (aliceCb && aliceCb.checked) weights[7] += 0.3; if (vivianCb && vivianCb.checked) weights[7] = 0.6; const wi = document.querySelectorAll(`.game-weight-${idx}`); const ri = document.querySelectorAll(`.game-rest-${idx}`); for (let i = 0; i < 10; i++) { if (wi[i]) { wi[i].value = weights[i] === 0 ? '' : weights[i]; wi[i].disabled = false; } if (ri[i]) { ri[i].disabled = false; ri[i].value = 1; } } onPositionChange(idx); }
+    function getCurrentPositions(idx) { return Array.from(document.querySelectorAll(`#char-positions-${idx} input:checked`)).map(cb => parseInt(cb.value)); }
+    function getSelectedMainForPos(idx, pos) { const container = document.getElementById(`main-${idx}-${pos}`); if (!container) return []; return Array.from(container.querySelectorAll('input:checked')).map(c => c.value); }
+    function getBlockedSubIdxForPos(idx, pos) { if (pos <= 3) return []; const selected = getSelectedMainForPos(idx, pos); if (selected.length === 0) return []; const blockedSet = new Set(); selected.forEach(main => { const subIdx = MAIN_ATTR_TO_SUB[main]; if (subIdx !== undefined) blockedSet.add(subIdx); }); return Array.from(blockedSet); }
+    function getMaxScoreForPos(idx, pos) { const weightInputs = document.querySelectorAll(`.game-weight-${idx}`); const blockedIdxs = getBlockedSubIdxForPos(idx, pos); const weights = []; for (let i = 0; i < 10; i++) { if (blockedIdxs.includes(i)) continue; const w = parseNumber(weightInputs[i]?.value) || 0; if (w > 0) weights.push(w); } weights.sort((a,b)=>b-a); if (weights.length === 0) return 0; const top4 = weights.slice(0,4); return top4[0]*6 + (top4[1]||0) + (top4[2]||0) + (top4[3]||0); }
+    function createPositionConfig(idx, pos) { const configsDiv = document.getElementById(`position-configs-${idx}`); if (!configsDiv || document.getElementById(`pos-config-${idx}-${pos}`)) return; const div = document.createElement('div'); div.className = 'pos-config'; div.id = `pos-config-${idx}-${pos}`; let inner = `<h4>${pos}号位配置</h4>`; if (pos >= 4) inner += `<label>主词条选择：</label><div class="main-entry-grid" id="main-${idx}-${pos}"></div>`; inner += `<div class="special-option" style="margin:10px 0;"><input type="checkbox" id="game-direct-toggle-${idx}-${pos}" onchange="toggleGameDirect(${idx},${pos})"> <label for="game-direct-toggle-${idx}-${pos}">定向副词条</label></div>`; inner += `<div id="game-direct-area-${idx}-${pos}" style="display:none; margin-bottom:10px; padding:10px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:8px;"><label>选择定向副词条（最多2个）</label><div id="game-direct-options-${idx}-${pos}" class="main-entry-grid"></div></div>`; inner += `<label>当前驱动盘强化次数：</label><div id="enhance-${idx}-${pos}"></div>`; inner += `<div>当前驱动盘分数：<span id="score-percent-${idx}-${pos}">0分</span></div>`; inner += `<small style="color:var(--text-muted);">满分100分，为100倍当前驱动盘权重分数与驱动盘最大权重分数之比</small>`; inner += `<label>抽中对应号位主词条概率：<input type="text" id="scale-${idx}-${pos}" readonly></label><small style="color:var(--text-muted);">示例：随机抽得该位置概率1/6；4/6号位主词条仅1种可用输入1/36</small>`; div.innerHTML = inner; configsDiv.appendChild(div); if (pos >= 4) renderMainEntriesForPos(idx, pos); updatePosScale(idx, pos); buildGameDirectOptions(idx, pos); buildPosEnhance(idx, pos); }
+    function removePositionConfig(idx, pos) { const el = document.getElementById(`pos-config-${idx}-${pos}`); if (el) el.remove(); }
+    function togglePosition(idx, pos, checked) { if (checked) createPositionConfig(idx, parseInt(pos)); else removePositionConfig(idx, parseInt(pos)); }
+    function onPositionChange(idx) { const configsDiv = document.getElementById(`position-configs-${idx}`); if (!configsDiv) return; const savedStates = {}; configsDiv.querySelectorAll('.pos-config').forEach(configDiv => { const pos = parseInt(configDiv.id.split('-').pop()); const state = { pos, mains: [], directEnabled: false, directTypes: [], enhance: {}, setId: configDiv.dataset.setId || '', setName: configDiv.dataset.setName || '' }; if (pos >= 4) { const mainContainer = configDiv.querySelector('.main-entry-grid'); if (mainContainer) { mainContainer.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => state.mains.push(cb.value)); } } const directToggle = configDiv.querySelector(`input[id^="game-direct-toggle-"]`); if (directToggle) { state.directEnabled = directToggle.checked; if (directToggle.checked) { configDiv.querySelectorAll(`input[id^="game-direct-check-"]:checked`).forEach(cb => state.directTypes.push(parseInt(cb.value))); } } configDiv.querySelectorAll('.enhance-row').forEach(row => { const cb = row.querySelector(`input[type="checkbox"]`); const timesInput = row.querySelector(`input[type="number"]`); if (cb && timesInput) { const entryIdx = parseInt(cb.dataset.idx); state.enhance[entryIdx] = { checked: cb.checked, times: parseInt(timesInput.value) || 0 }; } }); savedStates[pos] = state; }); configsDiv.innerHTML = ''; const positions = getCurrentPositions(idx); positions.forEach(pos => { createPositionConfig(idx, pos); }); 
+
+    Object.values(savedStates).forEach(state => {
+        const pos = state.pos;
+        if (!positions.includes(pos)) return;
+        const configDiv = document.getElementById(`pos-config-${idx}-${pos}`);
+        if (!configDiv) return;
+        if (state.setId) {
+            configDiv.dataset.setId = state.setId;
+            configDiv.dataset.setName = state.setName;
+            const header = configDiv.querySelector('h4');
+            if (header && state.setName) header.textContent = `${state.setName} - ${pos}号位配置`;
+        }
+        if (pos >= 4 && state.mains.length > 0) {
+            const mainContainer = document.getElementById(`main-${idx}-${pos}`);
+            if (mainContainer) {
+                mainContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                    cb.checked = state.mains.includes(cb.value);
+                });
             }
-            allGroups.push({ firstFour: [...shortGroup], basicsc: basicSc, weight: presentWeight });
-            return;
         }
-        for (let i = 0; i < savePool.length; i++) {
-            if (savePool[i].rest <= 0) continue;
-            const nP = savePool.map(item => ({ ...item }));
-            nP[i].rest--;
-            shortGroup.push({ ...savePool[i] });
-            firstGroup(nP, shortGroup, basicSc + savePool[i].score, presentWeight * savePool[i].rest, allGroups, requiredTypes);
-            shortGroup.pop();
-        }
-    }
-
-    function calculateCore(entryList, goal, scaleFactor, directedTypes = []) {
-        const allGroups = [];
-        firstGroup(entryList, [], 0, 1, allGroups, directedTypes);
-        let gA = 0, gB = 0, tW = 0;
-        for (const gr of allGroups) {
-            let sA, sB;
-            if (gr.basicsc > goal) { sA = 1; sB = 1; }
-            else { const nd = goal - gr.basicsc; sA = passChance(Atimes, nd, gr.firstFour); sB = passChance(Btimes, nd, gr.firstFour); }
-            gA += sA * gr.weight; gB += sB * gr.weight; tW += gr.weight;
-        }
-        const mA = tW === 0 ? 0 : gA / tW;
-        const mB = tW === 0 ? 0 : gB / tW;
-        const ch = Achance * mA + Bchance * mB;
-        return { mchanceA: mA, mchanceB: mB, chance: ch, scaledChance: ch * scaleFactor };
-    }
-
-    function calculateCoreGame(types, goal, scaleFactor, directedTypes = []) {
-        const combinationMap = new Map();
-        function enumerate(seqIndices, seqScores, currentWeight, remaining) {
-            if (seqIndices.length === 4) {
-                const key = [...seqIndices].sort((a,b)=>a-b).join(',');
-                if (combinationMap.has(key)) {
-                    combinationMap.get(key).weight += currentWeight;
-                } else {
-                    combinationMap.set(key, { weight: currentWeight, scores: seqScores.map(s => ({score: s})) });
-                }
-                return;
-            }
-            const totalW = remaining.reduce((sum, t) => sum + (t.rest > 0 ? t.specialWeight : 0), 0);
-            for (let i = 0; i < remaining.length; i++) {
-                const t = remaining[i];
-                if (t.rest <= 0) continue;
-                const prob = t.specialWeight / totalW;
-                const nextRemaining = remaining.map(item => ({...item}));
-                nextRemaining[i].rest--;
-                enumerate([...seqIndices, t.typeIndex], [...seqScores, t.score], currentWeight * prob, nextRemaining);
+        buildPosEnhance(idx, pos);
+        buildGameDirectOptions(idx, pos);
+        const directToggle = document.getElementById(`game-direct-toggle-${idx}-${pos}`);
+        if (directToggle) {
+            directToggle.checked = state.directEnabled;
+            toggleGameDirect(idx, pos);
+            if (state.directEnabled && state.directTypes.length > 0) {
+                const directChecks = document.querySelectorAll(`.game-direct-check-${idx}-${pos}`);
+                directChecks.forEach(cb => {
+                    cb.checked = state.directTypes.includes(parseInt(cb.value));
+                });
             }
         }
-        const initialRemaining = types.map(t => ({...t}));
-        enumerate([], [], 1, initialRemaining);
-        let totalWeight = 0, totalA = 0, totalB = 0;
-        for (const [key, entry] of combinationMap.entries()) {
-            const typeIndices = key.split(',').map(Number);
-            if (directedTypes.length > 0 && !directedTypes.every(dt => typeIndices.includes(dt))) continue;
-            const baseScore = entry.scores.reduce((sum, s) => sum + s.score, 0);
-            const pA = baseScore > goal ? 1 : passChance(Atimes, goal - baseScore, entry.scores);
-            const pB = baseScore > goal ? 1 : passChance(Btimes, goal - baseScore, entry.scores);
-            totalWeight += entry.weight;
-            totalA += pA * entry.weight;
-            totalB += pB * entry.weight;
-        }
-        if (totalWeight === 0) return { mchanceA:0, mchanceB:0, chance:0, scaledChance:0 };
-        const mA = totalA / totalWeight;
-        const mB = totalB / totalWeight;
-        const ch = Achance * mA + Bchance * mB;
-        return { mchanceA: mA, mchanceB: mB, chance: ch, scaledChance: ch * scaleFactor };
-    }
-
-    document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        b.classList.add('active');
-        document.getElementById(`${b.dataset.mode}-panel`).classList.add('active');
-        document.getElementById('result-area').style.display = 'none';
-    }));
-
-    function renderFactionTabs(cId) {
-        const ct = document.getElementById(cId); ct.innerHTML = '';
-        CHARACTER_DATA.forEach((f, i) => {
-            const tb = document.createElement('div'); tb.className = `faction-tab ${i===0?'active':''}`; tb.textContent = f.faction;
-            tb.onclick = () => { ct.querySelectorAll('.faction-tab').forEach(x => x.classList.remove('active')); tb.classList.add('active'); renderCharacterGrid(i); };
-            ct.appendChild(tb);
+        Object.keys(state.enhance).forEach(entryIdx => {
+            const iNum = parseInt(entryIdx);
+            const rowCb = configDiv.querySelector(`.enhance-check-${idx}-${pos}[data-idx="${iNum}"]`);
+            const rowTimes = configDiv.querySelector(`.enhance-times-${idx}-${pos}[data-idx="${iNum}"]`);
+            if (rowCb) rowCb.checked = state.enhance[entryIdx].checked;
+            if (rowTimes) rowTimes.value = state.enhance[entryIdx].times;
         });
-    }
-
-    function renderCharacterGrid(fi = 0) {
-        const g = document.getElementById('game-character-grid'); g.innerHTML = '';
-        CHARACTER_DATA[fi].roles.forEach(ch => {
-            const cd = document.createElement('div'); cd.className = 'character-card';
-            const isActive = gameSelectedChars.some(c => c.name === ch.name);
-            if (isActive) cd.classList.add('active');
-            cd.innerHTML = `<img src="./${ch.image}" alt="${ch.name}" class="character-avatar" onerror="this.style.display='none'"><div class="character-name">${ch.name}</div>`;
-            cd.onclick = () => {
-                const idx = gameSelectedChars.findIndex(c => c.name === ch.name);
-                if (idx >= 0) {
-                    gameSelectedChars.splice(idx, 1);
-                } else {
-                    gameSelectedChars.push(ch);
-                }
-                renderCharacterGrid(fi);
-                renderAllCharacterConfigs();
-            };
-            g.appendChild(cd);
-        });
-    }
-
-    function getCid(ch) {
-        if (!ch.cid) ch.cid = ch.name.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_');
-        return ch.cid;
-    }
-
-    function renderAllCharacterConfigs() {
-        const container = document.getElementById('char-configs-container');
-        const existingPanels = container.querySelectorAll('.char-panel');
-        const existingCids = new Set();
-        existingPanels.forEach(panel => existingCids.add(panel.dataset.cid));
-        const currentCids = new Set(gameSelectedChars.map(ch => getCid(ch)));
-        existingPanels.forEach(panel => {
-            if (!currentCids.has(panel.dataset.cid)) panel.remove();
-        });
-        gameSelectedChars.forEach(ch => {
-            const cid = getCid(ch);
-            if (!existingCids.has(cid)) {
-                const panel = document.createElement('div');
-                panel.className = 'char-panel';
-                panel.id = `char-panel-${cid}`;
-                panel.dataset.cid = cid;
-                let html = `<h3>${ch.name}</h3>`;
-                if (ch.special === 'alice') {
-                    html += `<div class="special-option"><input type="checkbox" id="char-alice-c6-${cid}" onchange="updateCharWeights('${cid}')"> <label for="char-alice-c6-${cid}">爱丽丝6命（额外增加爆伤权重0.3）</label></div>`;
-                }
-                if (ch.special === 'vivian') {
-                    html += `<div class="special-option"><input type="checkbox" id="char-vivian-c4-${cid}" onchange="updateCharWeights('${cid}')"> <label for="char-vivian-c4-${cid}">薇薇安4命（暴击伤害权重改为0.6）</label></div>`;
-                }
-                html += `<div class="form-group"><label>驱动盘号位（可多选）</label><div class="position-select" id="char-positions-${cid}">`;
-                for (let p = 1; p <= 6; p++) {
-                    html += `<label class="position-option"><input type="checkbox" value="${p}" onchange="togglePosition('${cid}', this.value, this.checked)"> ${p}号位</label>`;
-                }
-                html += `</div></div>`;
-                html += `<div id="position-configs-${cid}"></div>`;
-                html += `<label class="section-label">角色基础词条库</label><div class="entries-list" id="char-entries-${cid}"></div>`;
-                panel.innerHTML = html;
-                container.appendChild(panel);
-                initCharEntries(cid, ch);
-                updateCharWeights(cid);
-            }
-        });
-    }
-
-    function initCharEntries(cid, ch) {
-        const ct = document.getElementById(`char-entries-${cid}`);
+        updatePosScale(idx, pos);
+        calcPosScore(idx, pos);
+    });}
+    function calcPosScore(idx, pos) { const configDiv = document.getElementById(`pos-config-${idx}-${pos}`); if (!configDiv) return; const weightInputs = document.querySelectorAll(`.game-weight-${idx}`); let score = 0; const checks = configDiv.querySelectorAll(`.enhance-check-${idx}-${pos}:checked`); checks.forEach(cb => { const i = parseInt(cb.dataset.idx); const w = parseNumber(weightInputs[i]?.value); if (isNaN(w)) return; const timesInput = configDiv.querySelector(`.enhance-times-${idx}-${pos}[data-idx="${i}"]`); const times = parseInt(timesInput?.value || 0); score += (times + 1) * w; }); const maxScore = getMaxScoreForPos(idx, pos); const percent = maxScore > 0 ? (score / maxScore * 100).toFixed(1) : 0; const el = document.getElementById(`score-percent-${idx}-${pos}`); if (el) { el.textContent = percent + '分'; el.dataset.internalScore = score; } const rows = configDiv.querySelectorAll('.enhance-row'); rows.forEach(row => { const cb = row.querySelector(`.enhance-check-${idx}-${pos}`); const timesInput = row.querySelector(`.enhance-times-${idx}-${pos}`); const subValSpan = row.querySelector('.enhance-subval'); if (!cb || !timesInput || !subValSpan) return; const i = parseInt(cb.dataset.idx); const times = parseInt(timesInput.value || 0); const checked = cb.checked; let value; if (!checked) value = 0; else { const n = times + 1; switch(i) { case 0: case 2: value = (n * 3).toFixed(1) + '%'; break; case 5: case 7: value = (n * 4.8).toFixed(1) + '%'; break; case 4: case 9: value = (n * 9); break; case 1: value = (n * 112); break; case 3: value = (n * 19); break; case 6: value = (n * 15); break; case 8: value = (n * 2.4).toFixed(1) + '%'; break; default: value = 0; } } subValSpan.textContent = `当前副词条数值：${value}`; }); }
+    function getPosGoal(idx, pos) { const el = document.getElementById(`score-percent-${idx}-${pos}`); return el && el.dataset.internalScore ? parseFloat(el.dataset.internalScore) : 0; }
+    function updatePosScale(idx, pos) { const input = document.getElementById(`scale-${idx}-${pos}`); if (!input) return; if (pos <= 3) { input.value = (1/6).toFixed(15); return; } const selected = getSelectedMainForPos(idx, pos); const probWeights = MAIN_PROB_WEIGHTS[pos]; const totalWeight = Object.values(probWeights).reduce((a,b)=>a+b,0); let selectedWeight = selected.length === 0 ? totalWeight : selected.reduce((sum,name)=> sum + (probWeights[name]||0), 0); const scale = (1/6) * (selectedWeight / totalWeight); input.value = scale.toFixed(15); }
+    function renderMainEntriesForPos(idx, pos) {
+        const ct = document.getElementById(`main-${idx}-${pos}`);
+        if (!ct) return;
         ct.innerHTML = '';
-        ENTRY_NAMES.forEach((n, i) => {
-            const d = document.createElement('div'); d.className = 'entry-grid';
-            d.innerHTML = `<div class="entry-item"><label>词条名称</label><input type="text" value="${n}" disabled></div><div class="entry-item"><label>库存</label><input type="number" class="game-rest-${cid}" data-idx="${i}" min="0" value="1"></div><div class="entry-item"><label>权重</label><input type="text" class="game-weight-${cid}" data-idx="${i}" placeholder="整数/小数/分数"></div>`;
-            ct.appendChild(d);
-        });
-        document.querySelectorAll(`.game-weight-${cid}`).forEach(inp => inp.addEventListener('input', () => {
-            onPositionChange(cid);
-        }));
-    }
-
-    function updateCharWeights(cid) {
-        const ch = gameSelectedChars.find(c => getCid(c) === cid);
-        if (!ch) return;
-        const weights = [...ch.weights];
-        const aliceCb = document.getElementById(`char-alice-c6-${cid}`);
-        const vivianCb = document.getElementById(`char-vivian-c4-${cid}`);
-        if (aliceCb && aliceCb.checked) weights[7] += 0.3;
-        if (vivianCb && vivianCb.checked) weights[7] = 0.6;
-        const wi = document.querySelectorAll(`.game-weight-${cid}`);
-        const ri = document.querySelectorAll(`.game-rest-${cid}`);
-        for (let i = 0; i < 10; i++) {
-            if (wi[i]) { wi[i].value = weights[i] === 0 ? '' : weights[i]; wi[i].disabled = false; }
-            if (ri[i]) { ri[i].disabled = false; ri[i].value = 1; }
-        }
-        onPositionChange(cid);
-    }
-
-    function getCurrentPositions(cid) {
-        return Array.from(document.querySelectorAll(`#char-positions-${cid} input:checked`)).map(cb => parseInt(cb.value));
-    }
-
-    function getSelectedMainForPos(cid, pos) {
-        const container = document.getElementById(`main-${cid}-${pos}`);
-        if (!container) return [];
-        return Array.from(container.querySelectorAll('input:checked')).map(c => c.value);
-    }
-
-    function getBlockedSubIdxForPos(cid, pos) {
-        if (pos <= 3) return -1;
-        const selected = getSelectedMainForPos(cid, pos);
-        if (selected.length === 1 && MAIN_ATTR_TO_SUB[selected[0]] !== undefined) return MAIN_ATTR_TO_SUB[selected[0]];
-        return -1;
-    }
-
-    function getMaxScoreForPos(cid, pos) {
-        const weightInputs = document.querySelectorAll(`.game-weight-${cid}`);
-        const blockedIdx = getBlockedSubIdxForPos(cid, pos);
-        const weights = [];
-        for (let i = 0; i < 10; i++) {
-            if (i === blockedIdx) continue;
-            const w = parseNumber(weightInputs[i]?.value) || 0;
-            if (w > 0) weights.push(w);
-        }
-        weights.sort((a,b)=>b-a);
-        if (weights.length === 0) return 0;
-        const top4 = weights.slice(0,4);
-        return top4[0]*6 + (top4[1]||0) + (top4[2]||0) + (top4[3]||0);
-    }
-
-    function createPositionConfig(cid, pos) {
-        const configsDiv = document.getElementById(`position-configs-${cid}`);
-        if (!configsDiv || document.getElementById(`pos-config-${cid}-${pos}`)) return;
-        const div = document.createElement('div');
-        div.className = 'pos-config';
-        div.id = `pos-config-${cid}-${pos}`;
-        let inner = `<h4>${pos}号位配置</h4>`;
-        if (pos >= 4) inner += `<label>主词条选择：</label><div class="main-entry-grid" id="main-${cid}-${pos}"></div>`;
-        inner += `<div class="special-option" style="margin:10px 0;"><input type="checkbox" id="game-direct-toggle-${cid}-${pos}" onchange="toggleGameDirect('${cid}',${pos})"> <label for="game-direct-toggle-${cid}-${pos}">定向副词条</label></div>`;
-        inner += `<div id="game-direct-area-${cid}-${pos}" style="display:none; margin-bottom:10px; padding:10px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:8px;"><label>选择定向副词条（最多2个）</label><div id="game-direct-options-${cid}-${pos}" class="main-entry-grid"></div></div>`;
-        inner += `<label>当前驱动盘强化次数：</label><div id="enhance-${cid}-${pos}"></div>`;
-        inner += `<div>当前驱动盘分数：<span id="score-percent-${cid}-${pos}">0分</span></div>`;
-        inner += `<small style="color:var(--text-muted);">满分100分，为100倍当前驱动盘权重分数与驱动盘最大权重分数之比</small>`;
-        inner += `<label>抽中对应号位主词条概率：<input type="text" id="scale-${cid}-${pos}" readonly></label><small style="color:var(--text-muted);">示例：随机抽得该位置概率1/6；4/6号位主词条仅1种可用输入1/36</small>`;
-        div.innerHTML = inner;
-        configsDiv.appendChild(div);
-        if (pos >= 4) renderMainEntriesForPos(cid, pos);
-        updatePosScale(cid, pos);
-        buildGameDirectOptions(cid, pos);
-        buildPosEnhance(cid, pos);
-    }
-
-    function removePositionConfig(cid, pos) {
-        const el = document.getElementById(`pos-config-${cid}-${pos}`);
-        if (el) el.remove();
-    }
-
-    function togglePosition(cid, pos, checked) {
-        if (checked) {
-            createPositionConfig(cid, parseInt(pos));
-        } else {
-            removePositionConfig(cid, parseInt(pos));
-        }
-    }
-
-    function onPositionChange(cid) {
-        const positions = getCurrentPositions(cid);
-        const configsDiv = document.getElementById(`position-configs-${cid}`);
-        if (!configsDiv) return;
-        configsDiv.innerHTML = '';
-        positions.forEach(pos => {
-            createPositionConfig(cid, pos);
+        (MAIN_ENTRY_CONFIG[pos] || []).forEach(n => {
+            const it = document.createElement('label');
+            it.className = 'main-entry-item';
+            it.innerHTML = `<input type="checkbox" value="${n}" onchange="onMainEntryChange(${idx},${pos})"> ${n}`;
+            ct.appendChild(it);
         });
     }
-
-    function toggleGameDirect(cid, pos) {
-        const area = document.getElementById(`game-direct-area-${cid}-${pos}`);
-        area.style.display = document.getElementById(`game-direct-toggle-${cid}-${pos}`).checked ? 'block' : 'none';
-        if (document.getElementById(`game-direct-toggle-${cid}-${pos}`).checked) buildGameDirectOptions(cid, pos);
+    function buildPosEnhance(idx, pos) {
+        const area = document.getElementById(`enhance-${idx}-${pos}`);
+        if (!area) return;
+        const weightInputs = document.querySelectorAll(`.game-weight-${idx}`);
+        const blockedIdxs = getBlockedSubIdxForPos(idx, pos);
+        area.innerHTML = '';
+        for (let i = 0; i < weightInputs.length; i++) {
+            if (blockedIdxs.includes(i)) continue;
+            const w = parseNumber(weightInputs[i].value);
+            if (isNaN(w) || w <= 0) continue;
+            const div = document.createElement('div');
+            div.className = 'enhance-row';
+            div.innerHTML = `
+                <label class="enhance-name-col">
+                    <input type="checkbox" class="enhance-check-${idx}-${pos}" data-idx="${i}" onchange="calcPosScore(${idx},${pos})"> ${ENTRY_NAMES[i]}
+                </label>
+                <span class="enhance-subval" id="sub-val-${idx}-${pos}-${i}">当前副词条数值：0</span>
+                <span>权重：${w}</span>
+                <div>
+                    <input type="number" class="enhance-times-${idx}-${pos}" data-idx="${i}" min="0" max="5" value="0" style="width:60px;" onchange="calcPosScore(${idx},${pos})">
+                </div>`;
+            area.appendChild(div);
+        }
+        calcPosScore(idx, pos);
     }
-
-    function buildGameDirectOptions(cid, pos) {
-        const container = document.getElementById(`game-direct-options-${cid}-${pos}`);
+    function buildGameDirectOptions(idx, pos) {
+        const container = document.getElementById(`game-direct-options-${idx}-${pos}`);
         if (!container) return;
-        const weightInputs = document.querySelectorAll(`.game-weight-${cid}`);
-        const blockedIdx = getBlockedSubIdxForPos(cid, pos);
+        const weightInputs = document.querySelectorAll(`.game-weight-${idx}`);
+        const blockedIdxs = getBlockedSubIdxForPos(idx, pos);
         container.innerHTML = '';
         for (let i = 0; i < 10; i++) {
-            if (i === blockedIdx) continue;
+            if (blockedIdxs.includes(i)) continue;
             const w = parseNumber(weightInputs[i]?.value) || 0;
             if (w > 0) {
                 const label = document.createElement('label');
                 label.className = 'main-entry-item';
-                label.innerHTML = `<input type="checkbox" class="game-direct-check-${cid}-${pos}" value="${i}" onchange="limitGameDirect('${cid}',${pos}, this)"> ${ENTRY_NAMES[i]}`;
+                label.innerHTML = `<input type="checkbox" class="game-direct-check-${idx}-${pos}" value="${i}" onchange="limitGameDirect(${idx},${pos}, this)"> ${ENTRY_NAMES[i]}`;
                 container.appendChild(label);
             }
         }
     }
-
-    function limitGameDirect(cid, pos, cb) {
-        const checked = document.querySelectorAll(`.game-direct-check-${cid}-${pos}:checked`);
+    function toggleGameDirect(idx, pos) {
+        const toggle = document.getElementById(`game-direct-toggle-${idx}-${pos}`);
+        const area = document.getElementById(`game-direct-area-${idx}-${pos}`);
+        if (!toggle || !area) return;
+        area.style.display = toggle.checked ? 'block' : 'none';
+        if (toggle.checked) buildGameDirectOptions(idx, pos);
+    }
+    function limitGameDirect(idx, pos, cb) {
+        const checked = document.querySelectorAll(`.game-direct-check-${idx}-${pos}:checked`);
         if (checked.length > 2) cb.checked = false;
     }
-
-    function getGameDirectTypes(cid, pos) {
-        const toggle = document.getElementById(`game-direct-toggle-${cid}-${pos}`);
+    function getGameDirectTypes(idx, pos) {
+        const toggle = document.getElementById(`game-direct-toggle-${idx}-${pos}`);
         if (!toggle || !toggle.checked) return [];
-        return Array.from(document.querySelectorAll(`.game-direct-check-${cid}-${pos}:checked`)).map(cb => parseInt(cb.value));
+        return Array.from(document.querySelectorAll(`.game-direct-check-${idx}-${pos}:checked`)).map(cb => parseInt(cb.value));
     }
-
-    function renderMainEntriesForPos(cid, pos) {
-        const ct = document.getElementById(`main-${cid}-${pos}`); if (!ct) return;
-        ct.innerHTML = '';
-        (MAIN_ENTRY_CONFIG[pos] || []).forEach(n => {
-            const it = document.createElement('label'); it.className = 'main-entry-item';
-            it.innerHTML = `<input type="checkbox" value="${n}" onchange="onMainEntryChange('${cid}',${pos})"> ${n}`;
-            ct.appendChild(it);
-        });
-    }
-
-    function onMainEntryChange(cid, pos) { updatePosScale(cid, pos); buildPosEnhance(cid, pos); buildGameDirectOptions(cid, pos); }
-
-    function buildPosEnhance(cid, pos) {
-        const area = document.getElementById(`enhance-${cid}-${pos}`); if (!area) return;
-        const weightInputs = document.querySelectorAll(`.game-weight-${cid}`);
-        const blockedIdx = getBlockedSubIdxForPos(cid, pos);
-        area.innerHTML = '';
-        for (let i = 0; i < weightInputs.length; i++) {
-            if (i === blockedIdx) continue;
-            const w = parseNumber(weightInputs[i].value);
-            if (isNaN(w) || w <= 0) continue;
-            const div = document.createElement('div'); div.className = 'enhance-row';
-            div.innerHTML = `<label class="enhance-name-col"><input type="checkbox" class="enhance-check-${cid}-${pos}" data-idx="${i}" onchange="calcPosScore('${cid}',${pos})"> ${ENTRY_NAMES[i]}</label><span class="enhance-subval" id="sub-val-${cid}-${pos}-${i}">当前副词条数值：0</span><span>权重：${w}</span><div><input type="number" class="enhance-times-${cid}-${pos}" data-idx="${i}" min="0" max="5" value="0" style="width:60px;" onchange="calcPosScore('${cid}',${pos})"></div>`;
-            area.appendChild(div);
-        }
-        calcPosScore(cid, pos);
-    }
-
-    function calcPosScore(cid, pos) {
-        const configDiv = document.getElementById(`pos-config-${cid}-${pos}`);
-        if (!configDiv) return;
-        const weightInputs = document.querySelectorAll(`.game-weight-${cid}`);
-        let score = 0;
-        const checks = configDiv.querySelectorAll(`.enhance-check-${cid}-${pos}:checked`);
-        checks.forEach(cb => {
-            const i = parseInt(cb.dataset.idx);
-            const w = parseNumber(weightInputs[i]?.value);
-            if (isNaN(w)) return;
-            const timesInput = configDiv.querySelector(`.enhance-times-${cid}-${pos}[data-idx="${i}"]`);
-            const times = parseInt(timesInput?.value || 0);
-            score += (times + 1) * w;
-        });
-        const maxScore = getMaxScoreForPos(cid, pos);
-        const percent = maxScore > 0 ? (score / maxScore * 100).toFixed(1) : 0;
-        const el = document.getElementById(`score-percent-${cid}-${pos}`);
-        if (el) { el.textContent = percent + '分'; el.dataset.internalScore = score; }
-        const rows = configDiv.querySelectorAll('.enhance-row');
-        rows.forEach(row => {
-            const cb = row.querySelector(`.enhance-check-${cid}-${pos}`);
-            const timesInput = row.querySelector(`.enhance-times-${cid}-${pos}`);
-            const subValSpan = row.querySelector('.enhance-subval');
-            if (!cb || !timesInput || !subValSpan) return;
-            const i = parseInt(cb.dataset.idx);
-            const times = parseInt(timesInput.value || 0);
-            const checked = cb.checked;
-            let value;
-            if (!checked) {
-                value = 0;
-            } else {
-                const n = times + 1;
-                switch(i) {
-                    case 0: case 2: value = (n * 3).toFixed(1) + '%'; break;
-                    case 5: case 7: value = (n * 4.8).toFixed(1) + '%'; break;
-                    case 4: case 9: value = (n * 9); break;
-                    case 1: value = (n * 112); break;
-                    case 3: value = (n * 19); break;
-                    case 6: value = (n * 15); break;
-                    case 8: value = (n * 2.4).toFixed(1) + '%'; break;
-                    default: value = 0;
-                }
-            }
-            subValSpan.textContent = `当前副词条数值：${value}`;
-        });
-    }
-
-    function getPosGoal(cid, pos) {
-        const el = document.getElementById(`score-percent-${cid}-${pos}`);
-        return el && el.dataset.internalScore ? parseFloat(el.dataset.internalScore) : 0;
-    }
-
-    function updatePosScale(cid, pos) {
-        const input = document.getElementById(`scale-${cid}-${pos}`); if (!input) return;
-        if (pos <= 3) { input.value = (1/6).toFixed(15); return; }
-        const selected = getSelectedMainForPos(cid, pos);
-        const probWeights = MAIN_PROB_WEIGHTS[pos];
-        const totalWeight = Object.values(probWeights).reduce((a,b)=>a+b,0);
-        let selectedWeight = selected.length === 0 ? totalWeight : selected.reduce((sum,name)=> sum + (probWeights[name]||0), 0);
-        const scale = (1/6) * (selectedWeight / totalWeight);
-        input.value = scale.toFixed(15);
-    }
-
-    function collectEntryListForSingleMain(cid, pos, mainName) {
-        const rests = document.querySelectorAll(`.game-rest-${cid}`);
-        const weights = document.querySelectorAll(`.game-weight-${cid}`);
+    function collectEntryListForSingleMain(idx, pos, mainName) {
+        const rests = document.querySelectorAll(`.game-rest-${idx}`);
+        const weights = document.querySelectorAll(`.game-weight-${idx}`);
         const types = [];
-        const blockedIdx = (pos >= 4 && mainName && MAIN_ATTR_TO_SUB[mainName] !== undefined) ? MAIN_ATTR_TO_SUB[mainName] : -1;
+        let blockedIdxs = [];
+        if (pos >= 4 && mainName) {
+            blockedIdxs = getBlockedSubIdxForPos(idx, pos);
+        }
         for (let i = 0; i < 10; i++) {
             let r = parseInt(rests[i].value) || 0;
             const w = parseNumber(weights[i].value) || 0;
-            if (i === blockedIdx) r = 0;
+            if (blockedIdxs.includes(i)) r = 0;
             types.push({ typeIndex: i, score: w, rest: r, specialWeight: SUBSTAT_SPECIAL_WEIGHTS[i] });
         }
         return types;
     }
-
+    function formatCost(value, imgSrc) {
+        if (value === Infinity || isNaN(value)) return '∞';
+        if (!imgSrc) return `<span>${value.toFixed(2)}</span>`;
+        return `<span>${value.toFixed(2)} <img src="${imgSrc}" class="resource-img"></span>`;
+    }
     function calculateGame() {
-        if (gameSelectedChars.length === 0) { alert('请至少选择一个角色'); return; }
+        extractionList = [];
+        if (gameSelectedChars.length === 0) {
+            alert('请至少选择一个角色');
+            return;
+        }
         const allCharResults = [];
-        gameSelectedChars.forEach(ch => {
-            const cid = getCid(ch);
-            const positions = getCurrentPositions(cid);
+        gameSelectedChars.forEach((ch, idx) => {
+            const positions = getCurrentPositions(idx);
             if (positions.length === 0) return;
             let totalRandom = 0;
             const perPosResults = [];
-            let sumA = 0, sumB = 0, countResults = 0;
             positions.forEach(pos => {
-                const goal = getPosGoal(cid, pos);
+                const goal = getPosGoal(idx, pos);
                 let mainList = [];
                 if (pos <= 3) mainList = [null];
                 else {
-                    const selected = getSelectedMainForPos(cid, pos);
+                    const selected = getSelectedMainForPos(idx, pos);
                     mainList = selected.length > 0 ? selected : [...MAIN_ENTRY_CONFIG[pos]];
                 }
                 const probWeights = pos >= 4 ? MAIN_PROB_WEIGHTS[pos] : null;
                 const totalWeight = probWeights ? Object.values(probWeights).reduce((a,b)=>a+b,0) : 1;
-                let posRandom = 0, posDirected = 0;
-                const directedTypes = getGameDirectTypes(cid, pos);
+                let posRandom = 0, posDirected = 0, posSumA = 0, posSumB = 0, posCount = 0;
+                let posDirectedNoDirect = 0;
+                const directedTypes = getGameDirectTypes(idx, pos);
+                const posConfig = document.getElementById(`pos-config-${idx}-${pos}`);
+                const setId = posConfig ? posConfig.dataset.setId || '0' : '0';
+                const setName = posConfig ? posConfig.dataset.setName || '未知' : '未知';
                 mainList.forEach(main => {
-                    const types = collectEntryListForSingleMain(cid, pos, main);
-                    if (types.reduce((sum,t)=>sum+t.rest,0) < 4) { alert(`${ch.name} ${pos}号位（主词条：${main||'无'}）词条库存不足4`); return; }
+                    const types = collectEntryListForSingleMain(idx, pos, main);
+                    if (types.reduce((sum,t)=>sum+t.rest,0) < 4) {
+                        alert(`${ch.name} ${pos}号位（主词条：${main||'无'}）词条库存不足4`);
+                        return;
+                    }
                     let scaleFactor;
                     if (pos <= 3) scaleFactor = 1/6;
                     else {
@@ -905,15 +670,22 @@
                         scaleFactor = (1/6) * (weight / totalWeight);
                     }
                     const result = calculateCoreGame(types, goal, scaleFactor, directedTypes);
+                    const resultNoDirect = calculateCoreGame(types, goal, scaleFactor, []);
                     const directedContrib = pos >= 4 ? result.chance / 6 : result.chance;
+                    const directedContribNoDirect = pos >= 4 ? resultNoDirect.chance / 6 : resultNoDirect.chance;
                     posRandom += result.scaledChance;
                     posDirected += directedContrib;
-                    sumA += result.mchanceA;
-                    sumB += result.mchanceB;
-                    countResults++;
+                    posDirectedNoDirect += directedContribNoDirect;
+                    posSumA += result.mchanceA;
+                    posSumB += result.mchanceB;
+                    posCount++;
                 });
-                if (pos === 5) posDirected *= 0.6;
+                if (pos === 5) {
+                    posDirected *= 0.6;
+                    posDirectedNoDirect *= 0.6;
+                }
                 let directedMain = null;
+                let directedMainNoDirect = null;
                 if (pos >= 4 && mainList[0] !== null) {
                     const generic46 = ["攻击力百分比","生命值百分比","防御力百分比","暴击率","暴击伤害"];
                     const generic5 = ["攻击力百分比","生命值百分比","防御力百分比"];
@@ -921,136 +693,266 @@
                     if (pos === 4 || pos === 6) {
                         if (selectedMains.length === 1 || !selectedMains.some(m => generic46.includes(m))) {
                             directedMain = posDirected * 6 / selectedMains.length;
+                            directedMainNoDirect = posDirectedNoDirect * 6 / selectedMains.length;
                         }
                     } else if (pos === 5) {
                         if (selectedMains.length === 1 || !selectedMains.some(m => generic5.includes(m))) {
                             directedMain = posDirected * 10 / selectedMains.length;
+                            directedMainNoDirect = posDirectedNoDirect * 10 / selectedMains.length;
                         }
                     }
                 }
                 let gradeText = null, gradeColor = 'white';
+                const evalProb = directedMainNoDirect !== null ? directedMainNoDirect : posDirectedNoDirect;
                 if (pos <= 3) {
-                    if (posDirected <= 0.003) { gradeText = '完美毕业'; gradeColor = 'red'; }
-                    else if (posDirected <= 0.033) { gradeText = '大毕业'; gradeColor = 'gold'; }
-                    else if (posDirected < 0.064) { gradeText = '小毕业'; gradeColor = 'purple'; }
-                    else if (posDirected < 0.12) { gradeText = '能用'; gradeColor = 'blue'; }
+                    if (evalProb <= 0.003) { gradeText = '完美毕业'; gradeColor = 'red'; }
+                    else if (evalProb <= 0.033) { gradeText = '大毕业'; gradeColor = 'gold'; }
+                    else if (evalProb < 0.064) { gradeText = '小毕业'; gradeColor = 'purple'; }
+                    else if (evalProb < 0.12) { gradeText = '能用'; gradeColor = 'blue'; }
                     else { gradeText = '可提升空间极大'; gradeColor = 'white'; }
-                } else if (directedMain !== null) {
-                    if (directedMain <= 0.08) { gradeText = '完美毕业'; gradeColor = 'red'; }
-                    else if (directedMain <= 0.17) { gradeText = '大毕业'; gradeColor = 'gold'; }
-                    else if (directedMain < 0.24) { gradeText = '小毕业'; gradeColor = 'purple'; }
-                    else if (directedMain < 0.48) { gradeText = '能用'; gradeColor = 'blue'; }
+                } else if (directedMainNoDirect !== null) {
+                    if (evalProb <= 0.08) { gradeText = '完美毕业'; gradeColor = 'red'; }
+                    else if (evalProb <= 0.17) { gradeText = '大毕业'; gradeColor = 'gold'; }
+                    else if (evalProb < 0.24) { gradeText = '小毕业'; gradeColor = 'purple'; }
+                    else if (evalProb < 0.48) { gradeText = '能用'; gradeColor = 'blue'; }
                     else { gradeText = '可提升空间极大'; gradeColor = 'white'; }
                 }
-                perPosResults.push({ pos, random: posRandom, directed: posDirected, directedMain, gradeText, gradeColor });
+                const avgA = posCount > 0 ? posSumA / posCount : 0;
+                const avgB = posCount > 0 ? posSumB / posCount : 0;
+                perPosResults.push({
+                    pos,
+                    random: posRandom,
+                    directed: posDirected,
+                    directedMain,
+                    directedMainNoDirect,
+                    gradeText,
+                    gradeColor,
+                    setId,
+                    setName,
+                    avgA,
+                    avgB,
+                    mainStat: mainList[0] !== null ? mainList[0] : null,
+                    hasDirect: directedTypes.length > 0
+                });
                 totalRandom += posRandom;
+                extractionList.push({
+                    type: 'random',
+                    char: ch.name,
+                    suit: setName,
+                    pos,
+                    probability: posRandom,
+                    costAudio: 1 / posRandom * 3,
+                    costScott: 1 / posRandom * 2 / 2.5 * 60,
+                    costScottDays: 1 / posRandom * 2 / 2.5 * 60 / 320
+                });
+                if (posDirected > 0) extractionList.push({
+                    type: 'position',
+                    char: ch.name,
+                    suit: setName,
+                    pos,
+                    probability: posDirected,
+                    costAudio: 1 / posDirected * 6
+                });
+                if (directedMain !== null && directedMain > 0) {
+                    extractionList.push({
+                        type: 'main',
+                        char: ch.name,
+                        suit: setName,
+                        pos,
+                        mainStat: mainList[0],
+                        probability: directedMain,
+                        costAudio1: 1 / directedMain * 6,
+                        costAudio2: 1 / directedMain
+                    });
+                }
             });
-            const avgA = countResults > 0 ? sumA / countResults : null;
-            const avgB = countResults > 0 ? sumB / countResults : null;
-            allCharResults.push({ name: ch.name, perPosResults, totalRandom, avgA, avgB });
+            allCharResults.push({ name: ch.name, perPosResults, totalRandom });
         });
 
         let resultHtml = '';
+        const multiChar = allCharResults.length > 1;
         allCharResults.forEach(cr => {
-            resultHtml += `<div style="margin-bottom:25px; border-bottom:1px solid var(--border-color); padding-bottom:10px;"><h3 style="color:var(--primary-color);">${cr.name}：</h3>`;
-            resultHtml += cr.perPosResults.map(r => {
-                let line = `${r.pos}号位：随机 ${(r.random*100).toFixed(4)}% 定向位置 ${(r.directed*100).toFixed(4)}%`;
-                if (r.directedMain !== null) line += ` 定向主词条 ${(r.directedMain*100).toFixed(4)}%`;
-                if (r.gradeText) line += ` 当前驱动盘练度评价：<span style="color:${r.gradeColor};font-weight:bold;">${r.gradeText}</span>`;
-                return `<div>${line}</div>`;
-            }).join('');
-            resultHtml += `<div class="result-item">初始四词条驱动盘强化后练度提升概率：${cr.avgA !== null ? (cr.avgA*100).toFixed(15) : '--'}%</div>`;
-            resultHtml += `<div class="result-item">初始三词条驱动盘强化后练度提升概率：${cr.avgB !== null ? (cr.avgB*100).toFixed(15) : '--'}%</div>`;
-            resultHtml += `<div class="result-item">随机抽取综合练度提升概率：${(cr.totalRandom*100).toFixed(15)}%</div></div>`;
+            const collapsedClass = (multiChar && settings.autoCollapseOutput) ? ' collapsed' : '';
+            resultHtml += `<div class="role-result collapsible${collapsedClass}" data-role="${cr.name}">`;
+            resultHtml += `<div class="role-result-header" style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                <span class="collapse-icon"></span>
+                <h3 style="color:var(--primary-color); margin:0;">${cr.name}</h3>
+            </div>`;
+            resultHtml += `<div class="role-result-body">`;
+            let groupBySet = {};
+            cr.perPosResults.forEach(r => {
+                const setId = r.setId || '0';
+                if (!groupBySet[setId]) groupBySet[setId] = { name: r.setName || '未知', items: [] };
+                groupBySet[setId].items.push(r);
+            });
+            for (const setId in groupBySet) {
+                const group = groupBySet[setId];
+                const groupRandomSum = group.items.reduce((sum, r) => sum + r.random, 0);
+                resultHtml += `<div style="margin-top:12px;"><h4 style="color:var(--primary-color); margin:0 0 6px;">${group.name}</h4></div>`;
+                resultHtml += `<div>随机抽取综合练度提升概率 <strong>${(groupRandomSum*100).toFixed(15)}%</strong>（音像店刷出更好驱动盘期望消耗 ${formatCost(1/groupRandomSum*3, '屏幕截图 2026-08-16 163440.png')}，哨站刷出更好驱动盘期望消耗 ${formatCost(1/groupRandomSum*2/2.5*60)} 电量（约和${(1/groupRandomSum*2/2.5*60/320).toFixed(2)}天体力））</div>`;
+                resultHtml += '<br>';
+                group.items.forEach(r => {
+                    resultHtml += `<div style="margin-bottom:8px;">`;
+                    resultHtml += `<div>${r.pos}号位：随机 <strong>${(r.random*100).toFixed(4)}%</strong>（音像店刷出更好驱动盘期望消耗 ${formatCost(1/r.random*3, '屏幕截图 2026-08-16 163440.png')}，哨站刷出更好驱动盘期望消耗${formatCost(1/r.random*2/2.5*60)} 电量（约和${(1/r.random*2/2.5*60/320).toFixed(2)}天体力））</div>`;
+                    resultHtml += `<div>定向位置 <strong>${(r.directed*100).toFixed(4)}%</strong>（音像店刷出更好驱动盘期望消耗 ${formatCost(1/r.directed*6, '屏幕截图 2026-08-16 163440.png')}）</div>`;
+                    if (r.directedMain !== null && r.directedMain > 0) {
+                        resultHtml += `<div>定向主词条 <strong>${(r.directedMain*100).toFixed(4)}%</strong>（音像店刷出更好驱动盘期望消耗 ${formatCost(1/r.directedMain*6, '屏幕截图 2026-08-16 163440.png')}、${formatCost(1/r.directedMain, '屏幕截图 2026-08-16 163519.png')}${r.hasDirect ? `、${formatCost(1/r.directedMain, '屏幕截图 2026-08-16 163459.png')}` : ''}）</div>`;
+                    }
+                    if (r.gradeText) resultHtml += `<div>当前驱动盘练度评价：<span style="color:${r.gradeColor};font-weight:bold;">${r.gradeText}</span></div>`;
+                    resultHtml += `<div>初始三词条驱动盘强化后练度提升概率：<strong>${(r.avgB*100).toFixed(15)}%</strong></div>`;
+                    resultHtml += `<div>初始四词条驱动盘强化后练度提升概率：<strong>${(r.avgA*100).toFixed(15)}%</strong></div>`;
+                    resultHtml += `</div>`;
+                });
+            }
+            resultHtml += `</div></div>`;
         });
-
         document.getElementById('per-position-results').innerHTML = resultHtml;
+        document.getElementById('per-position-results').querySelectorAll('.role-result').forEach(el => {
+            el.querySelector('.role-result-header').addEventListener('click', () => el.classList.toggle('collapsed'));
+        });
         document.getElementById('res-a').style.display = 'none';
         document.getElementById('res-b').style.display = 'none';
         document.getElementById('res-random').style.display = 'none';
 
-        if (allCharResults.length > 1) {
-            const sorted = [...allCharResults].sort((a,b) => b.totalRandom - a.totalRandom);
-            const best = sorted[0];
-            const recommendArea = document.getElementById('recommend-area');
-            recommendArea.style.display = 'block';
-            recommendArea.innerHTML = `推荐优先提升的角色：<strong>${best.name}</strong>（综合练度提升概率 ${(best.totalRandom*100).toFixed(4)}%，提升空间最大）`;
+        const recommendArea = document.getElementById('recommend-area');
+        if (extractionList.length === 0) {
+            recommendArea.innerHTML = '<div class="recommend-box">暂无驱动盘数据</div>';
         } else {
-            document.getElementById('recommend-area').style.display = 'none';
+            let maxProbItem = extractionList.reduce((a,b) => a.probability > b.probability ? a : b);
+            let scottMinItem = null;
+            extractionList.forEach(item => {
+                if (item.type === 'random' && (scottMinItem === null || item.costScott < scottMinItem.costScott)) scottMinItem = item;
+            });
+            let audioRandPosMinItem = null;
+            extractionList.forEach(item => {
+                if (item.type === 'random' || item.type === 'position') {
+                    if (audioRandPosMinItem === null || item.costAudio < audioRandPosMinItem.costAudio) audioRandPosMinItem = item;
+                }
+            });
+            let mainMinItem = null;
+            extractionList.forEach(item => {
+                if (item.type === 'main' && (mainMinItem === null || item.costAudio1 < mainMinItem.costAudio1)) mainMinItem = item;
+            });
+            let html = '';
+            if (maxProbItem) {
+                let probText = '';
+                if (maxProbItem.type === 'random') {
+                    probText = `随机抽取套装${maxProbItem.suit}`;
+                } else if (maxProbItem.type === 'position') {
+                    probText = `定向${maxProbItem.pos}号位为${maxProbItem.char}抽取${maxProbItem.suit}套装`;
+                } else if (maxProbItem.type === 'main') {
+                    probText = `${maxProbItem.pos}号位定向${maxProbItem.mainStat}主词条为${maxProbItem.char}抽取${maxProbItem.suit}套装`;
+                }
+                html += `<div class="recommend-box" style="margin-bottom:10px;"><span style="color:var(--primary-color);">出货概率最大的具体抽取方式：</span>${probText}，出货概率${(maxProbItem.probability*100).toFixed(4)}%</div>`;
+            }
+            if (scottMinItem) {
+                html += `<div class="recommend-box" style="margin-bottom:10px;"><span style="color:var(--primary-color);">斯科特哨站资源消耗最小的具体抽取方式：</span>为${scottMinItem.char}刷取套装${scottMinItem.suit}，期望消耗${scottMinItem.costScott.toFixed(2)}电量（约和${(1/scottMinItem.probability*2/2.5*60/320).toFixed(2)}天体力）</div>`;
+            }
+            if (audioRandPosMinItem) {
+                let methodText = '';
+                if (audioRandPosMinItem.type === 'random') {
+                    methodText = `随机抽取套装${audioRandPosMinItem.suit}`;
+                } else {
+                    methodText = `定向${audioRandPosMinItem.pos}号位为${audioRandPosMinItem.char}抽取${audioRandPosMinItem.suit}套装`;
+                }
+                html += `<div class="recommend-box" style="margin-bottom:10px;"><span style="color:var(--primary-color);">音像店抽取方式为随机，定向位置时资源消耗最小的具体抽取方式：</span>${methodText}，期望消耗${formatCost(audioRandPosMinItem.costAudio, '屏幕截图 2026-08-16 163440.png')}</div>`;
+            }
+            if (mainMinItem) {
+                let mainText = `${mainMinItem.pos}号位定向${mainMinItem.mainStat}主词条为${mainMinItem.char}抽取${mainMinItem.suit}套装`;
+                html += `<div class="recommend-box" style="margin-bottom:10px;"><span style="color:var(--primary-color);">定向主词条时资源消耗最小的具体抽取方式：</span>${mainText}，期望消耗${formatCost(mainMinItem.costAudio1, '屏幕截图 2026-08-16 163440.png')}${formatCost(mainMinItem.costAudio2, '屏幕截图 2026-08-16 163519.png')}</div>`;
+            }
+            recommendArea.innerHTML = html;
         }
         document.getElementById('result-area').style.display = 'block';
     }
 
-    function generateAdvancedEntries() {
-        const cnt = parseInt(document.getElementById('entry-count').value) || 10;
-        const ct = document.getElementById('advanced-entries'); ct.innerHTML = '';
-        for (let i = 0; i < cnt; i++) {
-            const d = document.createElement('div'); d.className = 'entry-grid';
-            d.innerHTML = `<div class="entry-item"><label>词条${i+1}名称</label><input type="text" class="adv-name" value="词条${i+1}"></div><div class="entry-item"><label>库存</label><input type="number" class="adv-rest" min="1" value="1"></div><div class="entry-item"><label>权重</label><input type="text" class="adv-score" placeholder="整数/小数/分数"></div>`;
-            ct.appendChild(d);
+    function generateAdvancedEntries() { const cnt = parseInt(document.getElementById('entry-count').value) || 10; const ct = document.getElementById('advanced-entries'); ct.innerHTML = ''; for (let i = 0; i < cnt; i++) { const d = document.createElement('div'); d.className = 'entry-grid'; d.innerHTML = `<div class="entry-item"><label>词条${i+1}名称</label><input type="text" class="adv-name" value="词条${i+1}"></div><div class="entry-item"><label>库存</label><input type="number" class="adv-rest" min="1" value="1"></div><div class="entry-item"><label>权重</label><input type="text" class="adv-score" placeholder="整数/小数/分数"></div>`; ct.appendChild(d); } buildCustomDirectOptions(); }
+    function toggleCustomDirect() { document.getElementById('custom-direct-area').style.display = document.getElementById('custom-direct-toggle').checked ? 'block' : 'none'; if (document.getElementById('custom-direct-toggle').checked) buildCustomDirectOptions(); }
+    function buildCustomDirectOptions() { const container = document.getElementById('custom-direct-options'); if (!container) return; const names = document.querySelectorAll('.adv-name'); container.innerHTML = ''; names.forEach((inp, idx) => { const label = document.createElement('label'); label.className = 'main-entry-item'; label.innerHTML = `<input type="checkbox" value="${idx}"> ${inp.value}`; container.appendChild(label); }); }
+    function calculateAdvanced() { const ns = document.querySelectorAll('.adv-name'), rs = document.querySelectorAll('.adv-rest'), ss = document.querySelectorAll('.adv-score'); if (ns.length === 0) { alert('请先生成词条输入'); return; } const el = []; let tr = 0; for (let i = 0; i < ns.length; i++) { const r = parseInt(rs[i].value), s = parseNumber(ss[i].value); if (isNaN(r) || r < 1) { alert(`词条${i+1}库存必须是正整数`); return; } if (isNaN(s)) { alert(`词条${i+1}权重格式不正确`); return; } for (let j = 0; j < r; j++) el.push({ rest: 1, score: s, typeIndex: i }); tr += r; } if (tr < 4) { alert('总词条库存不足4'); return; } const g = parseNumber(document.getElementById('advanced-goal').value); const sc = parseNumber(document.getElementById('advanced-scale').value); if (isNaN(g)) { alert('目标分数格式不正确'); return; } if (isNaN(sc)) { alert('缩放系数格式不正确'); return; } let directedTypes = []; if (document.getElementById('custom-direct-toggle').checked) { directedTypes = Array.from(document.querySelectorAll('#custom-direct-options input:checked')).map(cb => parseInt(cb.value)); } showResult(calculateCore(el, g, sc, directedTypes), 'advanced'); }
+    function showResult(r, mode) { document.getElementById('res-a').style.display = 'block'; document.getElementById('res-b').style.display = 'block'; document.getElementById('res-random').style.display = 'block'; document.getElementById('res-a').textContent = `初始四词条驱动盘强化后练度提升概率：${(r.mchanceA*100).toFixed(15)}%`; document.getElementById('res-b').textContent = `初始三词条驱动盘强化后练度提升概率：${(r.mchanceB*100).toFixed(15)}%`; document.getElementById('res-random').textContent = mode === 'simple' ? `随机抽取综合练度提升概率：${(r.scaledChance*100).toFixed(15)}%` : `乘以缩放系数后提升率：${(r.scaledChance*100).toFixed(15)}%`; document.getElementById('result-area').style.display = 'block'; document.getElementById('recommend-area').innerHTML = ''; }
+    function getSavesKey(chName) { return `zzz_disk_saves_${chName}`; }
+    function loadSavesList(chName) { const raw = localStorage.getItem(getSavesKey(chName)); if (!raw) return []; try { return JSON.parse(raw); } catch (e) { return []; } }
+    function saveSavesList(chName, list) { localStorage.setItem(getSavesKey(chName), JSON.stringify(list)); }
+    function refreshSaveSelect(idx) { const mainSelect = document.getElementById(`char-save-select-${idx}`); const topSelect = document.getElementById(`char-save-select-top-${idx}`); const bottomSelect = document.getElementById(`char-save-select-bottom-${idx}`); if (!mainSelect || !gameSelectedChars[idx]) return; const chName = gameSelectedChars[idx].name; const saves = loadSavesList(chName); const fill = (select) => { if (!select) return; select.innerHTML = ''; saves.forEach((s, i) => { const option = document.createElement('option'); option.value = i; option.textContent = s.name; select.appendChild(option); }); if (saves.length === 0) { const option = document.createElement('option'); option.value = ''; option.textContent = '暂无存档'; select.appendChild(option); } }; fill(mainSelect); fill(topSelect); fill(bottomSelect); if (topSelect) topSelect.value = mainSelect.value; if (bottomSelect) bottomSelect.value = mainSelect.value; }
+    function syncSaveSelects(idx, sourceSelect) { const mainSelect = document.getElementById(`char-save-select-${idx}`); const topSelect = document.getElementById(`char-save-select-top-${idx}`); const bottomSelect = document.getElementById(`char-save-select-bottom-${idx}`); const val = sourceSelect.value; if (mainSelect && mainSelect !== sourceSelect) mainSelect.value = val; if (topSelect && topSelect !== sourceSelect) topSelect.value = val; if (bottomSelect && bottomSelect !== sourceSelect) bottomSelect.value = val; }
+    document.addEventListener('change', function(e) { const target = e.target; if (target.classList.contains('char-save-select') || target.classList.contains('char-save-select-top') || target.classList.contains('char-save-select-bottom')) { const idx = parseInt(target.dataset.idx); if (!isNaN(idx)) syncSaveSelects(idx, target); } });
+    function collectCharConfigData(idx) { if (!gameSelectedChars[idx]) return null; const ch = gameSelectedChars[idx]; const positions = getCurrentPositions(idx); const data = { charName: ch.name, positions: {}, special: {} }; if (ch.special === 'alice') { const cb = document.getElementById(`char-alice-c6-${idx}`); data.special.aliceC6 = cb ? cb.checked : false; } if (ch.special === 'vivian') { const cb = document.getElementById(`char-vivian-c4-${idx}`); data.special.vivianC4 = cb ? cb.checked : false; } positions.forEach(pos => { const posData = {}; if (pos >= 4) { posData.mains = getSelectedMainForPos(idx, pos); } const directToggle = document.getElementById(`game-direct-toggle-${idx}-${pos}`); posData.directEnabled = directToggle ? directToggle.checked : false; if (posData.directEnabled) { posData.directTypes = getGameDirectTypes(idx, pos); } posData.enhance = {}; const rows = document.querySelectorAll(`#pos-config-${idx}-${pos} .enhance-row`); rows.forEach(row => { const cb = row.querySelector(`.enhance-check-${idx}-${pos}`); const timesInput = row.querySelector(`.enhance-times-${idx}-${pos}`); if (!cb || !timesInput) return; const i = parseInt(cb.dataset.idx); posData.enhance[i] = { checked: cb.checked, times: parseInt(timesInput.value) || 0 }; }); data.positions[pos] = posData; }); return data; }
+    function restoreCharConfigData(idx, data) { if (!data || !gameSelectedChars[idx] || gameSelectedChars[idx].name !== data.charName) return; if (data.special) { if (data.special.aliceC6 !== undefined) { const cb = document.getElementById(`char-alice-c6-${idx}`); if (cb) { cb.checked = data.special.aliceC6; updateCharWeights(idx); } } if (data.special.vivianC4 !== undefined) { const cb = document.getElementById(`char-vivian-c4-${idx}`); if (cb) { cb.checked = data.special.vivianC4; updateCharWeights(idx); } } } const allPosCheckboxes = document.querySelectorAll(`#char-positions-${idx} input[type="checkbox"]`); allPosCheckboxes.forEach(cb => { cb.checked = false; }); const posKeys = Object.keys(data.positions).map(Number); posKeys.forEach(pos => { const cb = document.querySelector(`#char-positions-${idx} input[value="${pos}"]`); if (cb) cb.checked = true; createPositionConfig(idx, pos); }); posKeys.forEach(pos => { const posData = data.positions[pos]; if (pos >= 4 && posData.mains) { const mainContainer = document.getElementById(`main-${idx}-${pos}`); if (mainContainer) { const checkboxes = mainContainer.querySelectorAll('input[type="checkbox"]'); checkboxes.forEach(cb => { cb.checked = posData.mains.includes(cb.value); }); } } const directToggle = document.getElementById(`game-direct-toggle-${idx}-${pos}`); if (directToggle) { directToggle.checked = !!posData.directEnabled; toggleGameDirect(idx, pos); } if (posData.directEnabled && posData.directTypes) { const directChecks = document.querySelectorAll(`.game-direct-check-${idx}-${pos}`); directChecks.forEach(cb => { cb.checked = posData.directTypes.includes(parseInt(cb.value)); }); } if (posData.enhance) { Object.keys(posData.enhance).forEach(i => { const iNum = parseInt(i); const rowCb = document.querySelector(`#pos-config-${idx}-${pos} .enhance-check-${idx}-${pos}[data-idx="${iNum}"]`); const rowTimes = document.querySelector(`#pos-config-${idx}-${pos} .enhance-times-${idx}-${pos}[data-idx="${iNum}"]`); if (rowCb) rowCb.checked = posData.enhance[i].checked; if (rowTimes) rowTimes.value = posData.enhance[i].times; }); } updatePosScale(idx, pos); calcPosScore(idx, pos); }); }
+    function newSave(idx) { if (!gameSelectedChars[idx]) return; const chName = gameSelectedChars[idx].name; const saves = loadSavesList(chName); const defaultName = `${saves.length + 1}号存档`; let name = prompt('请输入新存档名称：', defaultName); if (!name || name.trim() === '') return; name = name.trim(); const data = collectCharConfigData(idx); if (!data) return; saves.push({ name, data }); saveSavesList(chName, saves); refreshSaveSelect(idx); document.getElementById(`char-save-select-${idx}`).value = saves.length - 1; syncSaveSelects(idx, document.getElementById(`char-save-select-${idx}`)); }
+    function saveCurrentConfig(idx) { if (!gameSelectedChars[idx]) return; const chName = gameSelectedChars[idx].name; const select = document.getElementById(`char-save-select-${idx}`); if (!select) return; const saves = loadSavesList(chName); if (saves.length === 0) { newSave(idx); return; } const index = parseInt(select.value); if (isNaN(index) || index < 0 || index >= saves.length) { newSave(idx); return; } const data = collectCharConfigData(idx); if (!data) return; saves[index].data = data; saveSavesList(chName, saves); refreshSaveSelect(idx); select.value = index; syncSaveSelects(idx, select); alert(`已保存至 ${chName} - ${saves[index].name}`); }
+    function readCurrentSave(idx) { if (!gameSelectedChars[idx]) return; const chName = gameSelectedChars[idx].name; const select = document.getElementById(`char-save-select-${idx}`); if (!select) return; const saves = loadSavesList(chName); if (saves.length === 0) { alert('暂无存档'); return; } const index = parseInt(select.value); if (isNaN(index) || index < 0 || index >= saves.length) { alert('请选择有效存档'); return; } restoreCharConfigData(idx, saves[index].data); alert(`已读取 ${chName} - ${saves[index].name}`); }
+    function deleteCurrentSave(idx) { if (!gameSelectedChars[idx]) return; const chName = gameSelectedChars[idx].name; const select = document.getElementById(`char-save-select-${idx}`); if (!select) return; const saves = loadSavesList(chName); if (saves.length === 0) { alert('暂无存档'); return; } const index = parseInt(select.value); if (isNaN(index) || index < 0 || index >= saves.length) { alert('请选择有效存档'); return; } if (confirm(`确定删除 ${chName} 存档 “${saves[index].name}” 吗？`)) { saves.splice(index, 1); saveSavesList(chName, saves); refreshSaveSelect(idx); } }
+    function renameCurrentSave(idx) { if (!gameSelectedChars[idx]) return; const chName = gameSelectedChars[idx].name; const select = document.getElementById(`char-save-select-${idx}`); if (!select) return; const saves = loadSavesList(chName); if (saves.length === 0) { alert('暂无存档'); return; } const index = parseInt(select.value); if (isNaN(index) || index < 0 || index >= saves.length) { alert('请选择有效存档'); return; } const newName = prompt('请输入新名称：', saves[index].name); if (!newName || newName.trim() === '') return; saves[index].name = newName.trim(); saveSavesList(chName, saves); refreshSaveSelect(idx); select.value = index; syncSaveSelects(idx, select); }
+    async function loadEnkaMappings() { try { const [avatarsRes, locsRes] = await Promise.all([ fetch('https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/zzz/avatars.json'), fetch('https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/zzz/locs.json') ]); if (!avatarsRes.ok || !locsRes.ok) throw new Error('Failed to fetch mapping data'); const avatars = await avatarsRes.json(); const locs = await locsRes.json(); const locsZh = locs['zh-tw'] || {}; const idToName = {}; for (const [id, data] of Object.entries(avatars)) { const nameKey = data.Name; if (nameKey && locsZh[nameKey]) { idToName[id] = locsZh[nameKey]; } } return idToName; } catch (e) { console.warn('Failed to load Enka mappings, using fallback:', e); return null; } }
+    function updateJsonLink() {
+        const uid = document.getElementById('enka-uid').value.trim();
+        const container = document.getElementById('json-link-container');
+        const link = document.getElementById('json-link');
+        if (uid) {
+            const url = `https://enka.network/api/zzz/uid/${uid}/`;
+            link.href = url;
+            link.textContent = url;
+            container.style.display = 'block';
+        } else {
+            container.style.display = 'none';
         }
-        buildCustomDirectOptions();
     }
-
-    function toggleCustomDirect() {
-        document.getElementById('custom-direct-area').style.display = document.getElementById('custom-direct-toggle').checked ? 'block' : 'none';
-        if (document.getElementById('custom-direct-toggle').checked) buildCustomDirectOptions();
+    function findCharacterByImportedName(name) { let found = CHARACTER_DATA.find(f => f.roles.some(r => r.name === name)); if (found) return found.roles.find(r => r.name === name); const aliasMap = { "艾莲":"艾莲·乔", "莱卡恩":"冯·莱卡恩", "爱丽丝":"爱丽丝·泰姆菲尔德", "伊德海莉":"伊德海莉·墨菲", "真斗":"狛野真斗", "派派":"派派·韦尔", "柏妮思":"柏妮思·怀特", "凯撒":"凯撒·金", "赛斯":"赛斯·洛威尔", "安比":"安比·德玛拉", "妮可":"妮可·德玛拉", "比利":"比利·奇德", "星徽·比利":"星徽·比利", "露西":"露西", "莱特":"莱特", "本":"本·比格", "安东":"安东·伊万诺夫", "格莉丝":"格莉丝·霍华德", "珂蕾妲":"珂蕾妲·贝洛伯格", "苍角":"苍角", "可琳":"可琳·威克斯", "青衣":"青衣", "朱鸢":"朱鸢", "简":"简·杜", "波可娜":"波可娜", "伊芙琳":"伊芙琳·舒瓦利耶", "耀嘉音":"耀嘉音", "11号":"11号", "扳机":"扳机", "席德":"席德", "奥菲丝":"奥菲丝&鬼火", "零号·安比":"零号·安比", "雨果":"雨果·维拉德", "薇薇安":"薇薇安·班希", "照":"照", "普罗米娅":"普罗米娅", "琉音":"琉音", "般岳":"般岳", "南宫羽":"南宫羽", "千夏":"千夏", "爱芮":"爱芮", "叶瞬光":"叶瞬光", "橘福福":"橘福福", "仪玄":"仪玄", "潘引壶":"潘引壶", "卢西娅":"卢西娅", "柚叶":"浮波柚叶", "维琳娜":"维琳娜·艾嘉德", "诺姆":"诺姆·霍洛维尔", "蕾米埃尔":"蕾米埃尔", "希希芙":"希希芙", "佩洛伊斯":"佩洛伊斯", "希格莉德":"希格莉德" }; if (aliasMap[name]) { found = CHARACTER_DATA.find(f => f.roles.some(r => r.name === aliasMap[name])); if (found) return found.roles.find(r => r.name === aliasMap[name]); } for (const f of CHARACTER_DATA) { for (const r of f.roles) { if (r.name.includes(name)) return r; } } for (const f of CHARACTER_DATA) { for (const r of f.roles) { if (name.includes(r.name)) return r; } } return null; }
+    async function importFromJSON() { const input = document.getElementById('json-input'); const jsonText = input.value.trim(); if (!jsonText) { alert('请先粘贴 JSON 数据！'); return; } try { const data = JSON.parse(jsonText); const avatarList = data.PlayerInfo?.ShowcaseDetail?.AvatarList; if (!avatarList || avatarList.length === 0) throw new Error("粘贴的数据中缺少角色列表"); let charactersToAdd = []; for (const avatar of avatarList) { const charId = String(avatar.Id); const charName = ENKA_ID_MAP[charId]; if (!charName) continue; const ch = findCharacterByImportedName(charName); if (!ch) { console.warn(`未找到角色：${charName} (ID: ${charId})`); continue; } const ocrPositions = avatar.EquippedList.map(disc => { const pos = disc.Slot; const mainProp = disc.Equipment.MainPropertyList[0]; const mainStatId = String(mainProp.PropertyId); const mainStatName = MAIN_STAT_NAME_MAP[mainStatId] || mainStatId; const substats = disc.Equipment.RandomPropertyList.map(sub => { const subId = String(sub.PropertyId); const entryIdx = SUBSTAT_INDEX_MAP[subId]; if (entryIdx === undefined) return null; return { entryIdx, entryName: ENTRY_NAMES[entryIdx], times: Math.max(0, (sub.PropertyLevel || 1) - 1) }; }).filter(s => s !== null); const setId = String(Math.floor(disc.Equipment.Id / 100)); const setName = SUIT_NAME_MAP[setId] || '未知'; return { pos, mainStat: mainStatName, substats, setId, setName }; }); charactersToAdd.push({ ch, ocrPositions, charName: ch.name }); } if (charactersToAdd.length === 0) { alert('未能匹配到任何角色数据，请检查 ID 映射。'); return; } const addedNames = new Set(); let needsRender = false; for (const item of charactersToAdd) { const existingIdx = gameSelectedChars.findIndex(c => c.name === item.charName); if (existingIdx === -1 && !addedNames.has(item.charName)) { gameSelectedChars.push(item.ch); addedNames.add(item.charName); needsRender = true; } } if (needsRender) { const firstNewName = [...addedNames][0]; const fIdx = CHARACTER_DATA.findIndex(f => f.roles.some(r => r.name === firstNewName)); if (fIdx !== -1) renderCharacterGrid(fIdx); renderAllCharacterConfigs(); } for (const item of charactersToAdd) { const idx = gameSelectedChars.findIndex(c => c.name === item.charName); if (idx === -1) continue; const positionsToCheck = item.ocrPositions.map(p => p.pos); const posCheckboxes = document.querySelectorAll(`#char-positions-${idx} input[type="checkbox"]`); posCheckboxes.forEach(cb => { cb.checked = positionsToCheck.includes(parseInt(cb.value)); }); onPositionChange(idx); for (const posData of item.ocrPositions) { applyPosOcrData(idx, posData); } } lastImportedChars = [...new Set(charactersToAdd.map(item => item.charName))]; document.getElementById('one-click-save-btn').style.display = 'inline-block'; if (settings.autoCollapseImport) { charactersToAdd.forEach(item => { const idx = gameSelectedChars.findIndex(c => c.name === item.charName); if (idx !== -1) { const panel = document.getElementById(`char-panel-${idx}`); if (panel) panel.classList.add('collapsed'); } }); } alert(`成功导入 ${charactersToAdd.length} 个角色的数据！`); } catch (error) { console.error(error); alert('导入失败：' + error.message); } }
+    function oneClickSaveImported() {
+        if (lastImportedChars.length === 0) { alert('没有可存档的导入数据'); return; }
+        let savedCount = 0;
+        for (const charName of lastImportedChars) {
+            const idx = gameSelectedChars.findIndex(c => c.name === charName);
+            if (idx === -1) continue;
+            const data = collectCharConfigData(idx);
+            if (!data) continue;
+            const saves = loadSavesList(charName);
+            let baseName = '一键导入存档';
+            let finalName = baseName;
+            let counter = 2;
+            while (saves.some(s => s.name === finalName)) {
+                finalName = `${baseName}(${counter})`;
+                counter++;
+            }
+            saves.push({ name: finalName, data });
+            saveSavesList(charName, saves);
+            refreshSaveSelect(idx);
+            savedCount++;
+        }
+        alert(`一键存档完成，已保存 ${savedCount} 个角色`);
+        document.getElementById('one-click-save-btn').style.display = 'none';
     }
-
-    function buildCustomDirectOptions() {
-        const container = document.getElementById('custom-direct-options');
-        if (!container) return;
-        const names = document.querySelectorAll('.adv-name');
-        container.innerHTML = '';
-        names.forEach((inp, idx) => {
-            const label = document.createElement('label');
-            label.className = 'main-entry-item';
-            label.innerHTML = `<input type="checkbox" value="${idx}"> ${inp.value}`;
-            container.appendChild(label);
+    function applyPosOcrData(charIdx, posData) {
+        if (posData.pos >= 4 && posData.mainStat) {
+            const mainCheckboxes = document.querySelectorAll(`#main-${charIdx}-${posData.pos} input[type="checkbox"]`);
+            mainCheckboxes.forEach(cb => { cb.checked = (cb.value === posData.mainStat); });
+            onMainEntryChange(charIdx, posData.pos);
+        }
+        if (posData.setName) {
+            const configDiv = document.getElementById(`pos-config-${charIdx}-${posData.pos}`);
+            if (configDiv) {
+                configDiv.dataset.setId = posData.setId || '0';
+                configDiv.dataset.setName = posData.setName;
+                const header = configDiv.querySelector('h4');
+                if (header) header.textContent = `${posData.setName} - ${posData.pos}号位配置`;
+            }
+        }
+        const existingChecks = document.querySelectorAll(`#pos-config-${charIdx}-${posData.pos} .enhance-check-${charIdx}-${posData.pos}`);
+        existingChecks.forEach(cb => cb.checked = false);
+        posData.substats.forEach(sub => {
+            const enhanceCheck = document.querySelector(`#pos-config-${charIdx}-${posData.pos} .enhance-check-${charIdx}-${posData.pos}[data-idx="${sub.entryIdx}"]`);
+            if (enhanceCheck) enhanceCheck.checked = true;
+            const timesInput = document.querySelector(`#pos-config-${charIdx}-${posData.pos} .enhance-times-${charIdx}-${posData.pos}[data-idx="${sub.entryIdx}"]`);
+            if (timesInput) timesInput.value = sub.times;
         });
+        calcPosScore(charIdx, posData.pos);
+        updatePosScale(charIdx, posData.pos);
     }
-
-    function calculateAdvanced() {
-        const ns = document.querySelectorAll('.adv-name'), rs = document.querySelectorAll('.adv-rest'), ss = document.querySelectorAll('.adv-score');
-        if (ns.length === 0) { alert('请先生成词条输入'); return; }
-        const el = []; let tr = 0;
-        for (let i = 0; i < ns.length; i++) {
-            const r = parseInt(rs[i].value), s = parseNumber(ss[i].value);
-            if (isNaN(r) || r < 1) { alert(`词条${i+1}库存必须是正整数`); return; }
-            if (isNaN(s)) { alert(`词条${i+1}权重格式不正确`); return; }
-            for (let j = 0; j < r; j++) el.push({ rest: 1, score: s, typeIndex: i });
-            tr += r;
-        }
-        if (tr < 4) { alert('总词条库存不足4'); return; }
-        const g = parseNumber(document.getElementById('advanced-goal').value);
-        const sc = parseNumber(document.getElementById('advanced-scale').value);
-        if (isNaN(g)) { alert('目标分数格式不正确'); return; }
-        if (isNaN(sc)) { alert('缩放系数格式不正确'); return; }
-        let directedTypes = [];
-        if (document.getElementById('custom-direct-toggle').checked) {
-            directedTypes = Array.from(document.querySelectorAll('#custom-direct-options input:checked')).map(cb => parseInt(cb.value));
-        }
-        showResult(calculateCore(el, g, sc, directedTypes), 'advanced');
-    }
-
-    function showResult(r, mode) {
-        document.getElementById('res-a').style.display = 'block';
-        document.getElementById('res-b').style.display = 'block';
-        document.getElementById('res-random').style.display = 'block';
-        document.getElementById('res-a').textContent = `初始四词条驱动盘强化后练度提升概率：${(r.mchanceA*100).toFixed(15)}%`;
-        document.getElementById('res-b').textContent = `初始三词条驱动盘强化后练度提升概率：${(r.mchanceB*100).toFixed(15)}%`;
-        document.getElementById('res-random').textContent = mode === 'simple' ? `随机抽取综合练度提升概率：${(r.scaledChance*100).toFixed(15)}%` : `乘以缩放系数后提升率：${(r.scaledChance*100).toFixed(15)}%`;
-        document.getElementById('result-area').style.display = 'block';
-        document.getElementById('recommend-area').style.display = 'none';
-    }
-
-    window.onload = () => {
-        initThemeSelector();
-        generateAdvancedEntries();
-        renderFactionTabs('game-faction-tabs');
-        renderCharacterGrid(0);
-        applyTheme(themes[0]);
-    };
+    function findCharacterInData(name) { for (const f of CHARACTER_DATA) { for (const r of f.roles) { if (r.name === name) return r; } } return null; }
+    const ENTRY_IDX_MAP = { "大生命":0, "小生命":1, "大攻击":2, "小攻击":3, "穿透值":4, "大防御":5, "小防御":6, "暴击伤害":7, "暴击率":8, "异常精通":9 };
+    window.onload = () => { initThemeSelector(); generateAdvancedEntries(); renderFactionTabs('game-faction-tabs'); renderCharacterGrid(0); applyTheme(themes[0]); };
 </script>
 </body>
 </html>
